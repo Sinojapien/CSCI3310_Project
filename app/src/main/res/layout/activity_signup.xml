@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".SignupActivity">
 
     <TextView
         android:id="@+id/join_us_text"
@@ -18,7 +18,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintHorizontal_bias="0.466"
         app:layout_constraintVertical_bias="0.502"
-        android:layout_margin="70dp"
+        android:layout_marginTop="45dp"
         android:textColor="@color/primary" />
 
     <TextView
@@ -35,7 +35,7 @@
         app:layout_constraintVertical_bias="0.502"
         android:layout_marginTop="8dp"
         android:textColor="@color/primary" />
-    
+
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
@@ -81,14 +81,28 @@
         android:hint="Please enter your password"
         />
 
-    <Button
-        android:id="@+id/login_btn"
+    <EditText
+        android:id="@+id/password_again_ET"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Login"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="70dp"
+        android:hint="Please enter your password again"
+        android:inputType="textPassword"
+        android:backgroundTint="@color/primary"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/password_ET" />
+
+    <Button
+        android:id="@+id/signup_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Sign Up"
         android:backgroundTint="@color/primary"
         android:textColor="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/password_ET"
+        app:layout_constraintTop_toBottomOf="@id/password_again_ET"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="70dp"
@@ -98,15 +112,14 @@
         />
 
     <TextView
-        android:id="@+id/signup_TV"
+        android:id="@+id/login_TV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/login_btn"
+        app:layout_constraintTop_toBottomOf="@id/signup_btn"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="40dp"
-        android:text="Don't have an account yet? Click here"
+        android:text="Already have an account? Click here"
         />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

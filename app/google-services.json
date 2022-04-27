@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "806540029393",
+    "project_id": "cuhk-favor",
+    "storage_bucket": "cuhk-favor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:806540029393:android:15103baba754e9857f84f0",
+        "android_client_info": {
+          "package_name": "edu.cuhk.csci3310.project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "806540029393-veegnddb9e2e14eqmr1adqakpo83u9rg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUn0re2DIar89xYfjN9VHN9i9GY3DcEFA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "806540029393-veegnddb9e2e14eqmr1adqakpo83u9rg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:806540029393:android:c95550d166cf73e17f84f0",
+        "android_client_info": {
+          "package_name": "edu.cuhk.cuhkfavor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "806540029393-veegnddb9e2e14eqmr1adqakpo83u9rg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUn0re2DIar89xYfjN9VHN9i9GY3DcEFA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "806540029393-veegnddb9e2e14eqmr1adqakpo83u9rg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
