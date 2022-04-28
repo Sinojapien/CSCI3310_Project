@@ -42,6 +42,7 @@ public class RequestMapActivity extends AppCompatActivity {
             mMap.getUiSettings().setCompassEnabled(false);
             mMap.getUiSettings().setZoomControlsEnabled(false);
             mMap.getUiSettings().setMapToolbarEnabled(false);
+            mMap.getUiSettings().setRotateGesturesEnabled(false);
             mMap.getUiSettings().setZoomGesturesEnabled(true);
             mMap.setMinZoomPreference(minZoom);
             mMap.setMaxZoomPreference(maxZoom);
@@ -65,7 +66,7 @@ public class RequestMapActivity extends AppCompatActivity {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
                     marker.remove();
-                    focusOnMarker(null);
+                    // focusOnMarker(null);
                     return false;
                 }
             });
