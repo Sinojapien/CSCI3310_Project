@@ -1,5 +1,6 @@
 package edu.cuhk.csci3310.project;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
@@ -25,8 +26,13 @@ public class RequestMapActivity extends AppCompatActivity {
     private String defaultTitle;
     private LatLngBounds defaultMapBoundary;
 
+    private LatLng selectedLocation;
+
     final float defaultZoom = 16.0f;
-    final float selectZoom = 18.0f;
+    final float selectedZoom = 18.0f;
+    final float minZoom = 16.0f;
+    final float maxZoom = 20.0f;
+
     private GoogleMap mMap;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
@@ -34,19 +40,24 @@ public class RequestMapActivity extends AppCompatActivity {
         public void onMapReady(GoogleMap googleMap) {
             mMap = googleMap;
             mMap.getUiSettings().setCompassEnabled(false);
-            mMap.getUiSettings().setZoomGesturesEnabled(false);
-            mMap.getUiSettings().setZoomControlsEnabled(true);
+            mMap.getUiSettings().setZoomControlsEnabled(false);
+            mMap.getUiSettings().setMapToolbarEnabled(false);
+            mMap.getUiSettings().setZoomGesturesEnabled(true);
+            mMap.setMinZoomPreference(minZoom);
+            mMap.setMaxZoomPreference(maxZoom);
 
             // https://developers.google.com/maps/documentation/android-sdk/views#restricting_the_users_panning_to_a_given_area
+            // https://developers.google.com/maps/documentation/android-sdk/views#restrict-panning
             mMap.setLatLngBoundsForCameraTarget(defaultMapBoundary);
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultMapBoundary.getCenter(), defaultZoom));
 
-
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
-                public void onMapClick(LatLng latLng){
+                public void onMapClick(@NonNull LatLng latLng){
                     mMap.clear();
-                    focusOnMarker(addMarker(latLng));
+                    selectedLocation = latLng;
+                    // focusOnMarker(addMarker(latLng));
+                    addMarker(latLng).showInfoWindow();
                 }
             });
 
@@ -67,16 +78,11 @@ public class RequestMapActivity extends AppCompatActivity {
         setContentView(R.layout.activity_request_map);
 
         Bundle intentData = getIntent().getExtras();
-        defaultLocation = (LatLng) intentData.get(getString(R.string.key_map_location));
+        // defaultLocation = (LatLng) intentData.get(getString(R.string.key_map_location));
         defaultMapBoundary = (LatLngBounds) intentData.get(getString(R.string.key_map_boundary));
         defaultIconColour = (float) intentData.get(getString(R.string.key_map_icon));
         defaultTitle = (String) intentData.get(getString(R.string.key_map_title));
-//        defaultLocation = new LatLng(22.418014,	114.207259);
-//        defaultMapBoundary = new LatLngBounds(new LatLng(22.418014-0.005,	114.207259-0.005), new LatLng(22.418014+0.005,	114.207259+0.005));
-//        defaultIconColour = BitmapDescriptorFactory.HUE_RED;
-//        defaultTitle = "Location";
 
-        // MapsFragment mapFragment = MapsFragment.newInstance();
         SupportMapFragment mapFragment = SupportMapFragment.newInstance();
         mapFragment.getMapAsync(callback);
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -86,12 +92,18 @@ public class RequestMapActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent replyIntent = new Intent();
-                getSupportFragmentManager().findFragmentByTag("");
-                replyIntent.putExtra("TEST", "OK");
+                replyIntent.putExtra(getString(R.string.key_map_location), selectedLocation);
                 setResult(Activity.RESULT_OK, replyIntent);
                 finish();
             }
         });
+    }
+
+    private String getGeoCode(LatLng latLng){
+        // https://www.youtube.com/watch?v=Nsl99WWDFxM
+        // https://developers.google.com/maps/documentation/geocoding/overview
+        // https://www.geeksforgeeks.org/google-cloud-platform-creating-google-cloud-console-account-projects/
+        return "";
     }
 
     private Marker addMarker(LatLng latLng){
@@ -114,7 +126,7 @@ public class RequestMapActivity extends AppCompatActivity {
             marker.showInfoWindow();
 
             // Can't move camera and zoom with animateCamera()
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), selectZoom));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), selectedZoom));
             // mMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
             // mMap.animateCamera(CameraUpdateFactory.zoomTo(buildingZoomModeZoom));
             // mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), buildingZoomModeZoom));

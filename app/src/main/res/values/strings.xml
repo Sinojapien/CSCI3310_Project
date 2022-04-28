@@ -10,8 +10,16 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
-    <string name="key_map_location">LOCATION</string>
-    <string name="key_map_boundary">BOUNDARY</string>
-    <string name="key_map_title">TITLE</string>
-    <string name="key_map_icon">ICON</string>
+    <string name="request_description_wordcount">(%1$d / %2$d)</string>
+
+    <string name="key_map_location">MAP_LOCATION</string>
+    <string name="key_map_boundary">MAP_BOUNDARY</string>
+    <string name="key_map_title">MAP_MARKER_TITLE</string>
+    <string name="key_map_icon">MAP_MARKER_ICON</string>
+
+    <string name="key_request_location">REQUEST_LOCATION</string>
+    <string name="key_request_start_location">REQUEST_START_LOCATION</string>
+    <string name="key_request_destination">REQUEST_DESTINATION</string>
+    <string name="key_request_description">REQUEST_DESCRIPTION</string>
+    <string name="key_request_picture">REQUEST_PICTURE</string>
 </resources>
