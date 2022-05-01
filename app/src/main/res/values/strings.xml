@@ -11,15 +11,37 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
     <string name="request_description_wordcount">(%1$d / %2$d)</string>
+    <string-array name="request_tutoring_type">
+        <item>Assignment</item>
+        <item>Essay</item>
+        <item>Examination</item>
+        <item>Presentation</item>
+        <item>Course Project</item>
+        <item>Final Year Project</item>
+    </string-array>
+    <string-array name="request_major">
+        <item>Arts</item>
+        <item>Business</item>
+        <item>Education</item>
+        <item>Engineering</item>
+        <item>Law</item>
+        <item>Medicine</item>
+        <item>Science</item>
+        <item>Social Science</item>
+    </string-array>
 
     <string name="key_map_location">MAP_LOCATION</string>
     <string name="key_map_boundary">MAP_BOUNDARY</string>
     <string name="key_map_title">MAP_MARKER_TITLE</string>
     <string name="key_map_icon">MAP_MARKER_ICON</string>
 
+    <string name="key_request_type">REQUEST_TYPE</string>
     <string name="key_request_location">REQUEST_LOCATION</string>
     <string name="key_request_start_location">REQUEST_START_LOCATION</string>
     <string name="key_request_destination">REQUEST_DESTINATION</string>
     <string name="key_request_description">REQUEST_DESCRIPTION</string>
     <string name="key_request_picture">REQUEST_PICTURE</string>
+    <string name="key_request_datetime">REQUEST_DATETIME</string>
+    <string name="key_request_date">REQUEST_DATE</string>
+    <string name="key_request_time">REQUEST_TIME</string>
 </resources>

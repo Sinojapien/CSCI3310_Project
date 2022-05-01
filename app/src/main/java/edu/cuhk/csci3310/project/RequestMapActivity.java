@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,7 +23,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class RequestMapActivity extends AppCompatActivity {
 
     private float defaultIconColour;
-    private LatLng defaultLocation;
+    // private LatLng defaultLocation;
     private String defaultTitle;
     private LatLngBounds defaultMapBoundary;
 
@@ -57,16 +58,14 @@ public class RequestMapActivity extends AppCompatActivity {
                 public void onMapClick(@NonNull LatLng latLng){
                     mMap.clear();
                     selectedLocation = latLng;
-                    // focusOnMarker(addMarker(latLng));
                     addMarker(latLng).showInfoWindow();
                 }
             });
 
             mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
-                public boolean onMarkerClick(Marker marker) {
+                public boolean onMarkerClick(@NonNull Marker marker) {
                     marker.remove();
-                    // focusOnMarker(null);
                     return false;
                 }
             });
@@ -92,7 +91,13 @@ public class RequestMapActivity extends AppCompatActivity {
         findViewById(R.id.confirm_fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (selectedLocation == null){
+                    Toast.makeText(view.getContext(), "Please select " + defaultTitle + ".", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Intent replyIntent = new Intent();
+                replyIntent.putExtra(getString(R.string.key_map_title), selectedLocation.toString());
                 replyIntent.putExtra(getString(R.string.key_map_location), selectedLocation);
                 setResult(Activity.RESULT_OK, replyIntent);
                 finish();
@@ -100,7 +105,7 @@ public class RequestMapActivity extends AppCompatActivity {
         });
     }
 
-    private String getGeoCode(LatLng latLng){
+    private String getReverseGeoCode(LatLng latLng){
         // https://www.youtube.com/watch?v=Nsl99WWDFxM
         // https://developers.google.com/maps/documentation/geocoding/overview
         // https://www.geeksforgeeks.org/google-cloud-platform-creating-google-cloud-console-account-projects/

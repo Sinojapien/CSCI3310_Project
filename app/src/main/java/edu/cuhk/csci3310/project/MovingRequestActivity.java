@@ -10,80 +10,87 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.Animator;
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 
-public class MovingRequestActivity extends AppCompatActivity {
+public class MovingRequestActivity extends RequestActivity {
 
-    private SharedPreferences mPreferences;
-
-    private TextView valueRatingTextView;
-    private EditText nameEditText;
+    private TextView startLocationEditText;
     private TextView descriptionTextView;
-    private TextView wordcountTextView;
-    private ImageView photoView;
+    private ImageView photoImageView;
 
     private LatLng requestStartLocation;
     private LatLng requestDestination;
-    // private String requestDescription;
     private Bitmap requestPicture;  // Drawable not parsable
 
-    private Animator currentAnimator;
-    private int shortAnimationDuration = 1;
-
-    private final String sharedPrefFile = "edu.cuhk.csci3310.project";
-
-    ActivityResultLauncher<Intent> startMapActivityLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        // https://developer.android.com/training/basics/intents/result
-                        Intent data = result.getData();
-                        if (data != null) {
-                            Bundle dataExtra = data.getExtras();
-                            requestStartLocation = (LatLng) dataExtra.get(getString(R.string.key_map_location));
-                        }
+    private final ActivityResultLauncher<Intent> startMapActivityLauncher = registerForActivityResult(
+        new ActivityResultContracts.StartActivityForResult(),
+        new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    // https://developer.android.com/training/basics/intents/result
+                    Intent data = result.getData();
+                    if (data != null) {
+                        Bundle dataExtra = data.getExtras();
+                        requestStartLocation = (LatLng) dataExtra.get(getString(R.string.key_map_location));
+                        startLocationEditText.setText((String) dataExtra.get(getString(R.string.key_map_title)));;
                     }
                 }
-            });
+            }
+        });
 
-    ActivityResultLauncher<Intent> pictureActivityLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    // https://developer.android.com/training/camera/photobasics#java
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        Intent data = result.getData();
-                        if (data != null) {
-                            // data.getClipData();
-                            Bundle extras = data.getExtras();
-                            Bitmap imageBitmap = (Bitmap) extras.get("data");
-                            requestPicture = imageBitmap;
-                            ((ImageView) findViewById(R.id.photo_image)).setImageBitmap(imageBitmap);
-                        }
+    private final ActivityResultLauncher<Intent> pictureActivityLauncher = registerForActivityResult(
+        new ActivityResultContracts.StartActivityForResult(),
+        new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                // https://developer.android.com/training/camera/photobasics#java
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    if (data != null) {
+                        // data.getClipData();
+                        Bundle extras = data.getExtras();
+                        Bitmap imageBitmap = (Bitmap) extras.get("data");
+                        requestPicture = imageBitmap;
+                        photoImageView.setImageBitmap(imageBitmap);
                     }
                 }
-            });
+            }
+        });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +111,7 @@ public class MovingRequestActivity extends AppCompatActivity {
 //            }
 //        });
 
+        startLocationEditText = (TextView) findViewById(R.id.start_edit_text);
         descriptionTextView = (TextView) findViewById(R.id.description_edit);
 
         findViewById(R.id.start_map_button).setOnClickListener(new View.OnClickListener() {
@@ -121,137 +129,47 @@ public class MovingRequestActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.photo_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // https://stackoverflow.com/questions/25524617/intent-to-choose-between-the-camera-or-the-gallery-in-android
-                Intent pictureChooserIntent = new Intent(Intent.ACTION_CHOOSER);
-                ArrayList<Intent> intentArrayList = new ArrayList<Intent>();
+        photoImageView = (ImageView) findViewById(R.id.photo_image);
+        setRetrievePictureButtonView(findViewById(R.id.photo_button), pictureActivityLauncher);
+        setZoomableImageView(photoImageView, findViewById(R.id.expanded_image));
 
-                Intent getPictureIntent = new Intent(Intent.ACTION_PICK);
-                getPictureIntent.setType("image/*");
-                // getPictureIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                pictureChooserIntent.putExtra(Intent.EXTRA_INTENT, getPictureIntent);
-                pictureChooserIntent.putExtra(Intent.EXTRA_TITLE, "Select from:");
+        setWordcountTextView(findViewById(R.id.wordcount_text));
 
-                if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)){
-                    Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    intentArrayList.add(cameraIntent);
-                }
+        TextView dateTextEdit = findViewById(R.id.date_edit);
+        setDatePickerEditText(dateTextEdit);
 
-                pictureChooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArrayList.toArray(new Intent[0]));
-                intentArrayList.clear();
+        TextView timeTextEdit = findViewById(R.id.time_edit);
+        setTimePickerEditText(timeTextEdit);
 
-                try {
-                    // pictureActivityLauncher.launch(Intent.createChooser(getPictureIntent, "Select Picture"));
-                    // pictureActivityLauncher.launch(getPictureIntent);
-                    pictureActivityLauncher.launch(pictureChooserIntent);
-                } catch (ActivityNotFoundException e) {
-                    // display error state to the user
-                }
-            }
-        });
-
-        //
-        ImageView photoImageView = (ImageView) findViewById(R.id.photo_image);
-        ImageView expandedImageView = (ImageView) findViewById(R.id.expanded_image);
-        photoImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                expandedImageView.setClickable(true);
-                expandedImageView.setVisibility(View.VISIBLE);
-                zoomImage((ImageView) view, expandedImageView);
-            }
-        });
-        expandedImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                view.setClickable(false);
-                view.setVisibility(View.INVISIBLE);
-            }
-        });
-
-        int descriptionMaxLength = getResources().getInteger(R.integer.request_description_max_length);
-        wordcountTextView = findViewById(R.id.wordcount_text);
-        wordcountTextView.setText(getString(R.string.request_description_wordcount, 0, descriptionMaxLength));
-        ((TextView) findViewById(R.id.description_edit)).addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                // int testLength = charSequence.toString().length();
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                wordcountTextView.setText(getString(R.string.request_description_wordcount, charSequence.toString().length(), descriptionMaxLength));
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
+        setDropDownList(findViewById(R.id.type_spinner), R.array.request_tutoring_type);
+        setDropDownList(findViewById(R.id.participant_spinner), getNumberStringArray(1,99));
 
         findViewById(R.id.post_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                boolean isAllInformationFilled = true;
+                isAllInformationFilled &= requestStartLocation != null;
+                isAllInformationFilled &= requestDestination != null;
+                isAllInformationFilled &= dateTextEdit.getText().toString().length() > 0;
+                isAllInformationFilled &= timeTextEdit.getText().toString().length() > 0;
+                if (!isAllInformationFilled){
+                    Toast.makeText(view.getContext(), "Please fill in all required info", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Intent replyIntent = new Intent();
+                replyIntent.putExtra(getString(R.string.key_request_type), getResources().getInteger(R.integer.request_type_moving));
                 replyIntent.putExtra(getString(R.string.key_request_start_location), requestStartLocation);
                 replyIntent.putExtra(getString(R.string.key_request_destination), requestDestination);
                 replyIntent.putExtra(getString(R.string.key_request_description), descriptionTextView.getText().toString());
                 replyIntent.putExtra(getString(R.string.key_request_picture), requestPicture);
+                replyIntent.putExtra(getString(R.string.key_request_date), dateTextEdit.getText().toString());
+                replyIntent.putExtra(getString(R.string.key_request_time), timeTextEdit.getText().toString());
                 setResult(Activity.RESULT_OK, replyIntent);
                 finish();
             }
         });
 
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        savePreference();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        savePreference();
-    }
-
-    protected void savePreference(){
-        SharedPreferences.Editor preferencesEditor = mPreferences.edit();
-//        preferencesEditor.putInt(RATING_KEY, currentRating);
-//        preferencesEditor.putString(NAME_KEY, nameEditText.getText().toString());
-        preferencesEditor.apply();
-    }
-
-    protected void resetPreference(){
-        SharedPreferences.Editor preferencesEditor = mPreferences.edit();
-        preferencesEditor.clear();
-        preferencesEditor.apply();
-    }
-
-    private LatLngBounds getMapBoundary(LatLng center, double offset){
-        LatLng boundaryNE = new LatLng(center.latitude - offset,	center.longitude - offset);
-        LatLng boundarySW = new LatLng(center.latitude + offset,	center.longitude + offset);
-        return new LatLngBounds(boundaryNE, boundarySW);
-    }
-
-    private void zoomImage(ImageView imageView, ImageView expandedImageView){
-        // resize fragment
-        // https://stackoverflow.com/questions/10699464/dynamic-resize-fragment-android
-        // https://developer.android.com/guide/fragments/animate
-        // https://developer.android.com/training/animation/zoom#java
-
-        if (currentAnimator != null) {
-            currentAnimator.cancel();
-        }
-        expandedImageView.setImageDrawable(imageView.getDrawable());
     }
 
 }

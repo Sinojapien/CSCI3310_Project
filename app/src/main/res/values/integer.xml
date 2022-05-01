@@ -2,4 +2,10 @@
 <resources>
     <integer name="request_location_max_length">100</integer>
     <integer name="request_description_max_length">250</integer>
+
+    <integer name="request_type_moving">1</integer>
+    <integer name="request_type_gathering">2</integer>
+    <integer name="request_type_dining">3</integer>
+    <integer name="request_type_tutoring">4</integer>
+    <integer name="request_type_borrowing">5</integer>
 </resources>
