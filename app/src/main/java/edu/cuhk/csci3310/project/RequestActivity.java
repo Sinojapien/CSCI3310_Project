@@ -2,40 +2,40 @@ package edu.cuhk.csci3310.project;
 
 // Name: Yeung Chi Ho, SID: 1155126460
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.animation.Animator;
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
@@ -43,28 +43,32 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 public class RequestActivity extends AppCompatActivity {
 
     /* todo:
         map of all restaurants
-        enter number of participants
-        change layout
+        ScrollView as root
+        EnlargeImageFragment
         http://www.res.cuhk.edu.hk/en-gb/general-information/program-codes
     */
 
-    protected SharedPreferences mPreferences;
     protected Animator currentAnimator;
     protected int shortAnimationDuration = 1;
 
     // https://stackoverflow.com/questions/215497/what-is-the-difference-between-public-protected-package-private-and-private-in
+    protected SharedPreferences mPreferences;
     protected final String sharedPrefFile = "edu.cuhk.csci3310.project";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
         // setContentView(R.layout.activity_request);
     }
 
@@ -88,15 +92,31 @@ public class RequestActivity extends AppCompatActivity {
 
     protected void savePreference(){
         SharedPreferences.Editor preferencesEditor = mPreferences.edit();
-//        preferencesEditor.putInt(RATING_KEY, currentRating);
-//        preferencesEditor.putString(NAME_KEY, nameEditText.getText().toString());
+        // preferencesEditor.putInt(RATING_KEY, currentRating);
+        // preferencesEditor.putString(NAME_KEY, nameEditText.getText().toString());
         preferencesEditor.apply();
     }
 
     protected void resetPreference(){
-        SharedPreferences.Editor preferencesEditor = mPreferences.edit();
-        preferencesEditor.clear();
-        preferencesEditor.apply();
+        mPreferences.edit().clear().apply();
+    }
+
+    protected boolean isAllInformationFilled(){
+        return true;
+    }
+
+    public static String[] getNumberStringArray(int start, int end){
+        int total = end - start + 1;
+        String[] output = new String[total];
+        for (int i=0; i<total; i++)
+            output[i] = String.valueOf(start + i);
+        return output;
+    }
+
+    public static LatLngBounds getMapBoundary(LatLng center, double offset){
+        LatLng boundaryNE = new LatLng(center.latitude - offset,	center.longitude - offset);
+        LatLng boundarySW = new LatLng(center.latitude + offset,	center.longitude + offset);
+        return new LatLngBounds(boundaryNE, boundarySW);
     }
 
     protected void readCSV(int rawResourceID){
@@ -134,12 +154,6 @@ public class RequestActivity extends AppCompatActivity {
         }
     }
 
-    protected LatLngBounds getMapBoundary(LatLng center, double offset){
-        LatLng boundaryNE = new LatLng(center.latitude - offset,	center.longitude - offset);
-        LatLng boundarySW = new LatLng(center.latitude + offset,	center.longitude + offset);
-        return new LatLngBounds(boundaryNE, boundarySW);
-    }
-
     protected void setRetrievePictureButtonView(Button buttonView, ActivityResultLauncher<Intent> activityResultLauncher){
         buttonView.setOnClickListener(new View.OnClickListener() {
 
@@ -172,7 +186,7 @@ public class RequestActivity extends AppCompatActivity {
         });
     }
 
-    protected void setWordcountTextView(TextView textView){
+    protected void setWordCountTextView(TextView textView){
         int descriptionMaxLength = getResources().getInteger(R.integer.request_description_max_length);
         textView.setText(getString(R.string.request_description_wordcount, 0, descriptionMaxLength));
 
@@ -204,12 +218,19 @@ public class RequestActivity extends AppCompatActivity {
             currentAnimator.cancel();
         }
 
+        {
+            // put it on RealRequestActivity?
+            imageView.setImageDrawable(null);
+            expandedImageView.setImageDrawable(null);
+        }
         expandedImageView.setClickable(false);
         expandedImageView.setVisibility(View.INVISIBLE);
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (((ImageView) view).getDrawable() == null)
+                    return;
                 expandedImageView.setClickable(true);
                 expandedImageView.setVisibility(View.VISIBLE);
                 expandedImageView.setImageDrawable(((ImageView) view).getDrawable());
@@ -243,7 +264,8 @@ public class RequestActivity extends AppCompatActivity {
                 new DatePickerDialog(view.getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        String dateString = i + "-" + (i1 + 1) + "-" + i2;
+                        String dateString = getString(R.string.request_date, i2, i1, i);
+                        // String dateString = i + "-" + (i1 + 1) + "-" + i2;
                         textView.setText(dateString);
                     }
                 }, year, month, day).show();
@@ -267,7 +289,8 @@ public class RequestActivity extends AppCompatActivity {
                 new TimePickerDialog(view.getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                        String timeString = i + ":" + i1;
+                        String timeString = getString(R.string.request_time, i, i1);
+                        // String timeString = i + ":" + i1;
                         textView.setText(timeString);
                     }
                 }, hour, minute, true).show();
@@ -275,27 +298,106 @@ public class RequestActivity extends AppCompatActivity {
         });
     }
 
-    protected String[] getNumberStringArray(int start, int end){
-        int total = end - start + 1;
-        String[] output = new String[total];
-        for (int i=0; i<total; i++)
-            output[i] = String.valueOf(start + i);
-        return output;
+    protected void setSelectionView(View view, RecyclerView recyclerView, ArrayList<String> items){
+        // https://www.geeksforgeeks.org/alert-dialog-with-multipleitemselection-in-android/
+        // https://www.geeksforgeeks.org/alert-dialog-with-singleitemselection-in-android/
+        // https://developer.android.com/reference/kotlin/androidx/appcompat/app/AlertDialog.Builder
+        // https://developer.android.com/guide/topics/ui/dialogs#java
+
+        //SelectionListAdapter adapter = (SelectionListAdapter) recyclerView.getAdapter();
+        //assert adapter != null;
+        SelectionListAdapter adapter = new SelectionListAdapter(view.getContext(), items, 0);
+        recyclerView.setAdapter(adapter);
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(view.getContext(), 3);
+        gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        //tutoringTypeRecycler.setHasFixedSize(true);
+
+        final boolean[] checkedIndex = new boolean[items.size()];
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setTitle("Choose Tutoring Type:");
+                builder.setIcon(R.drawable.common_google_signin_btn_icon_light);
+                builder.setMultiChoiceItems(items.toArray(new String[0]), checkedIndex, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i, boolean isChecked) {
+                        checkedIndex[i] = isChecked;
+                    }
+                });
+
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        ArrayList<String> checkedItems = new ArrayList<>();
+                        for(int p=0; p<checkedIndex.length;p++){
+                            if (checkedIndex[p])
+                                checkedItems.add(items.get(p));
+                        }
+                        adapter.clearItem();
+                        adapter.addItem(checkedItems);
+                    }
+                });
+
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+
+                builder.setNeutralButton("CLEAR ALL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Arrays.fill(checkedIndex, false);
+                        // adapter.clearItem();
+                    }
+                });
+
+                builder.show();
+            }
+        });
     }
 
-    protected void setDropDownList(Spinner spinner, int resId){
-        // https://developer.android.com/guide/topics/ui/controls/spinner#java
-        // spinner.getSelectedItem();
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                resId, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setSelection(0);
+    protected void setCourseCodeTextEdit(TextView textView){
+        textView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+
+        // InputFilter[] inputFilters = textView.getFilters();
+        // textView.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
+
+        textView.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // https://www.geeksforgeeks.org/restrict-edittext-input-to-some-special-characters-in-android/
+                // https://stackoverflow.com/questions/7300490/set-edittext-digits-programmatically
+                int currentLength = textView.getText().toString().length();
+                if (currentLength < 4){
+                    textView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+                }else{
+                    textView.setInputType(InputType.TYPE_CLASS_NUMBER);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     protected void setDropDownList(Spinner spinner, String[] itemArray){
         // https://stackoverflow.com/questions/13377361/how-to-create-a-drop-down-list
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, itemArray);
+        // https://stackoverflow.com/questions/36857555/how-to-customize-checkboxes-in-multi-select-spinner-in-android
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(spinner.getContext(), android.R.layout.simple_spinner_dropdown_item, itemArray);
         spinner.setAdapter(adapter);
         spinner.setSelection(0);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

@@ -6,45 +6,18 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
 
-import android.animation.Animator;
 import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Calendar;
 
 public class MovingRequestActivity extends RequestActivity {
 
@@ -97,9 +70,8 @@ public class MovingRequestActivity extends RequestActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_moving);
 
-        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
-
         // Restore preferences
+//        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
 //        currentRating = mPreferences.getInt(getKey(RATING_KEY), defaultRating);
 //        nameEditText.setText(mPreferences.getString(getKey(NAME_KEY), name));
 
@@ -111,18 +83,19 @@ public class MovingRequestActivity extends RequestActivity {
 //            }
 //        });
 
-        startLocationEditText = (TextView) findViewById(R.id.start_edit_text);
+        startLocationEditText = (TextView) findViewById(R.id.location_edit);
+        startLocationEditText.setText("Start Location");
         descriptionTextView = (TextView) findViewById(R.id.description_edit);
 
-        findViewById(R.id.start_map_button).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.location_map_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 LatLng location = new LatLng(22.418014,	114.207259);
 
                 Intent intent = new Intent(MovingRequestActivity.this, RequestMapActivity.class);
-                intent.putExtra(getString(R.string.key_map_boundary), getMapBoundary(location, 0.01));
+                intent.putExtra(getString(R.string.key_map_boundary), getMapBoundary(location, 0.075));
                 // intent.putExtra(getString(R.string.key_map_location), location);
-                intent.putExtra(getString(R.string.key_map_title), "Start Location");
+                intent.putExtra(getString(R.string.key_map_title), startLocationEditText.getText().toString());
                 intent.putExtra(getString(R.string.key_map_icon), BitmapDescriptorFactory.HUE_RED);
 
                 startMapActivityLauncher.launch(intent);
@@ -133,16 +106,13 @@ public class MovingRequestActivity extends RequestActivity {
         setRetrievePictureButtonView(findViewById(R.id.photo_button), pictureActivityLauncher);
         setZoomableImageView(photoImageView, findViewById(R.id.expanded_image));
 
-        setWordcountTextView(findViewById(R.id.wordcount_text));
+        setWordCountTextView(findViewById(R.id.wordcount_text));
 
         TextView dateTextEdit = findViewById(R.id.date_edit);
         setDatePickerEditText(dateTextEdit);
 
         TextView timeTextEdit = findViewById(R.id.time_edit);
         setTimePickerEditText(timeTextEdit);
-
-        setDropDownList(findViewById(R.id.type_spinner), R.array.request_tutoring_type);
-        setDropDownList(findViewById(R.id.participant_spinner), getNumberStringArray(1,99));
 
         findViewById(R.id.post_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,7 +123,7 @@ public class MovingRequestActivity extends RequestActivity {
                 isAllInformationFilled &= dateTextEdit.getText().toString().length() > 0;
                 isAllInformationFilled &= timeTextEdit.getText().toString().length() > 0;
                 if (!isAllInformationFilled){
-                    Toast.makeText(view.getContext(), "Please fill in all required info", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(view.getContext(), "Please fill in all required info.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 

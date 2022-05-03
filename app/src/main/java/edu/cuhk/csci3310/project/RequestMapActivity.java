@@ -36,6 +36,9 @@ public class RequestMapActivity extends AppCompatActivity {
 
     private GoogleMap mMap;
 
+    // https://developers.google.com/maps/documentation/places/web-service/search#PlaceSearchRequests
+    // https://stackoverflow.com/questions/30161395/im-trying-to-search-nearby-places-such-as-banks-restaurants-atms-inside-the-d
+
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(GoogleMap googleMap) {

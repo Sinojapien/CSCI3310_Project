@@ -10,7 +10,15 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="clear">Clear All</string>
+
     <string name="request_description_wordcount">(%1$d / %2$d)</string>
+    <string name="request_date_hint">DD/MM/YY</string>
+    <string name="request_date">%1$02d/%2$02d/%3$04d</string>
+    <string name="request_time_hint">HH:MM</string>
+    <string name="request_time">%1$02d:%2$02d</string>
     <string-array name="request_tutoring_type">
         <item>Assignment</item>
         <item>Essay</item>
@@ -36,12 +44,24 @@
     <string name="key_map_icon">MAP_MARKER_ICON</string>
 
     <string name="key_request_type">REQUEST_TYPE</string>
+
     <string name="key_request_location">REQUEST_LOCATION</string>
+    <string name="key_request_location_string">REQUEST_LOCATION_STRING</string>
     <string name="key_request_start_location">REQUEST_START_LOCATION</string>
     <string name="key_request_destination">REQUEST_DESTINATION</string>
+
     <string name="key_request_description">REQUEST_DESCRIPTION</string>
     <string name="key_request_picture">REQUEST_PICTURE</string>
+
     <string name="key_request_datetime">REQUEST_DATETIME</string>
     <string name="key_request_date">REQUEST_DATE</string>
+    <string name="key_request_date_start">REQUEST_DATE_START</string>
+    <string name="key_request_date_end">REQUEST_DATE_END</string>
     <string name="key_request_time">REQUEST_TIME</string>
+    <string name="key_request_time_start">REQUEST_TIME_START</string>
+    <string name="key_request_time_end">REQUEST_TIME_END</string>
+
+    <string name="key_request_selection">REQUEST_SELECTION</string>
+    <string name="key_request_course_code">REQUEST_COURSE_CODE</string>
+    <string name="key_request_participant">REQUEST_PARTICIPANT</string>
 </resources>
