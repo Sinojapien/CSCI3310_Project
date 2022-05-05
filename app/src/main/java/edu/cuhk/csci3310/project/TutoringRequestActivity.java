@@ -9,12 +9,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -27,6 +25,7 @@ public class TutoringRequestActivity extends RequestActivity {
     DateRequestFragment dateFragment;
     TimeRequestFragment timeFragment;
     SelectionRequestFragment selectionFragment;
+    PictureRequestFragment pictureFragment;
     TextView courseCodeEdit;
     Spinner participantSpinner;
     RecyclerView tutoringTypeRecycler;
@@ -36,8 +35,7 @@ public class TutoringRequestActivity extends RequestActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_tutoring);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
         locationFragment = LocationRequestFragment.newInstance("Start Location", getMapBoundary(new LatLng(22.418014,	114.207259), 0.075));
         fragmentTransaction.replace(R.id.location_container, locationFragment);
@@ -45,15 +43,18 @@ public class TutoringRequestActivity extends RequestActivity {
         descriptionFragment = DescriptionRequestFragment.newInstance();
         fragmentTransaction.replace(R.id.description_container, descriptionFragment);
 
-        dateFragment = DateRequestFragment.newInstance(false);
+        dateFragment = DateRequestFragment.newInstance(true);
         fragmentTransaction.replace(R.id.date_container, dateFragment);
 
         timeFragment = TimeRequestFragment.newInstance(true);
         fragmentTransaction.replace(R.id.time_container, timeFragment);
 
         ArrayList<String> itemList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.request_tutoring_type)));
-        selectionFragment = SelectionRequestFragment.newInstance(itemList);
+        selectionFragment = SelectionRequestFragment.newInstance(itemList, "Choose Tutoring Type:");
         fragmentTransaction.replace(R.id.selection_container, selectionFragment);
+
+        pictureFragment = PictureRequestFragment.newInstance(findViewById(R.id.expanded_image));
+        fragmentTransaction.replace(R.id.picture_container, pictureFragment);
 
         fragmentTransaction.commit();
 
@@ -83,11 +84,13 @@ public class TutoringRequestActivity extends RequestActivity {
                 replyIntent.putExtra(getString(R.string.key_request_location), locationFragment.getInformationLocation());
                 replyIntent.putExtra(getString(R.string.key_request_location_string), locationFragment.getInformationString());
                 replyIntent.putExtra(getString(R.string.key_request_description), descriptionFragment.getInformationString());
-                replyIntent.putExtra(getString(R.string.key_request_date), dateFragment.getInformationDate());
+                replyIntent.putExtra(getString(R.string.key_request_date_start), dateFragment.getInformationDate());
+                replyIntent.putExtra(getString(R.string.key_request_date_end), dateFragment.getInformationDateEnd());
                 replyIntent.putExtra(getString(R.string.key_request_time_start), timeFragment.getInformationTime());
                 replyIntent.putExtra(getString(R.string.key_request_time_end), timeFragment.getInformationTimeEnd());
 
                 replyIntent.putExtra(getString(R.string.key_request_selection), selectionFragment.getInformationStringList());
+                replyIntent.putExtra(getString(R.string.key_request_picture), pictureFragment.getInformationBitmap());
 
                 replyIntent.putExtra(getString(R.string.key_request_course_code), courseCodeEdit.getText().toString());
                 replyIntent.putExtra(getString(R.string.key_request_participant), (String) participantSpinner.getSelectedItem());
@@ -101,15 +104,15 @@ public class TutoringRequestActivity extends RequestActivity {
 
     @Override
     protected boolean isAllInformationFilled(){
-        boolean allFilled = true;
+        boolean isAllFilled = true;
 
-        allFilled &= locationFragment.isFilled();
-        allFilled &= dateFragment.isFilled();
-        allFilled &= timeFragment.isFilled();
-        allFilled &= selectionFragment.isFilled();
-        allFilled &= courseCodeEdit.getText().toString().length() > 0;
+        isAllFilled &= locationFragment.isFilled();
+        isAllFilled &= dateFragment.isFilled();
+        isAllFilled &= timeFragment.isFilled();
+        isAllFilled &= selectionFragment.isFilled();
+        isAllFilled &= courseCodeEdit.getText().toString().length() > 0;
 
-        return allFilled;
+        return isAllFilled;
     }
 
 }

@@ -50,12 +50,12 @@ public class TimeRequestFragment extends Fragment {
         View view;
         if (mParamDuration){
             view = inflater.inflate(R.layout.fragment_request_time_duration, container, false);
-            mTimeTitle = view.findViewById(R.id.time_title);
-            mTimeEdit = view.findViewById(R.id.start_time_edit);
-            mEndTimeEdit = view.findViewById(R.id.end_time_edit);
+            mTimeTitle = view.findViewById(R.id.date_title);
+            mTimeEdit = view.findViewById(R.id.start_date_edit);
+            mEndTimeEdit = view.findViewById(R.id.end_date_edit);
         }else {
             view = inflater.inflate(R.layout.fragment_request_time, container, false);
-            mTimeTitle = view.findViewById(R.id.time_title);
+            mTimeTitle = view.findViewById(R.id.date_title);
             mTimeEdit = view.findViewById(R.id.time_edit);
         }
         return view;
@@ -86,14 +86,16 @@ public class TimeRequestFragment extends Fragment {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new TimePickerDialog(view.getContext(), new TimePickerDialog.OnTimeSetListener() {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
                         String timeString = getString(R.string.request_time, i, i1);
-                        // String timeString = i + ":" + i1;
                         textView.setText(timeString);
                     }
-                }, hour, minute, true).show();
+                }, hour, minute, true);
+
+                timePickerDialog.show();
+
             }
         });
     }

@@ -53,8 +53,12 @@ public class RequestActivity extends AppCompatActivity {
 
     /* todo:
         map of all restaurants
-        ScrollView as root
-        EnlargeImageFragment
+        ScrollView as root (not all)
+        extend EnlargeImageFragment to recycler
+        Web location
+        switch date & time real time
+        map save location
+        proper time and date limit
         http://www.res.cuhk.edu.hk/en-gb/general-information/program-codes
     */
 

@@ -19,128 +19,69 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/photo_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add Photo"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/photo_image" />
-
-            <ImageView
-                android:id="@+id/photo_image"
-                android:layout_width="128dp"
-                android:layout_height="128dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/time_edit"
-                tools:src="@tools:sample/avatars" />
-
-            <LinearLayout
-                android:id="@+id/linearLayout"
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/start_location_container"
                 android:layout_width="match_parent"
-                android:layout_height="96dp"
-                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/location_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="Start Location:" />
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/end_location_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/start_location_container" />
 
-                <EditText
-                    android:id="@+id/location_edit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="Enter location here"
-                    android:inputType="textPersonName"
-                    android:maxLength="@integer/request_location_max_length" />
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/date_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/end_location_container" />
 
-                <Button
-                    android:id="@+id/location_map_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="M" />
-            </LinearLayout>
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/time_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/date_container" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/description_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/time_container" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/picture_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/description_container" />
 
             <Button
                 android:id="@+id/post_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Post Request"
+                android:layout_marginTop="16dp"
+                android:text="@string/request_post"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/photo_button" />
-
-            <TextView
-                android:id="@+id/wordcount_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:layout_constraintEnd_toStartOf="@+id/description_edit"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/description_title" />
-
-            <TextView
-                android:id="@+id/description_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_weight="1"
-                android:text="Description (if any):"
-                app:layout_constraintEnd_toStartOf="@+id/description_edit"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
-
-            <EditText
-                android:id="@+id/description_edit"
-                android:layout_width="wrap_content"
-                android:layout_height="96dp"
-                android:ems="10"
-                android:maxLength="@integer/request_description_max_length"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
-
-            <TextView
-                android:id="@+id/time_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Date/Time:"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/description_edit" />
-
-            <EditText
-                android:id="@+id/date_edit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/request_date_hint"
-                android:inputType="date"
-                android:textAlignment="center"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/time_title"
-                app:layout_constraintTop_toBottomOf="@+id/description_edit" />
-
-            <EditText
-                android:id="@+id/time_edit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/request_time_hint"
-                android:inputType="time"
-                android:textAlignment="center"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/time_title"
-                app:layout_constraintTop_toBottomOf="@+id/date_edit" />
+                app:layout_constraintTop_toBottomOf="@+id/picture_container" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

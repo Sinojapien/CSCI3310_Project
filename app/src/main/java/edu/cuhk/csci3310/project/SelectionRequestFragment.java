@@ -28,17 +28,20 @@ public class SelectionRequestFragment extends Fragment {
     public SelectionListAdapter mAdapter;
 
     private static final String ARG_PARAM_LIST = "param1";
+    private static final String ARG_PARAM_TITLE = "param2";
 
     private ArrayList<String> mParamList;
+    private String mTitle;
 
     public SelectionRequestFragment() {
         // Required empty public constructor
     }
 
-    public static SelectionRequestFragment newInstance(ArrayList<String> param1) {
+    public static SelectionRequestFragment newInstance(ArrayList<String> param1, String param2) {
         SelectionRequestFragment fragment = new SelectionRequestFragment();
         Bundle args = new Bundle();
         args.putStringArrayList(ARG_PARAM_LIST, param1);
+        args.putString(ARG_PARAM_TITLE, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -48,6 +51,7 @@ public class SelectionRequestFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParamList = getArguments().getStringArrayList(ARG_PARAM_LIST);
+            mTitle = getArguments().getString(ARG_PARAM_TITLE);
         }
     }
 
@@ -84,7 +88,7 @@ public class SelectionRequestFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                builder.setTitle("Choose Tutoring Type:");
+                builder.setTitle(mTitle);
                 builder.setIcon(R.drawable.common_google_signin_btn_icon_light);
                 builder.setMultiChoiceItems(mParamList.toArray(new String[0]), checkedIndex, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override

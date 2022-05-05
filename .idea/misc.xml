@@ -12,8 +12,11 @@
         <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/activity_user_account.xml" value="0.152" />
         <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/fragment_maps.xml" value="0.1" />
         <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/fragment_request_date.xml" value="0.2" />
+        <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/fragment_request_date_duration.xml" value="0.264" />
         <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/fragment_request_description.xml" value="0.2" />
+        <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/fragment_request_image.xml" value="0.4" />
         <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/fragment_request_location.xml" value="0.4" />
+        <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/fragment_request_picture.xml" value="0.536" />
         <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/fragment_request_selection.xml" value="0.264" />
         <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/fragment_request_time.xml" value="0.16799999999999998" />
         <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/fragment_request_time_duration.xml" value="0.176" />

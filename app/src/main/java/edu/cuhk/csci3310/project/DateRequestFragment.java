@@ -49,14 +49,13 @@ public class DateRequestFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view;
         if (mParamDuration){
-            // Wait to implement
-            view = inflater.inflate(R.layout.fragment_request_date, container, false);
-            mDateTitle = view.findViewById(R.id.time_title);
-            mDateEdit = view.findViewById(R.id.date_edit);
-            mEndDateEdit = mDateEdit;
+            view = inflater.inflate(R.layout.fragment_request_date_duration, container, false);
+            mDateTitle = view.findViewById(R.id.date_title);
+            mDateEdit = view.findViewById(R.id.start_date_edit);
+            mEndDateEdit = view.findViewById(R.id.end_date_edit);
         }else{
             view = inflater.inflate(R.layout.fragment_request_date, container, false);
-            mDateTitle = view.findViewById(R.id.time_title);
+            mDateTitle = view.findViewById(R.id.date_title);
             mDateEdit = view.findViewById(R.id.date_edit);
         }
 
