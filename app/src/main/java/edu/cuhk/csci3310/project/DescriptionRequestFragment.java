@@ -21,22 +21,19 @@ public class DescriptionRequestFragment extends Fragment {
     public TextView mWordCountText;
     public TextView mDescriptionEdit;
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM_TITLE = "param1";
 
-    private String mParam1;
-    private String mParam2;
+    private String mParamTitle;
 
     public DescriptionRequestFragment() {
         // Required empty public constructor
     }
 
-    public static DescriptionRequestFragment newInstance() {
+    public static DescriptionRequestFragment newInstance(String param1) {
         DescriptionRequestFragment fragment = new DescriptionRequestFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM_TITLE, param1);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -44,8 +41,7 @@ public class DescriptionRequestFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mParamTitle = getArguments().getString(ARG_PARAM_TITLE);
         }
     }
 
@@ -62,6 +58,8 @@ public class DescriptionRequestFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mTitleText.setText(mParamTitle);
 
         int descriptionMaxLength = getResources().getInteger(R.integer.request_description_max_length);
         mWordCountText.setText(getString(R.string.request_description_wordcount, 0, descriptionMaxLength));

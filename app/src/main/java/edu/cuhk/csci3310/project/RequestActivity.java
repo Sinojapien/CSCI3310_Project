@@ -56,9 +56,10 @@ public class RequestActivity extends AppCompatActivity {
         ScrollView as root (not all)
         extend EnlargeImageFragment to recycler
         Web location
-        switch date & time real time
+        switch date & time (duration) real time
         map save location
         proper time and date limit
+        title in time & date
         http://www.res.cuhk.edu.hk/en-gb/general-information/program-codes
     */
 
@@ -399,6 +400,7 @@ public class RequestActivity extends AppCompatActivity {
     }
 
     protected void setDropDownList(Spinner spinner, String[] itemArray){
+        // https://material.io/components/menus/android#using-menus
         // https://stackoverflow.com/questions/13377361/how-to-create-a-drop-down-list
         // https://stackoverflow.com/questions/36857555/how-to-customize-checkboxes-in-multi-select-spinner-in-android
         ArrayAdapter<String> adapter = new ArrayAdapter<>(spinner.getContext(), android.R.layout.simple_spinner_dropdown_item, itemArray);

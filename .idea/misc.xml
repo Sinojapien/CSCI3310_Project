@@ -5,6 +5,10 @@
       <map>
         <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/drawable/request_selected.xml" value="0.2" />
         <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/activity_main.xml" value="0.10552536231884058" />
+        <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/activity_request_borrowing.xml" value="0.4" />
+        <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/activity_request_dining.xml" value="0.4" />
+        <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/activity_request_gathering.xml" value="0.264" />
+        <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/activity_request_main.xml" value="0.17864583333333334" />
         <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/activity_request_map.xml" value="0.2" />
         <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/activity_request_moving.xml" value="0.264" />
         <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/activity_request_tutoring.xml" value="0.264" />
@@ -13,7 +17,7 @@
         <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/fragment_maps.xml" value="0.1" />
         <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/fragment_request_date.xml" value="0.2" />
         <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/fragment_request_date_duration.xml" value="0.264" />
-        <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/fragment_request_description.xml" value="0.2" />
+        <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/fragment_request_description.xml" value="0.4" />
         <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/fragment_request_image.xml" value="0.4" />
         <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/fragment_request_location.xml" value="0.4" />
         <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/fragment_request_picture.xml" value="0.536" />

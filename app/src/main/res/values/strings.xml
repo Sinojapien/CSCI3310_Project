@@ -30,6 +30,18 @@
         <item>Course Project</item>
         <item>Final Year Project</item>
     </string-array>
+    <string-array name="request_gathering_type">
+        <item>Lecture</item>
+        <item>Study</item>
+        <item>Party</item>
+        <item>Other</item>
+    </string-array>
+    <string-array name="request_borrowing_type">
+        <item>Disposable</item>
+        <item>Accessory</item>
+        <item>Stationery</item>
+        <item>Other</item>
+    </string-array>
     <string-array name="request_major">
         <item>Arts</item>
         <item>Business</item>
@@ -47,6 +59,8 @@
     <string name="key_map_icon">MAP_MARKER_ICON</string>
 
     <string name="key_request_type">REQUEST_TYPE</string>
+
+    <string name="key_request_activity_type">REQUEST_ACTIVITY_TYPE</string>
 
     <string name="key_request_location">REQUEST_LOCATION</string>
     <string name="key_request_location_string">REQUEST_LOCATION_STRING</string>

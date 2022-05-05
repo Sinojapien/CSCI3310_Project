@@ -35,6 +35,8 @@ public class MovingRequestActivity extends RequestActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_moving);
 
+        setTitle("Moving Request");
+
         // Restore preferences
 //        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
 //        currentRating = mPreferences.getInt(getKey(RATING_KEY), defaultRating);
@@ -62,7 +64,7 @@ public class MovingRequestActivity extends RequestActivity {
         timeFragment = TimeRequestFragment.newInstance(false);
         fragmentTransaction.replace(R.id.time_container, timeFragment);
 
-        descriptionFragment = DescriptionRequestFragment.newInstance();
+        descriptionFragment = DescriptionRequestFragment.newInstance("Description (if any):");
         fragmentTransaction.replace(R.id.description_container, descriptionFragment);
 
         pictureFragment = PictureRequestFragment.newInstance(findViewById(R.id.expanded_image));
@@ -81,7 +83,9 @@ public class MovingRequestActivity extends RequestActivity {
                 Intent replyIntent = new Intent();
                 replyIntent.putExtra(getString(R.string.key_request_type), getResources().getInteger(R.integer.request_type_moving));
                 replyIntent.putExtra(getString(R.string.key_request_start_location), startLocationFragment.getInformationLocation());
-                replyIntent.putExtra(getString(R.string.key_request_destination), startLocationFragment.getInformationLocation());
+                //replyIntent.putExtra(getString(R.string.key_request_location_string), startLocationFragment.getInformationString());
+                replyIntent.putExtra(getString(R.string.key_request_destination), endLocationFragment.getInformationLocation());
+                //replyIntent.putExtra(getString(R.string.key_request_location_string), endLocationFragment.getInformationString());
                 replyIntent.putExtra(getString(R.string.key_request_date), dateFragment.getInformationDate());
                 replyIntent.putExtra(getString(R.string.key_request_time), timeFragment.getInformationTime());
                 replyIntent.putExtra(getString(R.string.key_request_description), descriptionFragment.getInformationString());
@@ -102,6 +106,7 @@ public class MovingRequestActivity extends RequestActivity {
         isAllFilled &= endLocationFragment.isFilled();
         isAllFilled &= dateFragment.isFilled();
         isAllFilled &= timeFragment.isFilled();
+        isAllFilled &= descriptionFragment.isFilled();
 
         return isAllFilled;
     }
