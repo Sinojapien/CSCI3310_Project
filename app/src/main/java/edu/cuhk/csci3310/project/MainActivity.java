@@ -82,8 +82,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()) {
                         hideProgressBar();
-                        Intent userAccountActivity = new Intent(MainActivity.this, UserAccountActivity.class);
-                        startActivity(userAccountActivity);
+                        Intent CentralHubActivity = new Intent(MainActivity.this, CentralHubActivity.class);
+                        startActivity(CentralHubActivity);
                     } else {
                         hideProgressBar();
                         Toast.makeText(MainActivity.this, "Error occured: " + task.getException(), Toast.LENGTH_SHORT).show();
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void handleSignUpClick() {
-        Intent signupActivity = new Intent(MainActivity.this, SignupActivity.class);
-        startActivity(signupActivity);
+        Intent SignupActivity = new Intent(MainActivity.this, SignupActivity.class);
+        startActivity(SignupActivity);
     }
 }
