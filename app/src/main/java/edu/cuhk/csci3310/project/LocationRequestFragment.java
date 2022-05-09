@@ -96,8 +96,8 @@ public class LocationRequestFragment extends Fragment {
         mMapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent intent = new Intent(view.getContext(), RequestMapActivity.class);
+                intent.putExtra(getString(R.string.key_map_location), mLocation);
                 intent.putExtra(getString(R.string.key_map_title), mParamTitle);
                 intent.putExtra(getString(R.string.key_map_boundary), mParamBoundary);
                 intent.putExtra(getString(R.string.key_map_icon), BitmapDescriptorFactory.HUE_RED);

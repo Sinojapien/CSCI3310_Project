@@ -1,12 +1,10 @@
 package edu.cuhk.csci3310.project;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,13 +13,11 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 public class SelectionListAdapter extends RecyclerView.Adapter<SelectionListAdapter.SelectionViewHolder> {
 
-    private int layoutResId;
-    public ArrayList<String> mSelectionList;
+    //private int layoutResId;
+    //public ArrayList<String> mSelectionList;
     private ArrayList<String> mItemList;
     private LayoutInflater mInflater;
 
@@ -34,17 +30,26 @@ public class SelectionListAdapter extends RecyclerView.Adapter<SelectionListAdap
             super(itemView);
             mTextView = (TextView) itemView;
             mAdapter = adapter;
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    removeItem(getAdapterPosition());
+                    return false;
+                }
+            });
+
         }
     }
 
-    public SelectionListAdapter(Context context, ArrayList<String> list, int rid) {
+    public SelectionListAdapter(Context context, int rid) {
         mInflater = LayoutInflater.from(context);
-        this.mSelectionList = list;
+        //this.mSelectionList = list;
         this.mItemList = new ArrayList<>();
-        layoutResId = rid;
+        //layoutResId = rid;
     }
 
-    public TextView createItemView(Context context){
+    protected TextView createItemView(Context context){
         TextView itemView = new TextView(context);
 
         itemView.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.rounded_rectangle, null));
@@ -61,6 +66,11 @@ public class SelectionListAdapter extends RecyclerView.Adapter<SelectionListAdap
         return itemView;
     }
 
+    public void addItem(String item){
+        this.mItemList.add(item);
+        this.notifyItemInserted(this.mItemList.size());
+    }
+
     public void addItem(String item, int position){
         this.mItemList.add(position, item);
         this.notifyItemInserted(position);
@@ -74,6 +84,21 @@ public class SelectionListAdapter extends RecyclerView.Adapter<SelectionListAdap
         this.notifyItemRangeChanged(this.getItemCount(), items.size());
     }
 
+    public void removeItem(int index){
+        this.mItemList.remove(index);
+        this.notifyItemRemoved(index);
+    }
+
+    public void removeItem(String item){
+        int index = this.mItemList.indexOf(item);
+        this.mItemList.remove(item);
+        this.notifyItemRemoved(index);
+    }
+
+    public boolean hasItem(String item){
+        return this.mItemList.contains(item);
+    }
+
     public void clearItem(){
         // https://stackoverflow.com/questions/29978695/remove-all-items-from-recyclerview
         int size = this.mItemList.size();
@@ -81,6 +106,10 @@ public class SelectionListAdapter extends RecyclerView.Adapter<SelectionListAdap
 
         this.mItemList.clear();
         this.notifyItemRangeRemoved(0, size); // this.notifyDataSetChanged();
+    }
+
+    public ArrayList<String> getItemList(){
+        return new ArrayList<String>(mItemList);
     }
 
     @NonNull
@@ -93,19 +122,14 @@ public class SelectionListAdapter extends RecyclerView.Adapter<SelectionListAdap
 
     @Override
     public void onBindViewHolder(@NonNull SelectionListAdapter.SelectionViewHolder holder, int position) {
-         String mItemString = mItemList.get(position);
-        // Uri uri = Uri.parse(mImagePath);
-        // holder.imageItemView.setImageURI(uri);
-         holder.mTextView.setText(mItemString);
+        String mItemString = mItemList.get(position);
+        holder.mTextView.setTag(position);
+        holder.mTextView.setText(mItemString);
     }
 
     @Override
     public int getItemCount() {
         return mItemList.size();
-    }
-
-    public ArrayList<String> getItemList(){
-        return (ArrayList<String>) mItemList.clone();
     }
 
 }

@@ -47,19 +47,15 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class RequestActivity extends AppCompatActivity {
 
     /* todo:
         map of all restaurants
-        ScrollView as root (not all)
         extend EnlargeImageFragment to recycler
         Web location
-        switch date & time (duration) real time
-        map save location
-        proper time and date limit
-        title in time & date
         http://www.res.cuhk.edu.hk/en-gb/general-information/program-codes
     */
 
@@ -122,6 +118,12 @@ public class RequestActivity extends AppCompatActivity {
         LatLng boundaryNE = new LatLng(center.latitude - offset,	center.longitude - offset);
         LatLng boundarySW = new LatLng(center.latitude + offset,	center.longitude + offset);
         return new LatLngBounds(boundaryNE, boundarySW);
+    }
+
+    public static long getTimeInMillis(int year, int month, int day){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day);
+        return calendar.getTimeInMillis();
     }
 
     protected void readCSV(int rawResourceID){
@@ -311,7 +313,7 @@ public class RequestActivity extends AppCompatActivity {
 
         //SelectionListAdapter adapter = (SelectionListAdapter) recyclerView.getAdapter();
         //assert adapter != null;
-        SelectionListAdapter adapter = new SelectionListAdapter(view.getContext(), items, 0);
+        SelectionListAdapter adapter = new SelectionListAdapter(view.getContext(), 0);
         recyclerView.setAdapter(adapter);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(view.getContext(), 3);

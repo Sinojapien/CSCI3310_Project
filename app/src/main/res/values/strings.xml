@@ -13,6 +13,8 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="clear">Clear All</string>
+    <string name="add">Add</string>
+    <string name="remove">Remove</string>
 
     <string name="request_post">Post Request</string>
 
@@ -53,15 +55,18 @@
         <item>Social Science</item>
     </string-array>
 
+    <!-- Map Activity -->
     <string name="key_map_location">MAP_LOCATION</string>
     <string name="key_map_boundary">MAP_BOUNDARY</string>
     <string name="key_map_title">MAP_MARKER_TITLE</string>
     <string name="key_map_icon">MAP_MARKER_ICON</string>
 
+    <!-- Request Activity -->
     <string name="key_request_type">REQUEST_TYPE</string>
 
     <string name="key_request_activity_type">REQUEST_ACTIVITY_TYPE</string>
 
+    <!-- Location -->
     <string name="key_request_location">REQUEST_LOCATION</string>
     <string name="key_request_location_string">REQUEST_LOCATION_STRING</string>
     <string name="key_request_start_location">REQUEST_START_LOCATION</string>
@@ -70,6 +75,7 @@
     <string name="key_request_description">REQUEST_DESCRIPTION</string>
     <string name="key_request_picture">REQUEST_PICTURE</string>
 
+    <!-- Date / Time -->
     <string name="key_request_datetime">REQUEST_DATETIME</string>
     <string name="key_request_date">REQUEST_DATE</string>
     <string name="key_request_date_start">REQUEST_DATE_START</string>
@@ -78,6 +84,7 @@
     <string name="key_request_time_start">REQUEST_TIME_START</string>
     <string name="key_request_time_end">REQUEST_TIME_END</string>
 
+    <!-- Selection / Spinner -->
     <string name="key_request_selection">REQUEST_SELECTION</string>
     <string name="key_request_course_code">REQUEST_COURSE_CODE</string>
     <string name="key_request_participant">REQUEST_PARTICIPANT</string>

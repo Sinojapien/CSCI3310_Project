@@ -44,14 +44,15 @@ public class TutoringRequestActivity extends RequestActivity {
         descriptionFragment = DescriptionRequestFragment.newInstance("Description (if any):");
         fragmentTransaction.replace(R.id.description_container, descriptionFragment);
 
-        dateFragment = DateRequestFragment.newInstance(true);
+        dateFragment = DateRequestFragment.newInstance(null, true);
         fragmentTransaction.replace(R.id.date_container, dateFragment);
 
-        timeFragment = TimeRequestFragment.newInstance(true);
+        // Not necessary???
+        timeFragment = TimeRequestFragment.newInstance(null, true);
         fragmentTransaction.replace(R.id.time_container, timeFragment);
 
         ArrayList<String> itemList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.request_tutoring_type)));
-        selectionFragment = SelectionRequestFragment.newInstance(itemList, "Choose Tutoring Type:");
+        selectionFragment = SelectionRequestFragment.newInstance(null, "Choose Tutoring Type:", itemList);
         fragmentTransaction.replace(R.id.selection_container, selectionFragment);
 
         pictureFragment = PictureRequestFragment.newInstance(findViewById(R.id.expanded_image));

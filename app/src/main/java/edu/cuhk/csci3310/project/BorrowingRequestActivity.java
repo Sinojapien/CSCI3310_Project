@@ -14,12 +14,12 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class BorrowingRequestActivity extends RequestActivity {
 
-    TextView borrowEdit;
+    //TextView borrowEdit;
+    SelectionRequestFragment selectionFragment;
     LocationRequestFragment locationFragment;
     DescriptionRequestFragment descriptionFragment;
     DateRequestFragment dateFragment;
     TimeRequestFragment timeFragment;
-    SelectionRequestFragment selectionFragment;
     Spinner borrowTypeSpinner;
 
     @Override
@@ -29,24 +29,28 @@ public class BorrowingRequestActivity extends RequestActivity {
 
         setTitle("Borrowing Request");
 
-        borrowEdit = findViewById(R.id.item_edit);
+        //borrowEdit = findViewById(R.id.item_edit);
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
         // Item Type and Purpose
         borrowTypeSpinner = findViewById(R.id.type_spinner);
         setDropDownList(borrowTypeSpinner, getResources().getStringArray(R.array.request_borrowing_type));
+
+        selectionFragment = SelectionRequestFragment.newInstance(null, "Enter item names:", null);
+        fragmentTransaction.replace(R.id.selection_container, selectionFragment);
+
         descriptionFragment = DescriptionRequestFragment.newInstance("Purpose:");
         fragmentTransaction.replace(R.id.description_container, descriptionFragment);
 
         // Borrow Duration
-        dateFragment = DateRequestFragment.newInstance(true);
+        dateFragment = DateRequestFragment.newInstance("Borrow Duration:", true);
         fragmentTransaction.replace(R.id.date_container, dateFragment);
 
         // Meetup Time and Location
         locationFragment = LocationRequestFragment.newInstance("Meetup Location:", getMapBoundary(new LatLng(22.418014,	114.207259), 0.075));
         fragmentTransaction.replace(R.id.location_container, locationFragment);
-        timeFragment = TimeRequestFragment.newInstance(false);
+        timeFragment = TimeRequestFragment.newInstance("Meetup Time:", false);
         fragmentTransaction.replace(R.id.time_container, timeFragment);
 
         fragmentTransaction.commit();
@@ -62,8 +66,9 @@ public class BorrowingRequestActivity extends RequestActivity {
                 Intent replyIntent = new Intent();
                 replyIntent.putExtra(getString(R.string.key_request_type), getResources().getInteger(R.integer.request_type_borrowing));
 
-                // replyIntent.putExtra(getString(R.string.key_request_activity_type), (String) borrowTypeSpinner.getSelectedItem());
-                replyIntent.putExtra(getString(R.string.key_request_activity_type), borrowEdit.getText().toString());
+                //replyIntent.putExtra(getString(R.string.key_request_activity_type), (String) borrowTypeSpinner.getSelectedItem());
+                //replyIntent.putExtra(getString(R.string.key_request_activity_type), borrowEdit.getText().toString());
+                replyIntent.putExtra(getString(R.string.key_request_selection), selectionFragment.getInformationStringList());
                 replyIntent.putExtra(getString(R.string.key_request_description), descriptionFragment.getInformationString());
 
                 replyIntent.putExtra(getString(R.string.key_request_location), locationFragment.getInformationLocation());
@@ -84,7 +89,8 @@ public class BorrowingRequestActivity extends RequestActivity {
     protected boolean isAllInformationFilled(){
         boolean isAllFilled = true;
 
-        isAllFilled &= borrowEdit.getText().toString().length() > 0;
+        //isAllFilled &= borrowEdit.getText().toString().length() > 0;
+        isAllFilled &= selectionFragment.isFilled();
         isAllFilled &= locationFragment.isFilled();
         isAllFilled &= descriptionFragment.isFilled();
         isAllFilled &= dateFragment.isFilled();

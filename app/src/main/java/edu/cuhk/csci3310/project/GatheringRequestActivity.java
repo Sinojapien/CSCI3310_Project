@@ -35,10 +35,10 @@ public class GatheringRequestActivity extends RequestActivity {
         descriptionFragment = DescriptionRequestFragment.newInstance("Description (if any):");
         fragmentTransaction.replace(R.id.description_container, descriptionFragment);
 
-        dateFragment = DateRequestFragment.newInstance(false);
+        dateFragment = DateRequestFragment.newInstance(null, false);
         fragmentTransaction.replace(R.id.date_container, dateFragment);
 
-        timeFragment = TimeRequestFragment.newInstance(true);
+        timeFragment = TimeRequestFragment.newInstance(null, true);
         fragmentTransaction.replace(R.id.time_container, timeFragment);
 
         fragmentTransaction.commit();

@@ -23,7 +23,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class RequestMapActivity extends AppCompatActivity {
 
     private float defaultIconColour;
-    // private LatLng defaultLocation;
+    private LatLng defaultLocation;
     private String defaultTitle;
     private LatLngBounds defaultMapBoundary;
 
@@ -54,7 +54,13 @@ public class RequestMapActivity extends AppCompatActivity {
             // https://developers.google.com/maps/documentation/android-sdk/views#restricting_the_users_panning_to_a_given_area
             // https://developers.google.com/maps/documentation/android-sdk/views#restrict-panning
             mMap.setLatLngBoundsForCameraTarget(defaultMapBoundary);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultMapBoundary.getCenter(), defaultZoom));
+
+            if (defaultLocation != null){
+                focusOnMarker(addMarker(defaultLocation));
+                selectedLocation = defaultLocation;
+            }else{
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultMapBoundary.getCenter(), defaultZoom));
+            }
 
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
@@ -81,7 +87,7 @@ public class RequestMapActivity extends AppCompatActivity {
         setContentView(R.layout.activity_request_map);
 
         Bundle intentData = getIntent().getExtras();
-        // defaultLocation = (LatLng) intentData.get(getString(R.string.key_map_location));
+        defaultLocation = (LatLng) intentData.get(getString(R.string.key_map_location));
         defaultMapBoundary = (LatLngBounds) intentData.get(getString(R.string.key_map_boundary));
         defaultIconColour = (float) intentData.get(getString(R.string.key_map_icon));
         defaultTitle = (String) intentData.get(getString(R.string.key_map_title));
@@ -94,7 +100,7 @@ public class RequestMapActivity extends AppCompatActivity {
         findViewById(R.id.confirm_fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (selectedLocation == null){
+                if (!isFilled()){
                     Toast.makeText(view.getContext(), "Please select " + defaultTitle + ".", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -126,10 +132,10 @@ public class RequestMapActivity extends AppCompatActivity {
 
     private void focusOnMarker(Marker marker) {
         if (marker == null){
-//            mMap.moveCamera(CameraUpdateFactory.newLatLng(centerPosition));
-//            mMap.animateCamera(CameraUpdateFactory.zoomTo(defaultZoom));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(defaultMapBoundary.getCenter()));
             mMap.moveCamera(CameraUpdateFactory.zoomTo(defaultZoom));
-            // mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(centerPosition, campusModeZoom));
+            //mMap.animateCamera(CameraUpdateFactory.zoomTo(defaultZoom));
+            //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(centerPosition, campusModeZoom));
         }else {
 //            marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
             marker.showInfoWindow();
@@ -140,6 +146,10 @@ public class RequestMapActivity extends AppCompatActivity {
             // mMap.animateCamera(CameraUpdateFactory.zoomTo(buildingZoomModeZoom));
             // mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), buildingZoomModeZoom));
         }
+    }
+
+    private boolean isFilled(){
+        return selectedLocation != null;
     }
 
 }

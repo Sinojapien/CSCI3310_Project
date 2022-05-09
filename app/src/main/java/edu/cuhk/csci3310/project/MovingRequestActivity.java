@@ -58,10 +58,10 @@ public class MovingRequestActivity extends RequestActivity {
         endLocationFragment = LocationRequestFragment.newInstance("End Location", getMapBoundary(new LatLng(22.418014,	114.207259), 0.075));
         fragmentTransaction.replace(R.id.end_location_container, endLocationFragment);
 
-        dateFragment = DateRequestFragment.newInstance(false);
+        dateFragment = DateRequestFragment.newInstance(null, false);
         fragmentTransaction.replace(R.id.date_container, dateFragment);
 
-        timeFragment = TimeRequestFragment.newInstance(false);
+        timeFragment = TimeRequestFragment.newInstance(null, false);
         fragmentTransaction.replace(R.id.time_container, timeFragment);
 
         descriptionFragment = DescriptionRequestFragment.newInstance("Description (if any):");
