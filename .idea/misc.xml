@@ -32,9 +32,13 @@
         <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/request_test.xml" value="0.2" />
         <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/request_time.xml" value="0.536" />
         <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/request_time_duration.xml" value="0.264" />
+        <entry key="app/src/main/res/layout/activity_central_hub.xml" value="0.1693840579710145" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_request_borrowing.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_signup.xml" value="0.14361702127659576" />
         <entry key="app/src/main/res/layout/activity_user_account.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_request_location.xml" value="0.1693840579710145" />
+        <entry key="app/src/main/res/layout/fragment_request_selection.xml" value="0.25" />
       </map>
     </option>
   </component>

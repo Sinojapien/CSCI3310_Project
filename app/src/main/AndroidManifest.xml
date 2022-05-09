@@ -10,7 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Project">
         <activity
-            android:name=".MainRequestActivity"
+            android:name=".CentralHubActivity"
+            android:exported="false" />
+        <activity
+            android:name=".createRequest.MainRequestActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,27 +22,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".BorrowingRequestActivity"
+            android:name=".createRequest.BorrowingRequestActivity"
             android:exported="false" />
         <activity
-            android:name=".GatheringRequestActivity"
+            android:name=".createRequest.GatheringRequestActivity"
             android:exported="false" />
         <activity
-            android:name=".DiningRequestActivity"
+            android:name=".createRequest.DiningRequestActivity"
             android:exported="false" />
         <activity
-            android:name=".TutoringRequestActivity"
-            android:exported="false"></activity>
+            android:name=".createRequest.TutoringRequestActivity"
+            android:exported="false" />
         <activity
-            android:name=".UserAccountActivity"
+            android:name=".account.UserAccountActivity"
             android:exported="false"
             android:theme="@style/AppThemeNoActionBar" />
         <activity
-            android:name=".SignupActivity"
+            android:name=".account.SignupActivity"
             android:exported="false"
             android:theme="@style/AppThemeNoActionBar" />
         <activity
-            android:name=".RequestMapActivity"
+            android:name=".createRequest.RequestMapActivity"
             android:exported="false" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -54,9 +57,8 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MovingRequestActivity"
-            android:exported="false">
-        </activity>
+            android:name=".createRequest.MovingRequestActivity"
+            android:exported="false"></activity>
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -1,4 +1,4 @@
-package edu.cuhk.csci3310.project;
+package edu.cuhk.csci3310.project.createRequest;
 
 // Name: Yeung Chi Ho, SID: 1155126460
 
@@ -48,6 +48,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+
+import edu.cuhk.csci3310.project.R;
+import edu.cuhk.csci3310.project.SelectionListAdapter;
 
 public class RequestActivity extends AppCompatActivity {
 
