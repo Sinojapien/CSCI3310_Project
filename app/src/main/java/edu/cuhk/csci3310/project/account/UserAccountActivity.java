@@ -1,4 +1,4 @@
-package edu.cuhk.csci3310.project;
+package edu.cuhk.csci3310.project.account;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import edu.cuhk.csci3310.project.R;
 
 public class UserAccountActivity extends AppCompatActivity implements View.OnClickListener {
 

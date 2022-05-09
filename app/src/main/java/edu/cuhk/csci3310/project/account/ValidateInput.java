@@ -1,4 +1,4 @@
-package edu.cuhk.csci3310.project;
+package edu.cuhk.csci3310.project.account;
 
 import android.content.Context;
 import android.util.Patterns;

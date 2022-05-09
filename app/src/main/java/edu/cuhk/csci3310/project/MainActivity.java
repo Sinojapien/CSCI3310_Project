@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +16,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+
+import edu.cuhk.csci3310.project.account.SignupActivity;
+import edu.cuhk.csci3310.project.account.UserAccountActivity;
+import edu.cuhk.csci3310.project.account.ValidateInput;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -79,8 +82,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()) {
                         hideProgressBar();
-                        Intent userAccountActivity = new Intent(MainActivity.this, UserAccountActivity.class);
-                        startActivity(userAccountActivity);
+                        Intent CentralHubActivity = new Intent(MainActivity.this, CentralHubActivity.class);
+                        startActivity(CentralHubActivity);
                     } else {
                         hideProgressBar();
                         Toast.makeText(MainActivity.this, "Error occured: " + task.getException(), Toast.LENGTH_SHORT).show();
@@ -99,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void handleSignUpClick() {
-        Intent signupActivity = new Intent(MainActivity.this, SignupActivity.class);
-        startActivity(signupActivity);
+        Intent SignupActivity = new Intent(MainActivity.this, SignupActivity.class);
+        startActivity(SignupActivity);
     }
 }

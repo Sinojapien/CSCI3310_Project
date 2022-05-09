@@ -1,4 +1,4 @@
-package edu.cuhk.csci3310.project;
+package edu.cuhk.csci3310.project.account;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +16,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import edu.cuhk.csci3310.project.MainActivity;
+import edu.cuhk.csci3310.project.R;
 
 public class SignupActivity extends AppCompatActivity {
 
