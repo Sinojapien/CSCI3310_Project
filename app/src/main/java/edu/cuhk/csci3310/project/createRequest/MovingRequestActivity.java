@@ -1,25 +1,18 @@
-package edu.cuhk.csci3310.project;
+package edu.cuhk.csci3310.project.createRequest;
 
 // Name: Yeung Chi Ho, SID: 1155126460
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+
+import edu.cuhk.csci3310.project.R;
 
 public class MovingRequestActivity extends RequestActivity {
 

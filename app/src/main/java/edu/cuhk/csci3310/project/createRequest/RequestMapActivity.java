@@ -1,4 +1,4 @@
-package edu.cuhk.csci3310.project;
+package edu.cuhk.csci3310.project.createRequest;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +19,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import edu.cuhk.csci3310.project.R;
 
 public class RequestMapActivity extends AppCompatActivity {
 

@@ -1,10 +1,12 @@
-package edu.cuhk.csci3310.project;
+package edu.cuhk.csci3310.project.createRequest;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import edu.cuhk.csci3310.project.R;
 
 public class MainRequestActivity extends AppCompatActivity {
 

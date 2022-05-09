@@ -1,4 +1,4 @@
-package edu.cuhk.csci3310.project;
+package edu.cuhk.csci3310.project.createRequest;
 
 import androidx.fragment.app.FragmentTransaction;
 
@@ -11,6 +11,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+
+import edu.cuhk.csci3310.project.R;
+import edu.cuhk.csci3310.project.SelectionRequestFragment;
 
 public class BorrowingRequestActivity extends RequestActivity {
 

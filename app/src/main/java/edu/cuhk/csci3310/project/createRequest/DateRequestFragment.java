@@ -1,4 +1,4 @@
-package edu.cuhk.csci3310.project;
+package edu.cuhk.csci3310.project.createRequest;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
@@ -25,6 +25,8 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 
 import java.util.Calendar;
 import java.util.Date;
+
+import edu.cuhk.csci3310.project.R;
 
 public class DateRequestFragment extends Fragment {
 

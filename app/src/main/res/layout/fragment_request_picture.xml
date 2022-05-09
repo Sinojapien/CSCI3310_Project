@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="128dp"
-    tools:context=".PictureRequestFragment">
+    tools:context=".createRequest.PictureRequestFragment">
 
     <ImageView
         android:id="@+id/picture_recycler"

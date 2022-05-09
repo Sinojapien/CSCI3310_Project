@@ -1,9 +1,7 @@
-package edu.cuhk.csci3310.project;
+package edu.cuhk.csci3310.project.createRequest;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,6 +15,9 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import edu.cuhk.csci3310.project.R;
+import edu.cuhk.csci3310.project.SelectionRequestFragment;
 
 public class TutoringRequestActivity extends RequestActivity {
 
