@@ -39,7 +39,7 @@ public class TutoringRequestActivity extends RequestActivity {
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
-        locationFragment = LocationRequestFragment.newInstance("Start Location", getMapBoundary(new LatLng(22.418014,	114.207259), 0.075));
+        locationFragment = LocationRequestFragment.newInstance("Location", getMapBoundary(new LatLng(22.418014,	114.207259), 0.075));
         fragmentTransaction.replace(R.id.location_container, locationFragment);
 
         descriptionFragment = DescriptionRequestFragment.newInstance("Description (if any):");
@@ -89,7 +89,7 @@ public class TutoringRequestActivity extends RequestActivity {
                 replyIntent.putExtra(getString(R.string.key_request_picture), pictureFragment.getInformationBitmap());
 
                 replyIntent.putExtra(getString(R.string.key_request_course_code), courseCodeEdit.getText().toString());
-                replyIntent.putExtra(getString(R.string.key_request_participant), (int) participantSpinner.getSelectedItem());
+                replyIntent.putExtra(getString(R.string.key_request_participant), Integer.valueOf((String)participantSpinner.getSelectedItem()));
 
                 setResult(Activity.RESULT_OK, replyIntent);
                 finish();

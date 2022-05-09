@@ -30,11 +30,6 @@ public class MovingRequestActivity extends RequestActivity {
 
         setTitle("Moving Request");
 
-        // Restore preferences
-//        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
-//        currentRating = mPreferences.getInt(getKey(RATING_KEY), defaultRating);
-//        nameEditText.setText(mPreferences.getString(getKey(NAME_KEY), name));
-
 //        restaurantTextView.setOnClickListener(new View.OnClickListener(){
 //            public void onClick(View v) {
 //                String url = OPENRICE_URL + restaurantTextView.getText().toString();
@@ -85,7 +80,6 @@ public class MovingRequestActivity extends RequestActivity {
                 replyIntent.putExtra(getString(R.string.key_request_picture), pictureFragment.getInformationBitmap());
                 setResult(Activity.RESULT_OK, replyIntent);
                 finish();
-
             }
         });
 

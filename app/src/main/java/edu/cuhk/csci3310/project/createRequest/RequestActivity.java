@@ -77,12 +77,6 @@ public class RequestActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        savePreference();
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         // do something
@@ -92,6 +86,19 @@ public class RequestActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         savePreference();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        savePreference();
+    }
+
+    protected void loadPreference(){
+        // Restore preferences
+        // mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+        // currentRating = mPreferences.getInt(getKey(RATING_KEY), defaultRating);
+        // nameEditText.setText(mPreferences.getString(getKey(NAME_KEY), name));
     }
 
     protected void savePreference(){
