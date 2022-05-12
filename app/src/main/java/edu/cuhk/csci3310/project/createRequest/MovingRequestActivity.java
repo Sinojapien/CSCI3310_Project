@@ -11,8 +11,17 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.UUID;
 
 import edu.cuhk.csci3310.project.R;
+import edu.cuhk.csci3310.project.database.Database;
+import edu.cuhk.csci3310.project.database.Status;
+import edu.cuhk.csci3310.project.database.TaskType;
+import edu.cuhk.csci3310.project.model.Favor;
+import edu.cuhk.csci3310.project.model.MovingFavor;
 
 public class MovingRequestActivity extends RequestActivity {
 
@@ -22,11 +31,14 @@ public class MovingRequestActivity extends RequestActivity {
     TimeRequestFragment timeFragment;
     DescriptionRequestFragment descriptionFragment;
     PictureRequestFragment pictureFragment;
+    FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_moving);
+
+        firebaseAuth = FirebaseAuth.getInstance();
 
         setTitle("Moving Request");
 
@@ -84,8 +96,19 @@ public class MovingRequestActivity extends RequestActivity {
                 replyIntent.putExtra(getString(R.string.key_request_description), descriptionFragment.getInformationString());
                 replyIntent.putExtra(getString(R.string.key_request_picture), pictureFragment.getInformationBitmap());
                 setResult(Activity.RESULT_OK, replyIntent);
+                MovingFavor favor = new MovingFavor();
+                UUID id = UUID.randomUUID();
+                favor.setId(id.toString());
+                favor.setTaskType(TaskType.MOVING);
+                favor.setEnquirer(firebaseAuth.getCurrentUser().getUid());
+                favor.setStatus(Status.OPEN);
+                favor.setStartLoc(startLocationFragment.getInformationLocation());
+                favor.setEndLoc(endLocationFragment.getInformationLocation());
+                favor.setDate(dateFragment.getInformationDate());
+                favor.setTime(timeFragment.getInformationTime());
+                favor.setPhoto(pictureFragment.getInformationBitmap());
+                Database.createNewFavor(favor);
                 finish();
-
             }
         });
 
