@@ -164,26 +164,6 @@ public class Database {
         saveFavorInDB(data);
     }
 
-    public static MovingFavor getMovingFavorById(String id) {
-        DocumentReference docRef = db.collection("favors").document(id);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
-        return new MovingFavor();
-    }
-
     public static void saveFavorInDB(Map<String, Object> data) throws Exception {
         // Save favor in db
         db.collection("favors")
@@ -201,5 +181,27 @@ public class Database {
                         Log.w(TAG, "Error adding document", e);
                     }
                 });
+    }
+
+    public static Favor generateFavorFromDB(String id, Map<String, Object> data) throws Exception {
+        if(data.get("taskType") != null) {
+            TaskType taskType = TaskType.getTaskTypeFromValue(((Long) data.get("taskType")).intValue());
+            switch(taskType) {
+                case MOVING:
+                    return MovingFavor.createMovingFavorFromDB(id, data);
+                case TUTORING:
+                    return TutoringFavor.createTutoringFavorFromDB(id, data);
+                case DINING:
+                    return DiningFavor.createDiningFavorFromDB(id, data);
+                case GATHERING:
+                    return GatheringFavor.createGatheringFavorFromDB(id, data);
+                case BORROWING:
+                    return BorrowingFavor.createBorrowingFavorFromDB(id, data);
+                default:
+                    return null;
+            }
+        } else {
+            return null;
+        }
     }
 }

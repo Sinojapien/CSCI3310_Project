@@ -12,4 +12,17 @@ public enum Status {
     public int getValue() {
         return value;
     }
+
+    public static Status getStatusFromValue(int status) {
+        switch (status) {
+            case 0:
+                return Status.OPEN;
+            case 1:
+                return Status.ACTIVE;
+            case 2:
+                return Status.COMPLETED;
+            default:
+                return null;
+        }
+    }
 }

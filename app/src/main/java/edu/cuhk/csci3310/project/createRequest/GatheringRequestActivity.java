@@ -17,9 +17,8 @@ import edu.cuhk.csci3310.project.R;
 import edu.cuhk.csci3310.project.database.Database;
 import edu.cuhk.csci3310.project.database.Status;
 import edu.cuhk.csci3310.project.database.TaskType;
-import edu.cuhk.csci3310.project.model.DiningFavor;
 import edu.cuhk.csci3310.project.model.GatheringFavor;
-import edu.cuhk.csci3310.project.myRequests.MyRequestsActivity;
+import edu.cuhk.csci3310.project.myRequests.RequestOverviewActivity;
 
 public class GatheringRequestActivity extends RequestActivity {
 
@@ -108,7 +107,7 @@ public class GatheringRequestActivity extends RequestActivity {
                 }
                 // [Stop: Create Dining Request]
 
-                Intent intent = new Intent(GatheringRequestActivity.this, MyRequestsActivity.class);
+                Intent intent = new Intent(GatheringRequestActivity.this, RequestOverviewActivity.class);
                 startActivity(intent);
             }
         });

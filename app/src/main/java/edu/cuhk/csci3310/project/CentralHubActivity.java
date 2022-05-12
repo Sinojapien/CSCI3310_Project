@@ -4,12 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import edu.cuhk.csci3310.project.account.UserAccountActivity; // for sending intent
 import edu.cuhk.csci3310.project.createRequest.MainRequestActivity;
+import edu.cuhk.csci3310.project.myRequests.RequestOverviewActivity;
 import edu.cuhk.csci3310.project.searchRequest.MainSearchRequestActivity;
 
 /**
@@ -40,6 +40,14 @@ public class CentralHubActivity extends AppCompatActivity{
         searchRequestBtn.setOnClickListener(view -> {
             Intent MainSearchRequestActivity = new Intent(CentralHubActivity.this, MainSearchRequestActivity.class);
             startActivity(MainSearchRequestActivity);
+        });
+        Button requestOverviewBtn = findViewById(R.id.request_overview_btn);
+        requestOverviewBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CentralHubActivity.this, RequestOverviewActivity.class);
+                startActivity(intent);
+            }
         });
         // Log.d("CentralHubActivity", "finish creating CentralHubActivity");
     }
