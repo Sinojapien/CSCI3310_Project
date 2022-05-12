@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -32,6 +33,8 @@ public class MovingRequestActivity extends RequestActivity {
     DescriptionRequestFragment descriptionFragment;
     PictureRequestFragment pictureFragment;
     FirebaseAuth firebaseAuth;
+
+    private static final String TAG = "MovingRequestActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +87,20 @@ public class MovingRequestActivity extends RequestActivity {
                     Toast.makeText(view.getContext(), "Please fill in all required info.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
+                try {
+                    MovingFavor favor = new MovingFavor();
+                    favor.setTaskType(TaskType.MOVING);
+                    favor.setEnquirer(firebaseAuth.getCurrentUser().getUid());
+                    favor.setStatus(Status.OPEN);
+                    favor.setStartLoc(startLocationFragment.getInformationLocation());
+                    favor.setEndLoc(endLocationFragment.getInformationLocation());
+                    favor.setDate(dateFragment.getInformationDate());
+                    favor.setTime(timeFragment.getInformationTime());
+                    favor.setPhoto(pictureFragment.getInformationBitmap());
+                    Database.createNewFavor(favor);
+                } catch (Exception e) {
+                    Log.d(TAG, "onClick: " + e.getMessage());
+                }
                 Intent replyIntent = new Intent();
                 replyIntent.putExtra(getString(R.string.key_request_type), getResources().getInteger(R.integer.request_type_moving));
                 replyIntent.putExtra(getString(R.string.key_request_start_location), startLocationFragment.getInformationLocation());
@@ -96,18 +112,6 @@ public class MovingRequestActivity extends RequestActivity {
                 replyIntent.putExtra(getString(R.string.key_request_description), descriptionFragment.getInformationString());
                 replyIntent.putExtra(getString(R.string.key_request_picture), pictureFragment.getInformationBitmap());
                 setResult(Activity.RESULT_OK, replyIntent);
-                MovingFavor favor = new MovingFavor();
-                UUID id = UUID.randomUUID();
-                favor.setId(id.toString());
-                favor.setTaskType(TaskType.MOVING);
-                favor.setEnquirer(firebaseAuth.getCurrentUser().getUid());
-                favor.setStatus(Status.OPEN);
-                favor.setStartLoc(startLocationFragment.getInformationLocation());
-                favor.setEndLoc(endLocationFragment.getInformationLocation());
-                favor.setDate(dateFragment.getInformationDate());
-                favor.setTime(timeFragment.getInformationTime());
-                favor.setPhoto(pictureFragment.getInformationBitmap());
-                Database.createNewFavor(favor);
                 finish();
             }
         });

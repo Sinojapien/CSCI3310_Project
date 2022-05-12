@@ -5,15 +5,22 @@ import androidx.fragment.app.FragmentTransaction;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
 
 import edu.cuhk.csci3310.project.R;
 import edu.cuhk.csci3310.project.SelectionRequestFragment;
+import edu.cuhk.csci3310.project.database.Database;
+import edu.cuhk.csci3310.project.database.Status;
+import edu.cuhk.csci3310.project.database.TaskType;
+import edu.cuhk.csci3310.project.model.BorrowingFavor;
+import edu.cuhk.csci3310.project.model.GatheringFavor;
 
 public class BorrowingRequestActivity extends RequestActivity {
 
@@ -24,6 +31,9 @@ public class BorrowingRequestActivity extends RequestActivity {
     TimeRequestFragment timeFragment;
     SelectionRequestFragment selectionFragment;
     Spinner borrowTypeSpinner;
+    FirebaseAuth firebaseAuth;
+
+    public static final String TAG = "BorrowRequestActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +64,8 @@ public class BorrowingRequestActivity extends RequestActivity {
 
         fragmentTransaction.commit();
 
+        firebaseAuth = FirebaseAuth.getInstance();
+
         findViewById(R.id.post_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,9 +86,27 @@ public class BorrowingRequestActivity extends RequestActivity {
                 replyIntent.putExtra(getString(R.string.key_request_time), timeFragment.getInformationTime());
 
                 replyIntent.putExtra(getString(R.string.key_request_date), dateFragment.getInformationDate());
-                replyIntent.putExtra(getString(R.string.key_request_date), dateFragment.getInformationDate());
 
                 setResult(Activity.RESULT_OK, replyIntent);
+
+                // [Start: Create Dining Request]
+                try {
+                    BorrowingFavor favor = new BorrowingFavor();
+                    favor.setEnquirer(firebaseAuth.getCurrentUser().getUid());
+                    favor.setTaskType(TaskType.BORROWING);
+                    favor.setStatus(Status.OPEN);
+                    favor.setLocation(locationFragment.getInformationLocation());
+                    favor.setDescription(descriptionFragment.getInformationString());
+                    favor.setDate(dateFragment.getInformationDate());
+                    favor.setTime(timeFragment.getInformationTime());
+                    favor.setActivityType(borrowEdit.getText().toString());
+                    favor.setItemType((String) borrowTypeSpinner.getSelectedItem());
+                    Database.createNewFavor(favor);
+                } catch(Exception e) {
+                    Log.d(TAG, "onClick: " + e.getMessage());
+                }
+                // [Stop: Create Dining Request]
+
                 finish();
             }
         });

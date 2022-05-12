@@ -5,13 +5,20 @@ import androidx.fragment.app.FragmentTransaction;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
 
 import edu.cuhk.csci3310.project.R;
+import edu.cuhk.csci3310.project.database.Database;
+import edu.cuhk.csci3310.project.database.Status;
+import edu.cuhk.csci3310.project.database.TaskType;
+import edu.cuhk.csci3310.project.model.DiningFavor;
+import edu.cuhk.csci3310.project.model.TutoringFavor;
 
 public class DiningRequestActivity extends RequestActivity {
 
@@ -20,6 +27,9 @@ public class DiningRequestActivity extends RequestActivity {
     DateRequestFragment dateFragment;
     TimeRequestFragment timeFragment;
     Spinner participantSpinner;
+    FirebaseAuth firebaseAuth;
+
+    public static final String TAG = "DiningRequestActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +57,8 @@ public class DiningRequestActivity extends RequestActivity {
         participantSpinner = findViewById(R.id.participant_spinner);
         setDropDownList(participantSpinner, getNumberStringArray(1, 9));
 
+        firebaseAuth = FirebaseAuth.getInstance();
+
         findViewById(R.id.post_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,6 +82,25 @@ public class DiningRequestActivity extends RequestActivity {
                 replyIntent.putExtra(getString(R.string.key_request_participant), Integer.parseInt((String) participantSpinner.getSelectedItem()));
 
                 setResult(Activity.RESULT_OK, replyIntent);
+
+                // [Start: Create Dining Request]
+                try {
+                    DiningFavor favor = new DiningFavor();
+                    favor.setEnquirer(firebaseAuth.getCurrentUser().getUid());
+                    favor.setTaskType(TaskType.DINING);
+                    favor.setStatus(Status.OPEN);
+                    favor.setLocation(locationFragment.getInformationLocation());
+                    favor.setDescription(descriptionFragment.getInformationString());
+                    favor.setDate(dateFragment.getInformationDate());
+                    favor.setStartTime(timeFragment.getInformationTime());
+                    favor.setEndTime(timeFragment.getInformationTimeEnd());
+                    favor.setParticipant(Integer.parseInt((String) participantSpinner.getSelectedItem()));
+                    Database.createNewFavor(favor);
+                } catch(Exception e) {
+                    Log.d(TAG, "onClick: " + e.getMessage());
+                }
+                // [Stop: Create Dining Request]
+
                 finish();
             }
         });

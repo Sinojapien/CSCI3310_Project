@@ -5,12 +5,12 @@ import android.graphics.Bitmap;
 import com.google.android.gms.maps.model.LatLng;
 
 public class MovingFavor extends Favor {
-    LatLng startLoc;
-    LatLng endLoc;
-    String date;
-    String time;
-    String description;
-    Bitmap photo;
+    private LatLng startLoc;
+    private LatLng endLoc;
+    private String date;
+    private String time;
+    private String description;
+    private Bitmap photo;
 
     public MovingFavor() {
         super();

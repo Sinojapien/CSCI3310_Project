@@ -6,18 +6,24 @@ import androidx.fragment.app.FragmentTransaction;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import edu.cuhk.csci3310.project.R;
 import edu.cuhk.csci3310.project.SelectionRequestFragment;
+import edu.cuhk.csci3310.project.database.Database;
+import edu.cuhk.csci3310.project.database.Status;
+import edu.cuhk.csci3310.project.database.TaskType;
+import edu.cuhk.csci3310.project.model.TutoringFavor;
 
 public class TutoringRequestActivity extends RequestActivity {
 
@@ -29,6 +35,9 @@ public class TutoringRequestActivity extends RequestActivity {
     PictureRequestFragment pictureFragment;
     TextView courseCodeEdit;
     Spinner participantSpinner;
+    FirebaseAuth firebaseAuth;
+
+    public static final String TAG = "TutoringRequestActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +75,8 @@ public class TutoringRequestActivity extends RequestActivity {
         participantSpinner = tutorInformation.findViewById(R.id.participant_spinner);
         setDropDownList(participantSpinner, getNumberStringArray(1, 9));
 
+        firebaseAuth = FirebaseAuth.getInstance();
+
         findViewById(R.id.post_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,9 +99,29 @@ public class TutoringRequestActivity extends RequestActivity {
                 replyIntent.putExtra(getString(R.string.key_request_picture), pictureFragment.getInformationBitmap());
 
                 replyIntent.putExtra(getString(R.string.key_request_course_code), courseCodeEdit.getText().toString());
-                replyIntent.putExtra(getString(R.string.key_request_participant), (int) participantSpinner.getSelectedItem());
+                replyIntent.putExtra(getString(R.string.key_request_participant), Integer.parseInt((String) participantSpinner.getSelectedItem()));
 
                 setResult(Activity.RESULT_OK, replyIntent);
+                try {
+                    TutoringFavor favor = new TutoringFavor();
+                    favor.setEnquirer(firebaseAuth.getCurrentUser().getUid());
+                    favor.setTaskType(TaskType.TUTORING);
+                    favor.setStatus(Status.OPEN);
+                    favor.setLocation(locationFragment.getInformationLocation());
+                    favor.setDescription(descriptionFragment.getInformationString());
+                    favor.setStartDate(dateFragment.getInformationDate());
+                    favor.setEndDate(dateFragment.getInformationDateEnd());
+                    favor.setStartTime(timeFragment.getInformationTime());
+                    favor.setEndTime(timeFragment.getInformationTimeEnd());
+                    favor.setSelection(selectionFragment.getInformationStringList());
+                    favor.setPicture(pictureFragment.getInformationBitmap());
+                    favor.setCourseCode(courseCodeEdit.getText().toString());
+                    favor.setCourseParticipant(Integer.parseInt((String) participantSpinner.getSelectedItem()));
+                    Log.d(TAG, "onClick: " + favor);
+                    Database.createNewFavor(favor);
+                } catch(Exception e) {
+                    Log.d(TAG, "onClick: " + e.getMessage());
+                }
                 finish();
             }
         });

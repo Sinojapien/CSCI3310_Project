@@ -5,13 +5,21 @@ import androidx.fragment.app.FragmentTransaction;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
 
 import edu.cuhk.csci3310.project.R;
+import edu.cuhk.csci3310.project.database.Database;
+import edu.cuhk.csci3310.project.database.Status;
+import edu.cuhk.csci3310.project.database.TaskType;
+import edu.cuhk.csci3310.project.model.DiningFavor;
+import edu.cuhk.csci3310.project.model.GatheringFavor;
+import edu.cuhk.csci3310.project.myRequests.MyRequestsActivity;
 
 public class GatheringRequestActivity extends RequestActivity {
 
@@ -21,6 +29,9 @@ public class GatheringRequestActivity extends RequestActivity {
     TimeRequestFragment timeFragment;
     Spinner gatheringTypeSpinner;
     Spinner participantSpinner;
+    FirebaseAuth firebaseAuth;
+
+    public static final String TAG = "GatherRequestActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +62,8 @@ public class GatheringRequestActivity extends RequestActivity {
         participantSpinner = findViewById(R.id.participant_spinner);
         setDropDownList(participantSpinner, getNumberStringArray(1, 49));
 
+        firebaseAuth = FirebaseAuth.getInstance();
+
         findViewById(R.id.post_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,7 +88,28 @@ public class GatheringRequestActivity extends RequestActivity {
                 replyIntent.putExtra(getString(R.string.key_request_participant), Integer.parseInt((String) participantSpinner.getSelectedItem()));
 
                 setResult(Activity.RESULT_OK, replyIntent);
-                finish();
+
+                // [Start: Create Dining Request]
+                try {
+                    GatheringFavor favor = new GatheringFavor();
+                    favor.setEnquirer(firebaseAuth.getCurrentUser().getUid());
+                    favor.setTaskType(TaskType.GATHERING);
+                    favor.setStatus(Status.OPEN);
+                    favor.setLocation(locationFragment.getInformationLocation());
+                    favor.setDescription(descriptionFragment.getInformationString());
+                    favor.setDate(dateFragment.getInformationDate());
+                    favor.setStartTime(timeFragment.getInformationTime());
+                    favor.setEndTime(timeFragment.getInformationTimeEnd());
+                    favor.setParticipant(Integer.parseInt((String) participantSpinner.getSelectedItem()));
+                    favor.setActivityType((String) gatheringTypeSpinner.getSelectedItem());
+                    Database.createNewFavor(favor);
+                } catch(Exception e) {
+                    Log.d(TAG, "onClick: " + e.getMessage());
+                }
+                // [Stop: Create Dining Request]
+
+                Intent intent = new Intent(GatheringRequestActivity.this, MyRequestsActivity.class);
+                startActivity(intent);
             }
         });
 
