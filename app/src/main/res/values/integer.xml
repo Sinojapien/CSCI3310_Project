@@ -10,4 +10,5 @@
     <integer name="request_type_dining">3</integer>
     <integer name="request_type_tutoring">4</integer>
     <integer name="request_type_borrowing">5</integer>
+
 </resources>

@@ -24,7 +24,7 @@ import java.util.Calendar;
 
 import edu.cuhk.csci3310.project.R;
 
-public class TimeRequestFragment extends Fragment {
+public class TimeRequestFragment extends RequestFragment {
 
     public TextView mTimeTitle;
     public EditText mTimeEdit;
@@ -136,22 +136,23 @@ public class TimeRequestFragment extends Fragment {
         textView.setCursorVisible(false);
         textView.setFocusable(false);
 
+        final TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                textView.setText(getString(R.string.request_time, i, i1));
+                textView.setTextColor(Color.BLACK);
+            }
+        }, hour, minute, true);
+
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(), new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                        textView.setText(getString(R.string.request_time, i, i1));
-                        textView.setTextColor(Color.BLACK);
-                    }
-                }, hour, minute, true);
-
                 timePickerDialog.show();
             }
         });
     }
 
+    @Override
     public boolean isFilled(){
         if (mParamDuration) {
             String startTime = mTimeEdit.getText().toString();
@@ -181,6 +182,7 @@ public class TimeRequestFragment extends Fragment {
     public String getInformationTimeEnd(){
         if (mParamDuration)
             return mEndTimeEdit.getText().toString();
+
         //return getInformationTime();
         return null;
     }

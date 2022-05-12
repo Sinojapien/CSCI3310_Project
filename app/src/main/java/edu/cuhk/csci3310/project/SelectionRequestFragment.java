@@ -23,19 +23,25 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class SelectionRequestFragment extends Fragment {
+import edu.cuhk.csci3310.project.createRequest.RequestFragment;
 
+public class SelectionRequestFragment extends RequestFragment {
+
+    // Views
     public TextView mTitleText;
     public RecyclerView mRecyclerView;
     public SelectionListAdapter mAdapter;
 
-    private static final String ARG_PARAM_TITLE = "param1";
-    private static final String ARG_PARAM_LIST_TITLE = "param2";
-    private static final String ARG_PARAM_LIST = "param3";
-
+    // Variables
     private String mParamTitle;
     private String mParamListTitle;
     private ArrayList<String> mParamList;
+    private ArrayList<String> mDefaultSelectedList;
+
+    private static final String ARG_PARAM_TITLE = "param1";
+    private static final String ARG_PARAM_LIST_TITLE = "param2";
+    private static final String ARG_PARAM_LIST = "param3";
+    private static final String INSTANCE_DEFAULT_LIST = "param4";
 
     public SelectionRequestFragment() {
         // Required empty public constructor
@@ -78,7 +84,7 @@ public class SelectionRequestFragment extends Fragment {
             mTitleText.setText(mParamTitle);
 
         // SelectionListAdapter adapter = new SelectionListAdapter(view.getContext(), mParamList, 0);
-        mAdapter = new SelectionListAdapter(view.getContext(), 0);
+        mAdapter = new SelectionListAdapter(view.getContext(), mDefaultSelectedList, 0);
         mRecyclerView.setAdapter(mAdapter);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(view.getContext(), 3);
@@ -191,6 +197,23 @@ public class SelectionRequestFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onSaveInstanceState(@Nullable Bundle savedInstanceState){
+        savedInstanceState.putString(ARG_PARAM_TITLE, mTitleText.getText().toString());
+        savedInstanceState.putString(ARG_PARAM_LIST_TITLE, mParamListTitle);
+        savedInstanceState.putStringArrayList(ARG_PARAM_LIST, mParamList);
+        savedInstanceState.putStringArrayList(INSTANCE_DEFAULT_LIST, mAdapter.getItemList());
+    }
+
+    @Override
+    protected void onLoadInstanceState(@Nullable Bundle savedInstanceState){
+        mParamTitle = savedInstanceState.getString(ARG_PARAM_TITLE);
+        mParamListTitle = savedInstanceState.getString(ARG_PARAM_LIST_TITLE);
+        mParamList = savedInstanceState.getStringArrayList(ARG_PARAM_LIST);
+        mDefaultSelectedList = savedInstanceState.getStringArrayList(INSTANCE_DEFAULT_LIST);
+    }
+
+    @Override
     public boolean isFilled(){
         return mAdapter.getItemCount() > 0;
     }

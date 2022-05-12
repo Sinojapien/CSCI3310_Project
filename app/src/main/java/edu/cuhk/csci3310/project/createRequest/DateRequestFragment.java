@@ -28,7 +28,7 @@ import java.util.Date;
 
 import edu.cuhk.csci3310.project.R;
 
-public class DateRequestFragment extends Fragment {
+public class DateRequestFragment extends RequestFragment {
 
     public TextView mDateTitle;
     public EditText mDateEdit;
@@ -105,7 +105,7 @@ public class DateRequestFragment extends Fragment {
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                 textView.setText(getString(R.string.request_date, i2, i1+1, i));
@@ -177,6 +177,7 @@ public class DateRequestFragment extends Fragment {
         endTextView.setOnClickListener(clickListener);
     }
 
+    @Override
     public boolean isFilled(){
         if (mParamDuration)
             return mDateEdit.getText().toString().length() > 0 && mEndDateEdit.getText().toString().length() > 0;

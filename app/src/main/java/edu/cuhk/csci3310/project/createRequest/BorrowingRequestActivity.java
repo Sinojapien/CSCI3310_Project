@@ -1,9 +1,13 @@
 package edu.cuhk.csci3310.project.createRequest;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Spinner;
@@ -40,20 +44,26 @@ public class BorrowingRequestActivity extends RequestActivity {
         borrowTypeSpinner = findViewById(R.id.type_spinner);
         setDropDownList(borrowTypeSpinner, getResources().getStringArray(R.array.request_borrowing_type));
 
-        selectionFragment = SelectionRequestFragment.newInstance(null, "Enter item names:", null);
+        if (selectionFragment == null)
+            selectionFragment = SelectionRequestFragment.newInstance(null, "Enter item names:", null);
         fragmentTransaction.replace(R.id.selection_container, selectionFragment);
 
-        descriptionFragment = DescriptionRequestFragment.newInstance("Purpose:");
+        if (descriptionFragment == null)
+            descriptionFragment = DescriptionRequestFragment.newInstance("Purpose:");
         fragmentTransaction.replace(R.id.description_container, descriptionFragment);
 
         // Borrow Duration
-        dateFragment = DateRequestFragment.newInstance("Borrow Duration:", true);
+        if (dateFragment == null)
+            dateFragment = DateRequestFragment.newInstance("Borrow Duration:", true);
         fragmentTransaction.replace(R.id.date_container, dateFragment);
 
         // Meetup Time and Location
-        locationFragment = LocationRequestFragment.newInstance("Meetup Location:", getMapBoundary(new LatLng(22.418014,	114.207259), 0.075));
+        if (locationFragment == null)
+            locationFragment = LocationRequestFragment.newInstance("Meetup Location:", R.array.location_cuhk);
+            //locationFragment = LocationRequestFragment.newInstance("Meetup Location:", getMapBoundary(new LatLng(22.418014,	114.207259), 0.075));
         fragmentTransaction.replace(R.id.location_container, locationFragment);
-        timeFragment = TimeRequestFragment.newInstance("Meetup Time:", false);
+        if (timeFragment == null)
+            timeFragment = TimeRequestFragment.newInstance("Meetup Time:", false);
         fragmentTransaction.replace(R.id.time_container, timeFragment);
 
         fragmentTransaction.commit();
@@ -86,6 +96,36 @@ public class BorrowingRequestActivity extends RequestActivity {
             }
         });
 
+        onLoadInstanceStateLate(savedInstanceState);
+
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.putFragment(outState, getResources().getResourceName(R.id.selection_container), selectionFragment);
+        fragmentManager.putFragment(outState, getResources().getResourceName(R.id.location_container), locationFragment);
+        fragmentManager.putFragment(outState, getResources().getResourceName(R.id.description_container), descriptionFragment);
+        fragmentManager.putFragment(outState, getResources().getResourceName(R.id.date_container), dateFragment);
+        fragmentManager.putFragment(outState, getResources().getResourceName(R.id.time_container), timeFragment);
+        outState.putInt(getResources().getResourceName(R.id.type_spinner), borrowTypeSpinner.getSelectedItemPosition());
+    }
+
+    @Override
+    protected void onLoadInstanceState(@Nullable Bundle savedInstanceState){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        selectionFragment = (SelectionRequestFragment) fragmentManager.getFragment(savedInstanceState, getResources().getResourceName(R.id.selection_container));
+        locationFragment = (LocationRequestFragment) fragmentManager.getFragment(savedInstanceState, getResources().getResourceName(R.id.location_container));
+        descriptionFragment = (DescriptionRequestFragment) fragmentManager.getFragment(savedInstanceState, getResources().getResourceName(R.id.description_container));
+        dateFragment = (DateRequestFragment) fragmentManager.getFragment(savedInstanceState, getResources().getResourceName(R.id.date_container));
+        timeFragment = (TimeRequestFragment) fragmentManager.getFragment(savedInstanceState, getResources().getResourceName(R.id.time_container));
+    }
+
+    protected void onLoadInstanceStateLate(@Nullable Bundle savedInstanceState){
+        if (savedInstanceState != null){
+            borrowTypeSpinner.setSelection(savedInstanceState.getInt(getResources().getResourceName(R.id.type_spinner)));
+        }
     }
 
     @Override

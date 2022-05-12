@@ -1,6 +1,7 @@
 package edu.cuhk.csci3310.project;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +14,11 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SelectionListAdapter extends RecyclerView.Adapter<SelectionListAdapter.SelectionViewHolder> {
 
-    //private int layoutResId;
-    //public ArrayList<String> mSelectionList;
+    private int layoutID;
     private ArrayList<String> mItemList;
     private LayoutInflater mInflater;
 
@@ -42,11 +43,12 @@ public class SelectionListAdapter extends RecyclerView.Adapter<SelectionListAdap
         }
     }
 
-    public SelectionListAdapter(Context context, int rid) {
-        mInflater = LayoutInflater.from(context);
-        //this.mSelectionList = list;
-        this.mItemList = new ArrayList<>();
-        //layoutResId = rid;
+    public SelectionListAdapter(Context context, ArrayList<String> defaulSelectedtList, int rid) {
+        this.mInflater = LayoutInflater.from(context);
+        this.mItemList = defaulSelectedtList;
+        if (this.mItemList == null)
+            this.mItemList = new ArrayList<>();
+        this.layoutID = rid;
     }
 
     protected TextView createItemView(Context context){
@@ -115,7 +117,7 @@ public class SelectionListAdapter extends RecyclerView.Adapter<SelectionListAdap
     @NonNull
     @Override
     public SelectionListAdapter.SelectionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // View mItemView = mInflater.inflate(layoutResId, parent, false);
+        // View mItemView = mInflater.inflate(layoutID, parent, false);
         TextView mItemView = createItemView(parent.getContext());
         return new SelectionViewHolder(mItemView, this);
     }

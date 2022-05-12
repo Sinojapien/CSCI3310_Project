@@ -3,8 +3,9 @@ package edu.cuhk.csci3310.project.createRequest;
 // Name: Yeung Chi Ho, SID: 1155126460
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,20 +22,18 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
-import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -43,12 +42,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 import edu.cuhk.csci3310.project.R;
 import edu.cuhk.csci3310.project.SelectionListAdapter;
@@ -56,9 +52,11 @@ import edu.cuhk.csci3310.project.SelectionListAdapter;
 public class RequestActivity extends AppCompatActivity {
 
     /* todo:
-        map of all restaurants
-        extend EnlargeImageFragment to recycler
         Web location
+        SavedInstanceState: Time/Date Dialog, bitmap for PictureRequestFragment (use ViewModel?), RequestMapActivity (Zoom)
+        map of all restaurants / list of restaurants
+        extend EnlargeImageFragment with recycler
+        possible messaging function?
         http://www.res.cuhk.edu.hk/en-gb/general-information/program-codes
     */
 
@@ -67,20 +65,18 @@ public class RequestActivity extends AppCompatActivity {
 
     // https://stackoverflow.com/questions/215497/what-is-the-difference-between-public-protected-package-private-and-private-in
     protected SharedPreferences mPreferences;
-    protected final String sharedPrefFile = "edu.cuhk.csci3310.project";
+    protected final String sharedPreferenceFile = "edu.cuhk.csci3310.project.request.activity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
-        // setContentView(R.layout.activity_request);
+        mPreferences = getSharedPreferences(sharedPreferenceFile, MODE_PRIVATE);
+        if (savedInstanceState != null)
+            onLoadInstanceState(savedInstanceState);
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        // do something
-    }
+    protected void onResume() { super.onResume(); }
 
     @Override
     protected void onPause() {
@@ -112,9 +108,12 @@ public class RequestActivity extends AppCompatActivity {
         mPreferences.edit().clear().apply();
     }
 
-    protected boolean isAllInformationFilled(){
-        return true;
+    protected void onLoadInstanceState(@Nullable Bundle savedInstanceState){
+        // https://stackoverflow.com/questions/15313598/how-to-correctly-save-instance-state-of-fragments-in-back-stack
+        // https://stackoverflow.com/questions/14647810/easier-way-to-get-views-id-string-by-its-id-int
     }
+
+    protected boolean isAllInformationFilled(){ return true; }
 
     public static String[] getNumberStringArray(int start, int end){
         int total = end - start + 1;
@@ -122,12 +121,6 @@ public class RequestActivity extends AppCompatActivity {
         for (int i=0; i<total; i++)
             output[i] = String.valueOf(start + i);
         return output;
-    }
-
-    public static LatLngBounds getMapBoundary(LatLng center, double offset){
-        LatLng boundaryNE = new LatLng(center.latitude - offset,	center.longitude - offset);
-        LatLng boundarySW = new LatLng(center.latitude + offset,	center.longitude + offset);
-        return new LatLngBounds(boundaryNE, boundarySW);
     }
 
     public static long getTimeInMillis(int year, int month, int day){
@@ -323,7 +316,7 @@ public class RequestActivity extends AppCompatActivity {
 
         //SelectionListAdapter adapter = (SelectionListAdapter) recyclerView.getAdapter();
         //assert adapter != null;
-        SelectionListAdapter adapter = new SelectionListAdapter(view.getContext(), 0);
+        SelectionListAdapter adapter = new SelectionListAdapter(view.getContext(), null, 0);
         recyclerView.setAdapter(adapter);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(view.getContext(), 3);
