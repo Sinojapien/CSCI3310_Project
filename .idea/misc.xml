@@ -35,6 +35,7 @@
         <entry key="app/src/main/res/layout/activity_central_hub.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main_search_rquest.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/activity_my_requests.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_request_borrowing.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_request_main.xml" value="0.1322463768115942" />
         <entry key="app/src/main/res/layout/activity_request_tutoring.xml" value="0.151268115942029" />
@@ -42,6 +43,7 @@
         <entry key="app/src/main/res/layout/activity_user_account.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_request_location.xml" value="0.1693840579710145" />
         <entry key="app/src/main/res/layout/fragment_request_selection.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/item_favor.xml" value="0.25" />
       </map>
     </option>
   </component>

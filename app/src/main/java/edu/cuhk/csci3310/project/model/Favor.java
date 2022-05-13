@@ -56,4 +56,33 @@ public class Favor {
         this.enquirer = enquirer;
         this.taskType = taskType;
     }
+
+    public String getTaskTypeString() {
+        switch(this.taskType) {
+            case MOVING:
+                return "Moving";
+            case TUTORING:
+                return "Tutoring";
+            case DINING:
+                return "Dining";
+            case GATHERING:
+                return "Gathering";
+            case BORROWING:
+                return "Borrowing";
+            default:
+                return null;
+        }
+    }
+    public String getStatusString(){
+        switch(this.status) {
+            case OPEN:
+                return "Open";
+            case ACTIVE:
+                return "Active";
+            case COMPLETED:
+                return "Completed";
+            default:
+                return null;
+        }
+    }
 }
