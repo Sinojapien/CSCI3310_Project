@@ -81,4 +81,7 @@
     <string name="key_request_selection">REQUEST_SELECTION</string>
     <string name="key_request_course_code">REQUEST_COURSE_CODE</string>
     <string name="key_request_participant">REQUEST_PARTICIPANT</string>
+    <string name="title_activity_request_details">requestDetailsActivity</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
