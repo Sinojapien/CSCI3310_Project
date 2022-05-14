@@ -53,8 +53,10 @@ public class RequestActivity extends AppCompatActivity {
 
     /* todo:
         Web location
-        SavedInstanceState: Time/Date Dialog, bitmap for PictureRequestFragment (use ViewModel?), RequestMapActivity (Zoom)
+        SavedInstanceState: Time/Date Dialog, use ViewModel for bitmap in PictureRequestFragment (?), RequestMapActivity (Zoom)
         map of all restaurants / list of restaurants
+            https://stackoverflow.com/questions/63272349/how-to-show-near-by-restaurants-to-current-user-location-in-google-map-when-user
+            place picker / Places API?
         extend EnlargeImageFragment with recycler
         possible messaging function?
         http://www.res.cuhk.edu.hk/en-gb/general-information/program-codes
