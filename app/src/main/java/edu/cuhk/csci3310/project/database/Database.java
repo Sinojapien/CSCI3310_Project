@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,9 +35,10 @@ import edu.cuhk.csci3310.project.model.MovingFavor;
 import edu.cuhk.csci3310.project.model.TutoringFavor;
 
 public class Database {
-    private static FirebaseFirestore db = FirebaseFirestore.getInstance();
-
     private static final String TAG = "Database";
+
+    private static FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static CollectionReference favors = db.collection("favors");
 
     public static boolean createNewFavor(Favor favor) throws Exception{
         if(favor.getTaskType() == TaskType.MOVING) {
@@ -59,24 +61,26 @@ public class Database {
     }
 
     private static void createNewMovingFavor(MovingFavor favor) throws Exception {
-        Map<String, Object> data = new HashMap<>();
-        data.put("enquirer", favor.getEnquirer());
-        data.put("accepter", favor.getAccepter());
-        data.put("taskType", favor.getTaskType().getValue());
-        data.put("status", favor.getStatus().getValue());
-        Map<String, Object> startLoc = new HashMap<>();
-        startLoc.put("lat", favor.getStartLoc().latitude);
-        startLoc.put("long", favor.getStartLoc().longitude);
-        data.put("startLoc", startLoc);
-        Map<String, Object> endLoc = new HashMap<>();
-        endLoc.put("lat", favor.getEndLoc().latitude);
-        endLoc.put("long", favor.getEndLoc().longitude);
-        data.put("endLoc", endLoc);
-        data.put("date", favor.getDate());
-        data.put("time", favor.getTime());
-        data.put("description", favor.getDescription());
-        // Save favor in DB
-        saveFavorInDB(data);
+        Log.d(TAG,"saving moving favor");
+        favors.add(favor);
+//        Map<String, MovingFavor> data = new HashMap<>();
+//        data.put("enquirer", favor.getEnquirer());
+//        data.put("accepter", favor.getAccepter());
+//        data.put("taskType", favor.getTaskType().getValue());
+//        data.put("status", favor.getStatus().getValue());
+//        Map<String, Object> startLoc = new HashMap<>();
+//        startLoc.put("lat", favor.getStartLoc().latitude);
+//        startLoc.put("long", favor.getStartLoc().longitude);
+//        data.put("startLoc", startLoc);
+//        Map<String, Object> endLoc = new HashMap<>();
+//        endLoc.put("lat", favor.getEndLoc().latitude);
+//        endLoc.put("long", favor.getEndLoc().longitude);
+//        data.put("endLoc", endLoc);
+//        data.put("date", favor.getDate());
+//        data.put("time", favor.getTime());
+//        data.put("description", favor.getDescription());
+//        // Save favor in DB
+//        saveFavorInDB(data);
 
     }
 

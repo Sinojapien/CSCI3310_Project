@@ -109,7 +109,7 @@ public class MainSearchRequestActivity extends AppCompatActivity implements
         // Apply filters
         // onFilter(mViewModel.getFilters());
 
-        // Construct query basic query
+        // Construct query
         Query query = mFirestore.collection("favors");
 
         // Start listening for Firestore updates
@@ -130,6 +130,7 @@ public class MainSearchRequestActivity extends AppCompatActivity implements
     // method passed to the adaptor
     @Override
     public void onFavorSelected(DocumentSnapshot favor) {
+        Log.d(TAG, "clicked on favor" + favor.getData());
         // Go to the details page for the selected favor
         // to be added when favor detail page created
         //Intent intent = new Intent(this, favorDetailActivity.class);

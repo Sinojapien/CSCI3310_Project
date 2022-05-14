@@ -18,6 +18,7 @@ import org.w3c.dom.Text;
 import edu.cuhk.csci3310.project.database.TaskType;
 import edu.cuhk.csci3310.project.model.Favor;
 
+
 /**
  * RecyclerView adapter for a list of Restaurants.
  */
@@ -61,11 +62,13 @@ public class FavorAdapter extends FirestoreAdapter<FavorAdapter.ViewHolder> {
         public void bind(final DocumentSnapshot snapshot,
                          final OnFavorSelectedListener listener) {
 
+            // check what type of favor it is before casting to object
+            snapshot.get("taskType");
             Favor favor = snapshot.toObject(Favor.class);
             Resources resources = itemView.getResources();
 
             item_favor_taskType.setText(favor.getTaskTypeString());
-            item_favor_requesterName.setText(favor.getStatusString());
+            item_favor_status.setText(favor.getStatusString());
 
             // Click listener
             itemView.setOnClickListener(new View.OnClickListener() {
