@@ -1,10 +1,13 @@
 package edu.cuhk.csci3310.project.model;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 // import com.google.android.gms.maps.model.LatLng; // use customized LatLng instead
+import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Map;
 
 import edu.cuhk.csci3310.project.database.Status;
@@ -19,6 +22,7 @@ public class MovingFavor extends Favor {
     private String time;
     private String description;
     private Bitmap photo;
+    private byte[] photoByte; // instead of using bitmap when storing photo, use byte array instead
 
     public MovingFavor() {
         super();
@@ -64,12 +68,28 @@ public class MovingFavor extends Favor {
         this.description = description;
     }
 
+    @Exclude // excluded because firebase does not support bitmap storage
     public Bitmap getPhoto() {
         return photo;
     }
 
+    @Exclude
     public void setPhoto(Bitmap photo) {
+        // now set the byteArray too
         this.photo = photo;
+//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//        photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//        this.photoByte =  stream.toByteArray();
+    }
+
+    // getter and setter for firebase to save and toObject()
+    public byte[] getPhotoByte(){
+        return this.photoByte;
+    }
+    public void setPhotoByte(byte[] photoByte){
+        // set the photo field too
+        this.photoByte = photoByte;
+//        this.photo = BitmapFactory.decodeByteArray(photoByte, 0, photoByte.length);
     }
 
     public static MovingFavor createMovingFavorFromDB(String id, Map<String, Object> data) throws Exception {
