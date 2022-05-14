@@ -35,7 +35,7 @@ public class Favor {
         return this.enquirerName;
     }
     public void setEnquirerName(String enquirerName){
-        this.enquirer = enquirerName;
+        this.enquirerName = enquirerName;
     }
 
     public String getAccepter() {
