@@ -18,9 +18,13 @@ import java.util.Arrays;
 
 public class SelectionListAdapter extends RecyclerView.Adapter<SelectionListAdapter.SelectionViewHolder> {
 
+    // Views
+    private LayoutInflater mInflater;
+    private SelectionRequestFragment mParentFragment;
+
+    // Variables
     private int layoutID;
     private ArrayList<String> mItemList;
-    private LayoutInflater mInflater;
 
     class SelectionViewHolder extends RecyclerView.ViewHolder {
 
@@ -39,12 +43,12 @@ public class SelectionListAdapter extends RecyclerView.Adapter<SelectionListAdap
                     return false;
                 }
             });
-
         }
     }
 
-    public SelectionListAdapter(Context context, ArrayList<String> defaulSelectedtList, int rid) {
-        this.mInflater = LayoutInflater.from(context);
+    public SelectionListAdapter(SelectionRequestFragment fragment, ArrayList<String> defaulSelectedtList, int rid) {
+        this.mInflater = LayoutInflater.from(fragment.getContext());
+        this.mParentFragment = fragment;
         this.mItemList = defaulSelectedtList;
         if (this.mItemList == null)
             this.mItemList = new ArrayList<>();
@@ -107,7 +111,7 @@ public class SelectionListAdapter extends RecyclerView.Adapter<SelectionListAdap
         if (size <= 0) return;
 
         this.mItemList.clear();
-        this.notifyItemRangeRemoved(0, size); // this.notifyDataSetChanged();
+        this.notifyItemRangeRemoved(0, size);
     }
 
     public ArrayList<String> getItemList(){

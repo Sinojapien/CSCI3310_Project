@@ -310,69 +310,69 @@ public class RequestActivity extends AppCompatActivity {
         });
     }
 
-    protected void setSelectionView(View view, RecyclerView recyclerView, ArrayList<String> items){
-        // https://www.geeksforgeeks.org/alert-dialog-with-multipleitemselection-in-android/
-        // https://www.geeksforgeeks.org/alert-dialog-with-singleitemselection-in-android/
-        // https://developer.android.com/reference/kotlin/androidx/appcompat/app/AlertDialog.Builder
-        // https://developer.android.com/guide/topics/ui/dialogs#java
-
-        //SelectionListAdapter adapter = (SelectionListAdapter) recyclerView.getAdapter();
-        //assert adapter != null;
-        SelectionListAdapter adapter = new SelectionListAdapter(view.getContext(), null, 0);
-        recyclerView.setAdapter(adapter);
-
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(view.getContext(), 3);
-        gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerView.setLayoutManager(gridLayoutManager);
-        //tutoringTypeRecycler.setHasFixedSize(true);
-
-        final boolean[] checkedIndex = new boolean[items.size()];
-
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                builder.setTitle("Choose Tutoring Type:");
-                builder.setIcon(R.drawable.common_google_signin_btn_icon_light);
-                builder.setMultiChoiceItems(items.toArray(new String[0]), checkedIndex, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i, boolean isChecked) {
-                        checkedIndex[i] = isChecked;
-                    }
-                });
-
-                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        ArrayList<String> checkedItems = new ArrayList<>();
-                        for(int p=0; p<checkedIndex.length;p++){
-                            if (checkedIndex[p])
-                                checkedItems.add(items.get(p));
-                        }
-                        adapter.clearItem();
-                        adapter.addItem(checkedItems);
-                    }
-                });
-
-                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
-
-                builder.setNeutralButton("CLEAR ALL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Arrays.fill(checkedIndex, false);
-                        // adapter.clearItem();
-                    }
-                });
-
-                builder.show();
-            }
-        });
-    }
+//    protected void setSelectionView(View view, RecyclerView recyclerView, ArrayList<String> items){
+//        // https://www.geeksforgeeks.org/alert-dialog-with-multipleitemselection-in-android/
+//        // https://www.geeksforgeeks.org/alert-dialog-with-singleitemselection-in-android/
+//        // https://developer.android.com/reference/kotlin/androidx/appcompat/app/AlertDialog.Builder
+//        // https://developer.android.com/guide/topics/ui/dialogs#java
+//
+//        //SelectionListAdapter adapter = (SelectionListAdapter) recyclerView.getAdapter();
+//        //assert adapter != null;
+//        SelectionListAdapter adapter = new SelectionListAdapter(view.getContext(), null, 0);
+//        recyclerView.setAdapter(adapter);
+//
+//        GridLayoutManager gridLayoutManager = new GridLayoutManager(view.getContext(), 3);
+//        gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+//        recyclerView.setLayoutManager(gridLayoutManager);
+//        //tutoringTypeRecycler.setHasFixedSize(true);
+//
+//        final boolean[] checkedIndex = new boolean[items.size()];
+//
+//        view.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+//                builder.setTitle("Choose Tutoring Type:");
+//                builder.setIcon(R.drawable.common_google_signin_btn_icon_light);
+//                builder.setMultiChoiceItems(items.toArray(new String[0]), checkedIndex, new DialogInterface.OnMultiChoiceClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i, boolean isChecked) {
+//                        checkedIndex[i] = isChecked;
+//                    }
+//                });
+//
+//                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        ArrayList<String> checkedItems = new ArrayList<>();
+//                        for(int p=0; p<checkedIndex.length;p++){
+//                            if (checkedIndex[p])
+//                                checkedItems.add(items.get(p));
+//                        }
+//                        adapter.clearItem();
+//                        adapter.addItem(checkedItems);
+//                    }
+//                });
+//
+//                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                    }
+//                });
+//
+//                builder.setNeutralButton("CLEAR ALL", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Arrays.fill(checkedIndex, false);
+//                        // adapter.clearItem();
+//                    }
+//                });
+//
+//                builder.show();
+//            }
+//        });
+//    }
 
     protected void setCourseCodeTextEdit(TextView textView){
         textView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);

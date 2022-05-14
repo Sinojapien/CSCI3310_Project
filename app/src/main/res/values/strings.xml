@@ -35,14 +35,18 @@
     <string-array name="request_gathering_type">
         <item>Lecture</item>
         <item>Study</item>
+        <item>Sports</item>
         <item>Party</item>
+        <item>Volunteer</item>
         <item>Other</item>
     </string-array>
     <string-array name="request_borrowing_type">
+        <item>Any</item>
         <item>Disposable</item>
-        <item>Accessory</item>
         <item>Stationery</item>
-        <item>Other</item>
+        <item>Learning Material</item>
+        <item>Accessory</item>
+        <item>Utensil</item>
     </string-array>
     <string-array name="request_major">
         <item>Arts</item>

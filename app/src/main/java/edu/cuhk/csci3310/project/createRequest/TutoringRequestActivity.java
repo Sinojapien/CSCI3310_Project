@@ -131,7 +131,7 @@ public class TutoringRequestActivity extends RequestActivity {
                     favor.setStartTime(timeFragment.getInformationTime());
                     favor.setEndTime(timeFragment.getInformationTimeEnd());
                     favor.setSelection(selectionFragment.getInformationStringList());
-                    favor.setPicture(pictureFragment.getInformationBitmap());
+                    //favor.setPicture(pictureFragment.getInformationBitmap());
                     favor.setCourseCode(courseCodeEdit.getText().toString());
                     favor.setCourseParticipant(Integer.parseInt((String) participantSpinner.getSelectedItem()));
                     Log.d(TAG, "onClick: " + favor);
