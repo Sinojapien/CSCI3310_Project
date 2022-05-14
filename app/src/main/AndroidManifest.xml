@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.cuhk.csci3310.project">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,19 +13,31 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Project">
         <activity
-            android:name=".searchRequest.MainSearchRequestActivity"
+            android:name=".myRequests.RequestOverviewActivity"
             android:exported="false" />
         <activity
+            android:name=".searchRequest.MainSearchRequestActivity"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+<!--        <activity-->
+<!--            android:name=".searchRequest.MainSearchRequestActivity"-->
+<!--            android:exported="false"/>-->
+<!--        <activity-->
             android:name=".CentralHubActivity"
             android:exported="false" />
         <activity
             android:name=".createRequest.MainRequestActivity"
             android:exported="true">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".createRequest.BorrowingRequestActivity"
@@ -38,8 +53,7 @@
             android:exported="false" />
         <activity
             android:name=".account.UserAccountActivity"
-            android:exported="false" />
-<!--            android:theme="@style/AppThemeNoActionBar" />-->
+            android:exported="false" /> <!-- android:theme="@style/AppThemeNoActionBar" /> -->
         <activity
             android:name=".account.SignupActivity"
             android:exported="false"
@@ -65,12 +79,11 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/AppThemeNoActionBar" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:theme="@style/AppThemeNoActionBar">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
     </application>
 

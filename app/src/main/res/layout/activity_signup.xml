@@ -51,10 +51,26 @@
         />
 
     <EditText
-        android:id="@+id/email_ET"
+        android:id="@+id/name_ET"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/progressBar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:backgroundTint="@color/primary"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="70dp"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:hint="Please enter your name"
+        />
+
+    <EditText
+        android:id="@+id/email_ET"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/name_ET"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:backgroundTint="@color/primary"
@@ -72,7 +88,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="70dp"
         android:layout_marginRight="70dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:backgroundTint="@color/primary"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -86,7 +102,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="70dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="70dp"
         android:hint="Please enter your password again"
         android:inputType="textPassword"
@@ -95,6 +111,19 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/password_ET" />
 
+    <TextView
+        android:id="@+id/error_message_TV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This is an error message"
+        android:textColor="#e01010"
+        app:layout_constraintLeft_toLeftOf="@id/password_again_ET"
+        app:layout_constraintRight_toRightOf="@id/password_again_ET"
+        app:layout_constraintTop_toBottomOf="@id/password_again_ET"
+        android:layout_marginTop="10dp"
+        android:visibility="invisible"
+        />
+
     <Button
         android:id="@+id/signup_btn"
         android:layout_width="0dp"
@@ -102,12 +131,12 @@
         android:text="Sign Up"
         android:backgroundTint="@color/primary"
         android:textColor="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/password_again_ET"
+        app:layout_constraintTop_toBottomOf="@id/error_message_TV"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="70dp"
         android:layout_marginRight="70dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="10dp"
         android:paddingVertical="15dp"
         />
 
