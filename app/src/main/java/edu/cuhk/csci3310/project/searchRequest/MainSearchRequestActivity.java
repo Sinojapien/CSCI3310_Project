@@ -67,7 +67,7 @@ public class MainSearchRequestActivity extends AppCompatActivity implements
                     mFavorRecycler.setVisibility(View.GONE);
                     mEmptyView.setVisibility(View.VISIBLE);
                 } else {
-                    Log.d(TAG, "itemCount is not 0");
+                    Log.d(TAG, "itemCount is not 0. getItemCount() = "+getItemCount());
                     mFavorRecycler.setVisibility(View.VISIBLE);
                     mEmptyView.setVisibility(View.GONE);
                 }
@@ -135,7 +135,7 @@ public class MainSearchRequestActivity extends AppCompatActivity implements
     // method passed to the adaptor
     @Override
     public void onFavorSelected(DocumentSnapshot favor) {
-        Log.d(TAG, "clicked on favor" + favor.getData());
+        Log.d(TAG, "clicked on favor, ID = " + favor.getId());
         // Go to the details page for the selected favor
         // to be added when favor detail page created
         //Intent intent = new Intent(this, favorDetailActivity.class);

@@ -53,10 +53,11 @@ public class FavorAdapter extends FirestoreAdapter<FavorAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        Log.d(TAG,"onBindViewHolder bind to "+ getSnapshot(position).getId() + "position " + position);
         holder.bind(getSnapshot(position), mListener);
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         TextView item_favor_taskType;
         TextView item_favor_requesterName;
         TextView item_favor_status;
@@ -74,7 +75,7 @@ public class FavorAdapter extends FirestoreAdapter<FavorAdapter.ViewHolder> {
             Log.d(TAG,"Trying to get taskType string");
             // check what type of favor it is before casting to object
             String favorType = snapshot.getString("taskType");
-            Log.d(TAG,"Trying to bind " + favorType);
+            Log.d(TAG,"Trying to bind = " + favorType + " with ID = " + snapshot.getId() );
 
             Favor favor;
             switch(favorType){
