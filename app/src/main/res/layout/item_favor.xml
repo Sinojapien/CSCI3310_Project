@@ -9,6 +9,7 @@
         android:id="@+id/item_favor_taskType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:text="taskType placeholder"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,16 +19,33 @@
         android:id="@+id/item_favor_requesterName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="requester name placeholder"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="..."
+        app:layout_constraintStart_toEndOf="@+id/item_favor_Requested_by"
         app:layout_constraintTop_toBottomOf="@+id/item_favor_taskType" />
 
     <TextView
         android:id="@+id/item_favor_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:text="status placeholder"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/item_favor_requesterName"
+        app:layout_constraintTop_toBottomOf="@+id/item_favor_taskType" />
+
+    <TextView
+        android:id="@+id/item_favor_Requested_by"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Requested by: "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/item_favor_taskType" />
+
+    <TextView
+        android:id="@+id/item_favor_status_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status: "
+        app:layout_constraintEnd_toStartOf="@+id/item_favor_status"
         app:layout_constraintTop_toBottomOf="@+id/item_favor_taskType" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -87,9 +87,10 @@ public class DiningRequestActivity extends RequestActivity {
                 try {
                     DiningFavor favor = new DiningFavor();
                     favor.setEnquirer(firebaseAuth.getCurrentUser().getUid());
+                    favor.setEnquirerName(firebaseAuth.getCurrentUser().getDisplayName());
                     favor.setTaskType(TaskType.DINING);
                     favor.setStatus(Status.OPEN);
-                    favor.setLocation(locationFragment.getInformationLocation());
+                    favor.setLocation(new edu.cuhk.csci3310.project.model.LatLng(locationFragment.getInformationLocation()));
                     favor.setDescription(descriptionFragment.getInformationString());
                     favor.setDate(dateFragment.getInformationDate());
                     favor.setStartTime(timeFragment.getInformationTime());

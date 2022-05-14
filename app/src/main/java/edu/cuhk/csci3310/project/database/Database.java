@@ -85,87 +85,94 @@ public class Database {
     }
 
     private static void createNewTutoringFavor(TutoringFavor favor) throws Exception {
-        Map<String, Object> data = new HashMap<>();
-        data.put("enquirer", favor.getEnquirer());
-        data.put("accepter", favor.getAccepter());
-        data.put("taskType", favor.getTaskType().getValue());
-        data.put("status", favor.getStatus().getValue());
-        Map<String, Object> loc = new HashMap<>();
-        loc.put("lat", favor.getLocation().latitude);
-        loc.put("long", favor.getLocation().longitude);
-        data.put("loc", loc);
-        data.put("description", favor.getDescription());
-        data.put("startDate", favor.getStartDate());
-        data.put("endDate", favor.getEndDate());
-        data.put("startTime", favor.getStartTime());
-        data.put("endTime", favor.getStartTime());
-        data.put("selection", favor.getSelection());
-        data.put("courseCode", favor.getCourseCode());
-        data.put("courseParticipant", favor.getCourseParticipant());
-
-        // Save favor in DB
-        saveFavorInDB(data);
+        favors.add(favor);
+//        Map<String, Object> data = new HashMap<>();
+//        data.put("enquirer", favor.getEnquirer());
+//        data.put("accepter", favor.getAccepter());
+//        data.put("taskType", favor.getTaskType().getValue());
+//        data.put("status", favor.getStatus().getValue());
+//        Map<String, Object> loc = new HashMap<>();
+//        loc.put("lat", favor.getLocation().latitude);
+//        loc.put("long", favor.getLocation().longitude);
+//        data.put("loc", loc);
+//        data.put("description", favor.getDescription());
+//        data.put("startDate", favor.getStartDate());
+//        data.put("endDate", favor.getEndDate());
+//        data.put("startTime", favor.getStartTime());
+//        data.put("endTime", favor.getStartTime());
+//        data.put("selection", favor.getSelection());
+//        data.put("courseCode", favor.getCourseCode());
+//        data.put("courseParticipant", favor.getCourseParticipant());
+//
+//        // Save favor in DB
+//        saveFavorInDB(data);
     }
 
     private static void createNewDiningFavor(DiningFavor favor) throws Exception {
-        Map<String, Object> data = new HashMap<>();
-        data.put("enquirer", favor.getEnquirer());
-        data.put("accepter", favor.getAccepter());
-        data.put("taskType", favor.getTaskType().getValue());
-        data.put("status", favor.getStatus().getValue());
-        Map<String, Object> loc = new HashMap<>();
-        loc.put("lat", favor.getLocation().latitude);
-        loc.put("long", favor.getLocation().longitude);
-        data.put("loc", loc);
-        data.put("description", favor.getDescription());
-        data.put("date", favor.getDate());
-        data.put("startTime", favor.getStartTime());
-        data.put("endTime", favor.getStartTime());
-        data.put("participant", favor.getParticipant());
 
-        // Save favor in DB
-        saveFavorInDB(data);
+        favors.add(favor);
+//        Map<String, Object> data = new HashMap<>();
+//        data.put("enquirer", favor.getEnquirer());
+//        data.put("accepter", favor.getAccepter());
+//        data.put("taskType", favor.getTaskType().getValue());
+//        data.put("status", favor.getStatus().getValue());
+//        Map<String, Object> loc = new HashMap<>();
+//        loc.put("lat", favor.getLocation().latitude);
+//        loc.put("long", favor.getLocation().longitude);
+//        data.put("loc", loc);
+//        data.put("description", favor.getDescription());
+//        data.put("date", favor.getDate());
+//        data.put("startTime", favor.getStartTime());
+//        data.put("endTime", favor.getStartTime());
+//        data.put("participant", favor.getParticipant());
+//
+//        // Save favor in DB
+//        saveFavorInDB(data);
     }
 
     private static void createNewGatheringFavor(GatheringFavor favor) throws Exception {
-        Map<String, Object> data = new HashMap<>();
-        data.put("enquirer", favor.getEnquirer());
-        data.put("accepter", favor.getAccepter());
-        data.put("taskType", favor.getTaskType().getValue());
-        data.put("status", favor.getStatus().getValue());
-        Map<String, Object> loc = new HashMap<>();
-        loc.put("lat", favor.getLocation().latitude);
-        loc.put("long", favor.getLocation().longitude);
-        data.put("loc", loc);
-        data.put("description", favor.getDescription());
-        data.put("date", favor.getDate());
-        data.put("startTime", favor.getStartTime());
-        data.put("endTime", favor.getStartTime());
-        data.put("activityType", favor.getActivityType());
-        data.put("participant", favor.getParticipant());
 
-        // Save favor in DB
-        saveFavorInDB(data);
+        favors.add(favor);
+//        Map<String, Object> data = new HashMap<>();
+//        data.put("enquirer", favor.getEnquirer());
+//        data.put("accepter", favor.getAccepter());
+//        data.put("taskType", favor.getTaskType().getValue());
+//        data.put("status", favor.getStatus().getValue());
+//        Map<String, Object> loc = new HashMap<>();
+//        loc.put("lat", favor.getLocation().latitude);
+//        loc.put("long", favor.getLocation().longitude);
+//        data.put("loc", loc);
+//        data.put("description", favor.getDescription());
+//        data.put("date", favor.getDate());
+//        data.put("startTime", favor.getStartTime());
+//        data.put("endTime", favor.getStartTime());
+//        data.put("activityType", favor.getActivityType());
+//        data.put("participant", favor.getParticipant());
+//
+//        // Save favor in DB
+//        saveFavorInDB(data);
     }
 
     private static void createNewBorrowingFavor(BorrowingFavor favor) throws Exception {
-        Map<String, Object> data = new HashMap<>();
-        data.put("enquirer", favor.getEnquirer());
-        data.put("accepter", favor.getAccepter());
-        data.put("taskType", favor.getTaskType().getValue());
-        data.put("status", favor.getStatus().getValue());
-        Map<String, Object> loc = new HashMap<>();
-        loc.put("lat", favor.getLocation().latitude);
-        loc.put("long", favor.getLocation().longitude);
-        data.put("loc", loc);
-        data.put("description", favor.getDescription());
-        data.put("date", favor.getDate());
-        data.put("time", favor.getTime());
-        data.put("activityType", favor.getActivityType());
-        data.put("itemType", favor.getItemType());
 
-        // Save favor in DB
-        saveFavorInDB(data);
+        favors.add(favor);
+//        Map<String, Object> data = new HashMap<>();
+//        data.put("enquirer", favor.getEnquirer());
+//        data.put("accepter", favor.getAccepter());
+//        data.put("taskType", favor.getTaskType().getValue());
+//        data.put("status", favor.getStatus().getValue());
+//        Map<String, Object> loc = new HashMap<>();
+//        loc.put("lat", favor.getLocation().latitude);
+//        loc.put("long", favor.getLocation().longitude);
+//        data.put("loc", loc);
+//        data.put("description", favor.getDescription());
+//        data.put("date", favor.getDate());
+//        data.put("time", favor.getTime());
+//        data.put("activityType", favor.getActivityType());
+//        data.put("itemType", favor.getItemType());
+//
+//        // Save favor in DB
+//        saveFavorInDB(data);
     }
 
     public static void saveFavorInDB(Map<String, Object> data) throws Exception {

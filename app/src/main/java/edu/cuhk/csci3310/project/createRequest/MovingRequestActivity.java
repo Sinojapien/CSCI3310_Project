@@ -91,6 +91,7 @@ public class MovingRequestActivity extends RequestActivity {
                     MovingFavor favor = new MovingFavor();
                     favor.setTaskType(TaskType.MOVING);
                     favor.setEnquirer(firebaseAuth.getCurrentUser().getUid());
+                    favor.setEnquirerName(firebaseAuth.getCurrentUser().getDisplayName());
                     favor.setStatus(Status.OPEN);
                     // favor internal representation of LatLng changed
                     favor.setStartLoc(new edu.cuhk.csci3310.project.model.LatLng(startLocationFragment.getInformationLocation()));

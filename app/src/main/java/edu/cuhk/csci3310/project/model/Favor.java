@@ -8,6 +8,7 @@ import edu.cuhk.csci3310.project.database.TaskType;
 public class Favor {
     private String id;
     private String enquirer;
+    private String enquirerName;
     private String accepter;
     private String taskType;
     private String status;
@@ -28,6 +29,13 @@ public class Favor {
 
     public void setEnquirer(String enquirer) {
         this.enquirer = enquirer;
+    }
+
+    public String getEnquirerName(){
+        return this.enquirerName;
+    }
+    public void setEnquirerName(String enquirerName){
+        this.enquirer = enquirerName;
     }
 
     public String getAccepter() {
