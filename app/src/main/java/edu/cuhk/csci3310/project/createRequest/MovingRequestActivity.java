@@ -11,13 +11,22 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.UUID;
 
 import edu.cuhk.csci3310.project.R;
-import edu.cuhk.csci3310.project.SelectionRequestFragment;
+import edu.cuhk.csci3310.project.database.Database;
+import edu.cuhk.csci3310.project.database.Status;
+import edu.cuhk.csci3310.project.database.TaskType;
+import edu.cuhk.csci3310.project.model.Favor;
+import edu.cuhk.csci3310.project.model.MovingFavor;
 
 public class MovingRequestActivity extends RequestActivity {
 
@@ -27,11 +36,16 @@ public class MovingRequestActivity extends RequestActivity {
     TimeRequestFragment timeFragment;
     DescriptionRequestFragment descriptionFragment;
     PictureRequestFragment pictureFragment;
+    FirebaseAuth firebaseAuth;
+
+    private static final String TAG = "MovingRequestActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_moving);
+
+        firebaseAuth = FirebaseAuth.getInstance();
 
         setTitle("Moving Request");
 
@@ -80,7 +94,20 @@ public class MovingRequestActivity extends RequestActivity {
                     Toast.makeText(view.getContext(), "Please fill in all required info.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
+                try {
+                    MovingFavor favor = new MovingFavor();
+                    favor.setTaskType(TaskType.MOVING);
+                    favor.setEnquirer(firebaseAuth.getCurrentUser().getUid());
+                    favor.setStatus(Status.OPEN);
+                    favor.setStartLoc(startLocationFragment.getInformationLocation());
+                    favor.setEndLoc(endLocationFragment.getInformationLocation());
+                    favor.setDate(dateFragment.getInformationDate());
+                    favor.setTime(timeFragment.getInformationTime());
+                    favor.setPhoto(pictureFragment.getInformationBitmap());
+                    Database.createNewFavor(favor);
+                } catch (Exception e) {
+                    Log.d(TAG, "onClick: " + e.getMessage());
+                }
                 Intent replyIntent = new Intent();
                 replyIntent.putExtra(getString(R.string.key_request_type), getResources().getInteger(R.integer.request_type_moving));
                 replyIntent.putExtra(getString(R.string.key_request_start_location), startLocationFragment.getInformationLocation());
