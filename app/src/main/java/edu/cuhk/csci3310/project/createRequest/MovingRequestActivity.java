@@ -92,8 +92,9 @@ public class MovingRequestActivity extends RequestActivity {
                     favor.setTaskType(TaskType.MOVING);
                     favor.setEnquirer(firebaseAuth.getCurrentUser().getUid());
                     favor.setStatus(Status.OPEN);
-                    favor.setStartLoc(startLocationFragment.getInformationLocation());
-                    favor.setEndLoc(endLocationFragment.getInformationLocation());
+                    // favor internal representation of LatLng changed
+                    favor.setStartLoc(new edu.cuhk.csci3310.project.model.LatLng(startLocationFragment.getInformationLocation()));
+                    favor.setEndLoc(new edu.cuhk.csci3310.project.model.LatLng(endLocationFragment.getInformationLocation()));
                     favor.setDate(dateFragment.getInformationDate());
                     favor.setTime(timeFragment.getInformationTime());
                     favor.setPhoto(pictureFragment.getInformationBitmap());
@@ -126,7 +127,7 @@ public class MovingRequestActivity extends RequestActivity {
         isAllFilled &= endLocationFragment.isFilled();
         isAllFilled &= dateFragment.isFilled();
         isAllFilled &= timeFragment.isFilled();
-        isAllFilled &= descriptionFragment.isFilled();
+        // isAllFilled &= descriptionFragment.isFilled(); // description seems to be optional, atleast in user interface
 
         return isAllFilled;
     }

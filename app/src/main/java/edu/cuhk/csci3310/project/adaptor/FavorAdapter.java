@@ -1,6 +1,7 @@
 package edu.cuhk.csci3310.project.adaptor;
 
 import android.content.res.Resources;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +16,15 @@ import com.google.firebase.firestore.Query;
 
 import org.w3c.dom.Text;
 
+import java.util.Objects;
+
 import edu.cuhk.csci3310.project.database.TaskType;
+import edu.cuhk.csci3310.project.model.BorrowingFavor;
+import edu.cuhk.csci3310.project.model.DiningFavor;
 import edu.cuhk.csci3310.project.model.Favor;
+import edu.cuhk.csci3310.project.model.GatheringFavor;
+import edu.cuhk.csci3310.project.model.MovingFavor;
+import edu.cuhk.csci3310.project.model.TutoringFavor;
 
 
 /**
@@ -29,6 +37,7 @@ public class FavorAdapter extends FirestoreAdapter<FavorAdapter.ViewHolder> {
     }
 
     // adapter field
+    private static final String TAG = "FavorAdapter";
     private OnFavorSelectedListener mListener;
 
     public FavorAdapter(Query query, OnFavorSelectedListener listener) {
@@ -62,9 +71,28 @@ public class FavorAdapter extends FirestoreAdapter<FavorAdapter.ViewHolder> {
         public void bind(final DocumentSnapshot snapshot,
                          final OnFavorSelectedListener listener) {
 
+            Log.d(TAG,"Trying to get taskType string");
             // check what type of favor it is before casting to object
-            snapshot.get("taskType");
-            Favor favor = snapshot.toObject(Favor.class);
+            String favorType = snapshot.getString("taskType");
+            Log.d(TAG,"Trying to bind " + favorType);
+
+            Favor favor;
+            switch(favorType){
+                case "MOVING":
+                    favor = snapshot.toObject(MovingFavor.class); break;
+                case "TUTORING":
+                    favor = snapshot.toObject(TutoringFavor.class); break;
+                case "DINING":
+                    favor = snapshot.toObject(DiningFavor.class); break;
+                case "GATHERING":
+                    favor = snapshot.toObject(GatheringFavor.class); break;
+                case "BORROWING":
+                    favor = snapshot.toObject(BorrowingFavor.class); break;
+                default:
+                    Log.e(TAG, "unknown favor encountered");
+                    favor = snapshot.toObject(Favor.class);
+            }
+
             Resources resources = itemView.getResources();
 
             item_favor_taskType.setText(favor.getTaskTypeString());

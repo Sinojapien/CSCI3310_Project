@@ -2,7 +2,7 @@ package edu.cuhk.csci3310.project.model;
 
 import android.graphics.Bitmap;
 
-import com.google.android.gms.maps.model.LatLng;
+// import com.google.android.gms.maps.model.LatLng; // use customized LatLng instead
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.Map;
@@ -11,6 +11,8 @@ import edu.cuhk.csci3310.project.database.Status;
 import edu.cuhk.csci3310.project.database.TaskType;
 
 public class MovingFavor extends Favor {
+    // similar to enum, LatLng from google is not serializable, wrap another layer of class in it
+    // new LatLng is in the same package
     private LatLng startLoc;
     private LatLng endLoc;
     private String date;

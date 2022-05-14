@@ -41,6 +41,7 @@ public class MainSearchRequestActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "on create");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_search_rquest);
 
@@ -49,7 +50,7 @@ public class MainSearchRequestActivity extends AppCompatActivity implements
 
         // initFirestore();
         mFirestore = FirebaseFirestore.getInstance();
-        mQuery = mFirestore.collection("favor")
+        mQuery = mFirestore.collection("favors")
                 .limit(50);
 
         // initialize recycler view
@@ -72,12 +73,13 @@ public class MainSearchRequestActivity extends AppCompatActivity implements
                 }
             }
 
-//            @Override
-//            protected void onError(FirebaseFirestoreException e) {
+            @Override
+            protected void onError(FirebaseFirestoreException e) {
 //                // Show a snackbar on errors
 //                Snackbar.make(findViewById(android.R.id.content),
 //                        "Error: check logs for info.", Snackbar.LENGTH_LONG).show();
-//            }
+                Log.e(TAG, "Error occurs, " + e);
+            }
         };
 
         mFavorRecycler.setLayoutManager(new LinearLayoutManager(this));
@@ -104,13 +106,16 @@ public class MainSearchRequestActivity extends AppCompatActivity implements
 
     @Override
     public void onStart() {
+        Log.d(TAG, "on start");
         super.onStart();
 
         // Apply filters
         // onFilter(mViewModel.getFilters());
 
         // Construct query
-        Query query = mFirestore.collection("favors");
+        Query query = mFirestore.collection("favors").limit(50);
+        mQuery = query;
+        mAdapter.setQuery(query);
 
         // Start listening for Firestore updates
         if (mAdapter != null) {
