@@ -2,15 +2,24 @@ package edu.cuhk.csci3310.project.searchRequest;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.icu.text.SimpleDateFormat;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 
+import java.util.Locale;
+
+import edu.cuhk.csci3310.project.MainActivity;
 import edu.cuhk.csci3310.project.R;
 import edu.cuhk.csci3310.project.database.Status;
 import edu.cuhk.csci3310.project.model.Favor;
@@ -20,13 +29,14 @@ public class MainSearchRequestActivity extends AppCompatActivity {
 
     // reuse favor model for searching
     String favorType;
-
+    final Calendar myCalendar= Calendar.getInstance();
+    String selectedDate;
     // use visibility to control option menu on screen
     // fragment is another option, but it is not necessary in the simple case
     View currentView; // variable to store current view
     View allView;
-    View BorrowingView; String itemType;
-    View DiningView;
+    View BorrowingView; String itemType; EditText dateView;
+    View DiningView; int participantNum; EditText query_Dining_date;
     View GatheringView;
     View MovingView;
     View TutoringView;
@@ -41,7 +51,8 @@ public class MainSearchRequestActivity extends AppCompatActivity {
         favorType = "all";
 
         allView = findViewById(R.id.query_any);
-        BorrowingView = findViewById(R.id.query_Borrowing);
+        BorrowingView = findViewById(R.id.query_Borrowing);;
+        DiningView = findViewById(R.id.query_Dining);
         currentView = allView; // user looking at allView
 
         Spinner spinner = (Spinner) findViewById(R.id.query_Borrowing_spinner);
@@ -62,6 +73,32 @@ public class MainSearchRequestActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
+        // dateView = findViewById(R.id.query_date);
+        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH,month);
+                myCalendar.set(Calendar.DAY_OF_MONTH,day);
+                updateLabel();
+            }
+        };
+        View.OnClickListener l = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DatePickerDialog(MainSearchRequestActivity.this,date,myCalendar.get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        };
+        dateView = findViewById(R.id.query_date);
+        query_Dining_date = findViewById(R.id.query_Dining_date);
+        View array[] = new View[]{dateView, query_Dining_date };
+        for (View view : array){
+            view.setOnClickListener(l);
+        }
+
+        String myFormat="dd/MM/yyyy";
+        SimpleDateFormat dateFormat=new SimpleDateFormat(myFormat, Locale.US);
+        selectedDate = dateFormat.format(myCalendar.getTime());
     }
 
     public void onTypeClicked(View view) {
@@ -75,12 +112,14 @@ public class MainSearchRequestActivity extends AppCompatActivity {
                     break;
             case R.id.radio_Borrowing:
                 if (checked) {
+                    dateView.setText(selectedDate);
                     changeView(currentView, BorrowingView); favorType = "Borrowing";
 
                 }
                     break;
             case R.id.radio_Dining:
                 if (checked) {
+                    query_Dining_date.setText(selectedDate);
                     changeView(currentView, DiningView); favorType = "Dining";
 
                 }
@@ -111,12 +150,15 @@ public class MainSearchRequestActivity extends AppCompatActivity {
     // https://stackoverflow.com/questions/2139134/how-to-send-an-object-from-one-android-activity-to-another-using-intents
     public void onQuerySubmit(View view) {
         Intent intent = new Intent(MainSearchRequestActivity.this, searchResultActivity.class);
-        intent.putExtra("favorType", favorType);
+        Bundle extras = new Bundle();
+        extras.putString("favorType", favorType);
         switch(favorType){
             case "all":
                 break;
             case "Borrowing":
-                intent.putExtra("itemType", itemType);
+                extras.putString("itemType", itemType);
+                extras.putString("date", selectedDate);
+                //Log.d(TAG, "get date: " + dateView.getText());
                 break;
             case "Dining":
                 break;
@@ -127,6 +169,7 @@ public class MainSearchRequestActivity extends AppCompatActivity {
             case "Tutoring":
                 break;
         }
+        intent.putExtras(extras);
         startActivity(intent);
     }
 
@@ -135,5 +178,14 @@ public class MainSearchRequestActivity extends AppCompatActivity {
         e1.setVisibility(View.GONE);
         e2.setVisibility(View.VISIBLE);
         currentView = e2;
+    }
+
+    private void updateLabel(){
+        String myFormat="dd/MM/yyyy";
+        SimpleDateFormat dateFormat=new SimpleDateFormat(myFormat, Locale.US);
+        String date = dateFormat.format(myCalendar.getTime());
+        selectedDate = date;
+        dateView.setText(selectedDate);
+        query_Dining_date.setText(selectedDate);
     }
 }

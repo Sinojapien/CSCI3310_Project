@@ -28,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:text="status"
+        android:text="..."
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/item_favor_taskType" />
 
@@ -45,7 +45,27 @@
         android:id="@+id/item_favor_status_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Status: "
+        android:text="   Status: "
         app:layout_constraintEnd_toStartOf="@+id/item_favor_status"
         app:layout_constraintTop_toBottomOf="@+id/item_favor_taskType" />
+
+    <TextView
+        android:id="@+id/item_favor_distance_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Distance: "
+        app:layout_constraintEnd_toStartOf="@+id/item_favor_distance"
+        app:layout_constraintTop_toBottomOf="@+id/item_favor_taskType"
+        android:visibility="gone"
+        tools:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/item_favor_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="..."
+        app:layout_constraintEnd_toStartOf="@+id/item_favor_status_hint"
+        app:layout_constraintTop_toBottomOf="@+id/item_favor_taskType"
+        android:visibility="gone"
+        tools:visibility="gone"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

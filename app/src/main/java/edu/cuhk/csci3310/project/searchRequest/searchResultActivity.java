@@ -5,9 +5,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -50,7 +52,8 @@ public class searchResultActivity extends AppCompatActivity implements
 
         // receive the favor object, so that the activity could decide the query
         Intent intent = getIntent();
-        String favorType = intent.getStringExtra("favorType");
+        Bundle extras = intent.getExtras();
+        String favorType = extras.getString("favorType");
         // Log.d(TAG, "get favorType: " + favorType);
         // construct query based on the favor
         mQuery = mFirestore.collection("favors")
@@ -63,10 +66,13 @@ public class searchResultActivity extends AppCompatActivity implements
                 break;
             case "Borrowing":
                 mQuery = mQuery.whereEqualTo("taskType", "BORROWING");
-                String itemType = intent.getStringExtra("itemType");
+                String itemType = extras.getString("itemType");
                 if(!itemType.equalsIgnoreCase("any"))
-                    mQuery = mQuery.whereEqualTo("itemType", intent.getStringExtra("itemType"));
+                    mQuery = mQuery.whereEqualTo("itemType", itemType);
                 // Log.d(TAG, "get itemType: " + intent.getStringExtra("itemType"));
+                String date = extras.getString("date");
+                Log.d(TAG, "get date: " + date);
+                mQuery = mQuery.whereGreaterThanOrEqualTo("date", date);
                 break;
             case "Dining":
                 break;
