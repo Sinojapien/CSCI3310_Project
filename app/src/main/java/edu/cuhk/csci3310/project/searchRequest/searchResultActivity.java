@@ -17,7 +17,12 @@ import com.google.firebase.firestore.Query;
 
 import edu.cuhk.csci3310.project.R;
 import edu.cuhk.csci3310.project.adaptor.FavorAdapter;
+import edu.cuhk.csci3310.project.model.BorrowingFavor;
+import edu.cuhk.csci3310.project.model.DiningFavor;
 import edu.cuhk.csci3310.project.model.Favor;
+import edu.cuhk.csci3310.project.model.GatheringFavor;
+import edu.cuhk.csci3310.project.model.MovingFavor;
+import edu.cuhk.csci3310.project.model.TutoringFavor;
 import edu.cuhk.csci3310.project.requestDetails.RequestDetailsActivity;
 
 public class searchResultActivity extends AppCompatActivity implements
@@ -45,15 +50,32 @@ public class searchResultActivity extends AppCompatActivity implements
 
         // receive the favor object, so that the activity could decide the query
         Intent intent = getIntent();
-        Favor favor = (Favor) intent.getParcelableExtra("favor");
-        // Log.d(TAG, "received favor, status = " + favor.getStatusString());
-
+        String favorType = intent.getStringExtra("favorType");
+        // Log.d(TAG, "get favorType: " + favorType);
+        // construct query based on the favor
         mQuery = mFirestore.collection("favors")
+                .whereEqualTo("status", "OPEN")
                 .limit(50);
 
-        // initialize recycler view
-        if (mQuery == null) {
-            Log.w(TAG, "No query, not initializing RecyclerView");
+        // get different information basic on favorType
+        switch(favorType){
+            case "all": // no need to modify query with all
+                break;
+            case "Borrowing":
+                mQuery = mQuery.whereEqualTo("taskType", "BORROWING");
+                String itemType = intent.getStringExtra("itemType");
+                if(!itemType.equalsIgnoreCase("any"))
+                    mQuery = mQuery.whereEqualTo("itemType", intent.getStringExtra("itemType"));
+                // Log.d(TAG, "get itemType: " + intent.getStringExtra("itemType"));
+                break;
+            case "Dining":
+                break;
+            case "Gathering":
+                break;
+            case "Moving":
+                break;
+            case "Tutoring":
+                break;
         }
 
         mAdapter = new FavorAdapter(mQuery, this) {
@@ -90,9 +112,7 @@ public class searchResultActivity extends AppCompatActivity implements
         // onFilter(mViewModel.getFilters());
 
         // Construct query
-        Query query = mFirestore.collection("favors").limit(50);
-        mQuery = query;
-        mAdapter.setQuery(query);
+        mAdapter.setQuery(mQuery);
 
         // Start listening for Firestore updates
         if (mAdapter != null) {
@@ -111,14 +131,29 @@ public class searchResultActivity extends AppCompatActivity implements
     // method to be called when favor is clicked
     // method passed to the adaptor
     @Override
-    public void onFavorSelected(DocumentSnapshot favor) {
-        Log.d(TAG, "clicked on favor, ID = " + favor.getId());
-        // Go to the details page for the selected favor
-        // to be added when favor detail page created
-        //Intent intent = new Intent(this, favorDetailActivity.class);
-        // intent.putExtra(RestaurantDetailActivity.KEY_RESTAURANT_ID, restaurant.getId());
-        // startActivity(intent);
+    public void onFavorSelected(DocumentSnapshot favorDoc) {
+        // Log.d(TAG, "clicked on favor, ID = " + favorDoc.getId());
         Intent intent = new Intent(searchResultActivity.this, RequestDetailsActivity.class);
+
+        Favor temFavor;
+        String favorType = favorDoc.getString("taskType");
+        switch(favorType){
+            case "MOVING":
+                temFavor = favorDoc.toObject(MovingFavor.class); break;
+            case "TUTORING":
+                temFavor = favorDoc.toObject(TutoringFavor.class); break;
+            case "DINING":
+                temFavor = favorDoc.toObject(DiningFavor.class); break;
+            case "GATHERING":
+                temFavor = favorDoc.toObject(GatheringFavor.class); break;
+            case "BORROWING":
+                temFavor = favorDoc.toObject(BorrowingFavor.class); break;
+            default:
+                Log.e(TAG, "unknown favor encountered");
+                temFavor = favorDoc.toObject(Favor.class);
+        }
+
+        intent.putExtra("favor", temFavor);
         startActivity(intent);
     }
 }
