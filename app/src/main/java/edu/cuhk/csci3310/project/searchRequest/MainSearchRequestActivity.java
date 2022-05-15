@@ -165,6 +165,7 @@ public class MainSearchRequestActivity extends AppCompatActivity implements
 
         Intent intent = new Intent(MainSearchRequestActivity.this, RequestDetailsActivity.class);
         intent.putExtra("FAVOR", favor);
+        intent.putExtra("TYPE", "REQUEST");
         startActivity(intent);
     }
 }

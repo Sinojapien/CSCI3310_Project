@@ -2,6 +2,8 @@ package edu.cuhk.csci3310.project.model;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 // import com.google.android.gms.maps.model.LatLng; // use customized LatLng instead
 import com.google.firebase.firestore.Exclude;
@@ -27,6 +29,42 @@ public class MovingFavor extends Favor {
     public MovingFavor() {
         super();
     }
+
+    protected MovingFavor(Parcel in) {
+        super(in);
+        date = in.readString();
+        time = in.readString();
+        description = in.readString();
+        photo = in.readParcelable(Bitmap.class.getClassLoader());
+        photoByte = in.createByteArray();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeString(date);
+        dest.writeString(time);
+        dest.writeString(description);
+        dest.writeParcelable(photo, flags);
+        dest.writeByteArray(photoByte);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<MovingFavor> CREATOR = new Creator<MovingFavor>() {
+        @Override
+        public MovingFavor createFromParcel(Parcel in) {
+            return new MovingFavor(in);
+        }
+
+        @Override
+        public MovingFavor[] newArray(int size) {
+            return new MovingFavor[size];
+        }
+    };
 
     public LatLng getStartLoc() {
         return startLoc;

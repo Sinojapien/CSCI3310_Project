@@ -2,6 +2,9 @@ package edu.cuhk.csci3310.project.model;
 
 // import com.google.android.gms.maps.model.LatLng;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Map;
 
 import edu.cuhk.csci3310.project.database.Status;
@@ -19,6 +22,42 @@ public class BorrowingFavor extends Favor {
     public BorrowingFavor() {
         super();
     }
+
+    protected BorrowingFavor(Parcel in) {
+        super(in);
+        activityType = in.readString();
+        description = in.readString();
+        date = in.readString();
+        time = in.readString();
+        itemType = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeString(activityType);
+        dest.writeString(description);
+        dest.writeString(date);
+        dest.writeString(time);
+        dest.writeString(itemType);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<BorrowingFavor> CREATOR = new Creator<BorrowingFavor>() {
+        @Override
+        public BorrowingFavor createFromParcel(Parcel in) {
+            return new BorrowingFavor(in);
+        }
+
+        @Override
+        public BorrowingFavor[] newArray(int size) {
+            return new BorrowingFavor[size];
+        }
+    };
 
     public String getActivityType() {
         return activityType;

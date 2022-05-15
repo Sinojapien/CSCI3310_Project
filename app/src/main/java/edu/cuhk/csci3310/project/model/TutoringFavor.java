@@ -1,6 +1,8 @@
 package edu.cuhk.csci3310.project.model;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 // import com.google.android.gms.maps.model.LatLng;
 
@@ -23,6 +25,50 @@ public class TutoringFavor extends Favor {
     private int courseParticipant;
 
     public TutoringFavor() { super(); }
+
+    protected TutoringFavor(Parcel in) {
+        super(in);
+        startDate = in.readString();
+        endDate = in.readString();
+        startTime = in.readString();
+        endTime = in.readString();
+        description = in.readString();
+        selection = in.createStringArrayList();
+        picture = in.readParcelable(Bitmap.class.getClassLoader());
+        courseCode = in.readString();
+        courseParticipant = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeString(startDate);
+        dest.writeString(endDate);
+        dest.writeString(startTime);
+        dest.writeString(endTime);
+        dest.writeString(description);
+        dest.writeStringList(selection);
+        dest.writeParcelable(picture, flags);
+        dest.writeString(courseCode);
+        dest.writeInt(courseParticipant);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<TutoringFavor> CREATOR = new Creator<TutoringFavor>() {
+        @Override
+        public TutoringFavor createFromParcel(Parcel in) {
+            return new TutoringFavor(in);
+        }
+
+        @Override
+        public TutoringFavor[] newArray(int size) {
+            return new TutoringFavor[size];
+        }
+    };
 
     public LatLng getLocation() {
         return location;

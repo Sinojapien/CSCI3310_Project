@@ -2,6 +2,9 @@ package edu.cuhk.csci3310.project.model;
 
 // import com.google.android.gms.maps.model.LatLng;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Map;
 
 import edu.cuhk.csci3310.project.database.Status;
@@ -19,6 +22,44 @@ public class GatheringFavor extends Favor {
     public GatheringFavor() {
         super();
     }
+
+    protected GatheringFavor(Parcel in) {
+        super(in);
+        description = in.readString();
+        date = in.readString();
+        startTime = in.readString();
+        endTime = in.readString();
+        activityType = in.readString();
+        participant = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeString(description);
+        dest.writeString(date);
+        dest.writeString(startTime);
+        dest.writeString(endTime);
+        dest.writeString(activityType);
+        dest.writeInt(participant);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<GatheringFavor> CREATOR = new Creator<GatheringFavor>() {
+        @Override
+        public GatheringFavor createFromParcel(Parcel in) {
+            return new GatheringFavor(in);
+        }
+
+        @Override
+        public GatheringFavor[] newArray(int size) {
+            return new GatheringFavor[size];
+        }
+    };
 
     public LatLng getLocation() {
         return location;
