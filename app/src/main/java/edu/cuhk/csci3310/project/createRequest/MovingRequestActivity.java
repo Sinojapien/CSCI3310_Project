@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -26,6 +25,7 @@ import edu.cuhk.csci3310.project.database.Database;
 import edu.cuhk.csci3310.project.database.Status;
 import edu.cuhk.csci3310.project.database.TaskType;
 import edu.cuhk.csci3310.project.model.Favor;
+import edu.cuhk.csci3310.project.model.LatLng;
 import edu.cuhk.csci3310.project.model.MovingFavor;
 
 public class MovingRequestActivity extends RequestActivity {
@@ -100,8 +100,8 @@ public class MovingRequestActivity extends RequestActivity {
                     favor.setEnquirer(firebaseAuth.getCurrentUser().getUid());
                     favor.setEnquirerName(firebaseAuth.getCurrentUser().getDisplayName());
                     favor.setStatus(Status.OPEN);
-                    favor.setStartLoc(startLocationFragment.getInformationLocation());
-                    favor.setEndLoc(endLocationFragment.getInformationLocation());
+                    favor.setStartLoc(new LatLng(startLocationFragment.getInformationLocation()));
+                    favor.setEndLoc(new LatLng(endLocationFragment.getInformationLocation()));
                     favor.setDate(dateFragment.getInformationDate());
                     favor.setTime(timeFragment.getInformationTime());
                     favor.setPhoto(pictureFragment.getInformationBitmap());
