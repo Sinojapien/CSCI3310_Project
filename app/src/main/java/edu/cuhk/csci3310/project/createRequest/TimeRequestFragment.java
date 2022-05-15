@@ -113,8 +113,7 @@ public class TimeRequestFragment extends RequestFragment {
     protected void setDurationSwitch(boolean checked){
         mParamDuration = checked;
         mDurationSwitch.setChecked(checked);
-        mTimeEdit.setTextColor(Color.BLACK);
-        mEndTimeEdit.setTextColor(Color.BLACK);
+        setTextColour(Color.BLACK);
         if (checked){
             mToText.setVisibility(View.VISIBLE);
             mFromText.setVisibility(View.VISIBLE);
@@ -140,7 +139,8 @@ public class TimeRequestFragment extends RequestFragment {
             @Override
             public void onTimeSet(TimePicker timePicker, int i, int i1) {
                 textView.setText(getString(R.string.request_time, i, i1));
-                textView.setTextColor(Color.BLACK);
+                //textView.setTextColor(Color.BLACK);
+                setTextColour(Color.BLACK);
             }
         }, hour, minute, true);
 
@@ -150,6 +150,21 @@ public class TimeRequestFragment extends RequestFragment {
                 timePickerDialog.show();
             }
         });
+    }
+
+    protected void setTextColour(int colour){
+        mTimeEdit.setTextColor(colour);
+        mEndTimeEdit.setTextColor(colour);
+    }
+
+    @Override
+    public void onSaveInstanceState(@Nullable Bundle savedInstanceState){
+        savedInstanceState.putBoolean(ARG_PARAM_DURATION, mParamDuration);
+    }
+
+    @Override
+    protected void onLoadInstanceState(@Nullable Bundle savedInstanceState){
+        mParamDuration = savedInstanceState.getBoolean(ARG_PARAM_DURATION);
     }
 
     @Override
@@ -164,8 +179,7 @@ public class TimeRequestFragment extends RequestFragment {
                 // https://stackoverflow.com/questions/52333750/problem-with-display-multiple-toast-in-order-one-after-another
                 // Invalid Input
                 Toast.makeText(getContext(), mTimeTitle.getText().toString() + " " + "Please fill in a valid interval.", Toast.LENGTH_SHORT).show();
-                mTimeEdit.setTextColor(Color.RED);
-                mEndTimeEdit.setTextColor(Color.RED);
+                setTextColour(Color.RED);
             }
 
             return false;

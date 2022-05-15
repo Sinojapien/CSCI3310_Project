@@ -84,7 +84,7 @@ public class SelectionRequestFragment extends RequestFragment {
             mTitleText.setText(mParamTitle);
 
         // SelectionListAdapter adapter = new SelectionListAdapter(view.getContext(), mParamList, 0);
-        mAdapter = new SelectionListAdapter(view.getContext(), mDefaultSelectedList, 0);
+        mAdapter = new SelectionListAdapter(this, mDefaultSelectedList, 0);
         mRecyclerView.setAdapter(mAdapter);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(view.getContext(), 3);
@@ -104,11 +104,23 @@ public class SelectionRequestFragment extends RequestFragment {
         // https://developer.android.com/reference/kotlin/androidx/appcompat/app/AlertDialog.Builder
         // https://developer.android.com/guide/topics/ui/dialogs#java
 
-        final boolean[] checkedIndex = new boolean[mParamList.size()];
-
         view.setOnClickListener(new View.OnClickListener() {
+
+            //final boolean[] checkedIndex = new boolean[mParamList.size()];
+
             @Override
             public void onClick(View view) {
+
+                boolean[] checkedIndex = new boolean[mParamList.size()];
+                // Initialize index array, inefficient
+                ArrayList<String> selectedList = mAdapter.getItemList();
+                for(int i=0; i<mParamList.size(); i++){
+                    if (selectedList.contains(mParamList.get(i)))
+                        checkedIndex[i] = true;
+                    else
+                        checkedIndex[i] = false;
+                }
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
                 builder.setTitle(mParamListTitle);
                 builder.setIcon(R.drawable.common_google_signin_btn_icon_light);

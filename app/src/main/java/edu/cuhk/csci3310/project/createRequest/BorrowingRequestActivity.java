@@ -116,7 +116,7 @@ public class BorrowingRequestActivity extends RequestActivity {
                     favor.setDescription(descriptionFragment.getInformationString());
                     favor.setDate(dateFragment.getInformationDate());
                     favor.setTime(timeFragment.getInformationTime());
-                    favor.setActivityType(borrowEdit.getText().toString());
+                    //favor.setActivityType(borrowEdit.getText().toString());
                     favor.setItemType((String) borrowTypeSpinner.getSelectedItem());
                     Database.createNewFavor(favor);
                 } catch(Exception e) {
