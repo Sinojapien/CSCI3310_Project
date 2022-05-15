@@ -2,6 +2,9 @@ package edu.cuhk.csci3310.project.model;
 
 // import com.google.android.gms.maps.model.LatLng;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Map;
 
 import edu.cuhk.csci3310.project.database.Status;
@@ -113,5 +116,47 @@ public class BorrowingFavor extends Favor {
             favor.setItemType((String) data.get("itemType"));
         }
         return favor;
+    }
+
+    // Parcelable is useful for passing object between activity, also much faster than java native serialization
+    // Reference: stack overflow question
+    // https://stackoverflow.com/questions/2139134/how-to-send-an-object-from-one-android-activity-to-another-using-intents
+    // Parcelable required method.
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        // write information in super class first
+        super.writeToParcel(out,flags);
+        // than add information related to the child class
+        out.writeString(this.activityType);
+        out.writeString(this.description);
+        out.writeDouble(this.location.getLatitude());
+        out.writeDouble(this.location.getLongitude());
+        out.writeString(this.date);
+        out.writeString(this.time);
+    }
+
+    // constructor the object back
+    public static final Parcelable.Creator<Favor> CREATOR = new Parcelable.Creator<Favor>() {
+        public BorrowingFavor createFromParcel(Parcel in) {
+            return new BorrowingFavor(in);
+        }
+
+        public BorrowingFavor[] newArray(int size) {
+            return new BorrowingFavor[size];
+        }
+    };
+
+    // constructor for Parcelable, only used privately
+    private BorrowingFavor(Parcel in) {
+        // first in, first out manner
+        super(in);
+        this.activityType = in.readString();
+        this.description = in.readString();
+        Double lat = in.readDouble();
+        Double lng = in.readDouble();
+        this.location = new LatLng(lat, lng);
+        this.date = in.readString();
+        this.time = in.readString();
     }
 }

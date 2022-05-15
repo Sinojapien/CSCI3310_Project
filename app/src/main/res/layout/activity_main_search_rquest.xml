@@ -7,41 +7,96 @@
     tools:context=".searchRequest.MainSearchRequestActivity">
 
     <TextView
-        android:id="@+id/search_text"
+        android:id="@+id/query_search_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="To be edited"
+        android:text="What favor are you looking for?"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_favor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_text"
-        tools:listitem="@layout/item_favor" />
-
-    <!-- Empty list view (shown when there is no favor)-->
-    <LinearLayout
-        android:id="@+id/view_empty"
+    <RadioGroup
+        android:id="@+id/radioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
         android:orientation="vertical"
-        android:visibility="gone"
-        tools:visibility="gone"
-
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_text" >
+        app:layout_constraintTop_toBottomOf="@+id/query_search_text">
 
-        <TextView
+        <RadioButton
+            android:id="@+id/radio_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="You have no favor. start by creating one!"/>
+            android:checked="true"
+            android:onClick="onTypeClicked"
+            android:text="Any" />
 
-    </LinearLayout>
+        <RadioButton
+            android:id="@+id/radio_Borrowing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onTypeClicked"
+            android:text="Borrowing" />
+
+        <RadioButton
+            android:id="@+id/radio_Dining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onTypeClicked"
+            android:text="Dining" />
+
+        <RadioButton
+            android:id="@+id/radio_Gathering"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onTypeClicked"
+            android:text="Gathering" />
+
+        <RadioButton
+            android:id="@+id/radio_Moving"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onTypeClicked"
+            android:text="Moving" />
+
+        <RadioButton
+            android:id="@+id/radio_Tutoring"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="32dp"
+            android:onClick="onTypeClicked"
+            android:text="Tutoring" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/query_submit_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#D3E8BA"
+        android:text="Submit"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:onClick="onQuerySubmit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="300dp"
+        android:layout_height="649dp"
+        app:layout_constraintBottom_toTopOf="@+id/query_submit_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/radioGroup"
+        app:layout_constraintTop_toBottomOf="@+id/query_search_text">
+
+        <TextView
+            android:id="@+id/query_any_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No further option for favor type 'any'"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
