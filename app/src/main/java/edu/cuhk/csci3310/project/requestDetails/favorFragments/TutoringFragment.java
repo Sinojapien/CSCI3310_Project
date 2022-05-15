@@ -16,8 +16,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import edu.cuhk.csci3310.project.R;
+import edu.cuhk.csci3310.project.model.TutoringFavor;
 
 public class TutoringFragment extends Fragment {
+
+    public static final String BUNDLE_KEY = "Favor";
+    TutoringFavor favor;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -38,6 +42,14 @@ public class TutoringFragment extends Fragment {
         }
     };
 
+    public static Fragment newInstance(TutoringFavor favor) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(BUNDLE_KEY, favor);
+        Fragment fragment = new TutoringFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -54,5 +66,6 @@ public class TutoringFragment extends Fragment {
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
+        favor = getArguments().getParcelable(BUNDLE_KEY);
     }
 }

@@ -17,8 +17,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import edu.cuhk.csci3310.project.R;
+import edu.cuhk.csci3310.project.model.BorrowingFavor;
+import edu.cuhk.csci3310.project.model.GatheringFavor;
 
 public class BorrowingFragment extends Fragment {
+
+    public static final String BUNDLE_KEY = "Favor";
+    GatheringFavor favor;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -39,6 +44,14 @@ public class BorrowingFragment extends Fragment {
         }
     };
 
+    public static Fragment newInstance(BorrowingFavor favor) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(BUNDLE_KEY, favor);
+        Fragment fragment = new BorrowingFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -55,5 +68,6 @@ public class BorrowingFragment extends Fragment {
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
+        favor = getArguments().getParcelable(BUNDLE_KEY);
     }
 }

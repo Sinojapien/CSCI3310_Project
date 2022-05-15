@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import edu.cuhk.csci3310.project.R;
 import edu.cuhk.csci3310.project.createRequest.RequestActivity;
@@ -34,6 +35,12 @@ public class RequestDetailsActivity extends FragmentActivity {
 
     Favor favor;
 
+    // View objects
+    TextView requestTypeTV;
+    TextView statusTV;
+    TextView enquirerTV;
+    TextView description;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,26 +48,49 @@ public class RequestDetailsActivity extends FragmentActivity {
         setContentView(R.layout.activity_request_details);
 
         Intent intent = getIntent();
-        // Favor favor = getFavorObjectFromIntent(intent);
         favor = intent.getParcelableExtra("FAVOR");
+        instantiateTextFields();
+        fillTextFields();
         showFavorFragment(favor.getTaskTypeString());
         showActionFragment(intent.getStringExtra("TYPE"));
     }
 
+    private void instantiateTextFields() {
+        requestTypeTV = findViewById(R.id.request_type_TV);
+        statusTV = findViewById(R.id.status_TV);
+        enquirerTV = findViewById(R.id.enquirer_TV);
+    }
+
+    private void fillTextFields() {
+        if(favor.getTaskTypeString() != null) {
+            requestTypeTV.setText(favor.getTaskTypeString());
+        }
+        if(favor.getStatusString() != null) {
+            statusTV.setText(favor.getStatusString());
+        }
+        if(favor.getEnquirerName() != null) {
+            enquirerTV.setText(favor.getEnquirerName());
+        }
+    }
+
     public void showFavorFragment(String taskType) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment fragment;
         switch(taskType) {
             case "Moving":
-                ft.add(R.id.favorFragmentContainer, new MovingFragment()).commit(); break;
+                fragment = MovingFragment.newInstance((MovingFavor) favor); break;
             case "Tutoring":
-                ft.add(R.id.favorFragmentContainer, new TutoringFragment()).commit(); break;
+                fragment = TutoringFragment.newInstance((TutoringFavor) favor); break;
             case "Dining":
-                ft.add(R.id.favorFragmentContainer, new DiningFragment()).commit(); break;
+                fragment = DiningFragment.newInstance((DiningFavor) favor); break;
             case "Gathering":
-                ft.add(R.id.favorFragmentContainer, new GatheringFragment()).commit(); break;
+                fragment = GatheringFragment.newInstance((GatheringFavor) favor); break;
             case "Borrowing":
-                ft.add(R.id.favorFragmentContainer, new BorrowingFragment()).commit(); break;
+                fragment = BorrowingFragment.newInstance((BorrowingFavor) favor); break;
+            default:
+                return;
         }
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.favorFragmentContainer, fragment).commit();
     }
 
     public void showActionFragment(String type) {

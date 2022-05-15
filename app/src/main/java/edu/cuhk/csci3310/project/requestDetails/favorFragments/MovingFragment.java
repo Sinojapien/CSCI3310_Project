@@ -5,11 +5,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import edu.cuhk.csci3310.project.R;
+import edu.cuhk.csci3310.project.model.MovingFavor;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,6 +21,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MovingFragment extends Fragment {
+
+    public static final String BUNDLE_KEY = "Favor";
+    MovingFavor favor;
+
+    private final String TAG = "MovingFragment";
+
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -33,11 +41,28 @@ public class MovingFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            LatLng sydney = new LatLng(-34, 151);
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            favor.getEndLoc();
+            // Set marker at start loc
+            if(favor.getStartLoc() != null) {
+                LatLng startloc = new LatLng(favor.getStartLoc().getLatitude(), favor.getEndLoc().getLongitude());
+                googleMap.addMarker(new MarkerOptions().position(startloc).title("Start Locarion"));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(startloc));
+            }
+            // Set marker at end loc
+            if(favor.getEndLoc() != null) {
+                LatLng endLoc = new LatLng(favor.getStartLoc().getLatitude(), favor.getEndLoc().getLongitude());
+                googleMap.addMarker(new MarkerOptions().position(endLoc).title("End Location"));
+            }
         }
     };
+
+    public static Fragment newInstance(MovingFavor favor) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(BUNDLE_KEY, favor);
+        Fragment fragment = new MovingFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Nullable
     @Override
@@ -54,6 +79,9 @@ public class MovingFragment extends Fragment {
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
+        }
+        if(getArguments().getParcelable(BUNDLE_KEY) != null) {
+            favor = getArguments().getParcelable(BUNDLE_KEY);
         }
     }
 }
