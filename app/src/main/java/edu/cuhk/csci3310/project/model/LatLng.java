@@ -3,6 +3,8 @@ package edu.cuhk.csci3310.project.model;
 
 import com.google.firebase.firestore.Exclude;
 
+// since firebase complaint when serializing google's LatLng, (no empty constructor)
+// use our own class to wrap it up
 public class LatLng{
     private Double latitude;
     private Double longitude;

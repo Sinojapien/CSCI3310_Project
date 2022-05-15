@@ -105,9 +105,10 @@ public class GatheringRequestActivity extends RequestActivity {
                 try {
                     GatheringFavor favor = new GatheringFavor();
                     favor.setEnquirer(firebaseAuth.getCurrentUser().getUid());
+                    favor.setEnquirerName(firebaseAuth.getCurrentUser().getDisplayName());
                     favor.setTaskType(TaskType.GATHERING);
                     favor.setStatus(Status.OPEN);
-                    favor.setLocation(locationFragment.getInformationLocation());
+                    favor.setLocation(new edu.cuhk.csci3310.project.model.LatLng(locationFragment.getInformationLocation()));
                     favor.setDescription(descriptionFragment.getInformationString());
                     favor.setDate(dateFragment.getInformationDate());
                     favor.setStartTime(timeFragment.getInformationTime());

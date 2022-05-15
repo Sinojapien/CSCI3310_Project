@@ -2,7 +2,7 @@ package edu.cuhk.csci3310.project.model;
 
 import android.graphics.Bitmap;
 
-import com.google.android.gms.maps.model.LatLng;
+// import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 import java.util.Map;

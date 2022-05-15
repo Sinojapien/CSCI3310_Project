@@ -110,9 +110,10 @@ public class BorrowingRequestActivity extends RequestActivity {
                 try {
                     BorrowingFavor favor = new BorrowingFavor();
                     favor.setEnquirer(firebaseAuth.getCurrentUser().getUid());
+                    favor.setEnquirerName(firebaseAuth.getCurrentUser().getDisplayName());
                     favor.setTaskType(TaskType.BORROWING);
                     favor.setStatus(Status.OPEN);
-                    favor.setLocation(locationFragment.getInformationLocation());
+                    favor.setLocation(new edu.cuhk.csci3310.project.model.LatLng(locationFragment.getInformationLocation()));
                     favor.setDescription(descriptionFragment.getInformationString());
                     favor.setDate(dateFragment.getInformationDate());
                     favor.setTime(timeFragment.getInformationTime());

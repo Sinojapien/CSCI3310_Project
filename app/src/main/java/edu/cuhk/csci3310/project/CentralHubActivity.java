@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import edu.cuhk.csci3310.project.account.UserAccountActivity; // for sending intent
 import edu.cuhk.csci3310.project.createRequest.MainRequestActivity;
@@ -17,14 +21,20 @@ import edu.cuhk.csci3310.project.searchRequest.MainSearchRequestActivity;
  */
 public class CentralHubActivity extends AppCompatActivity{
     // layout page may need more stuff, e.g. photo, text
+    private TextView mUserDisplayName;
+    FirebaseAuth firebaseAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Log.d("CentralHubActivity", "creating CentralHubActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_central_hub);
 
-        // set user name, if any
+        firebaseAuth = FirebaseAuth.getInstance();
 
+        // set user name, if any
+        mUserDisplayName = findViewById(R.id.hub_username);
+        mUserDisplayName.setText(firebaseAuth.getCurrentUser().getDisplayName());
 
         Button accountBtn = findViewById(R.id.hub_account_btn);
         accountBtn.setOnClickListener(view -> {

@@ -122,9 +122,10 @@ public class TutoringRequestActivity extends RequestActivity {
                 try {
                     TutoringFavor favor = new TutoringFavor();
                     favor.setEnquirer(firebaseAuth.getCurrentUser().getUid());
+                    favor.setEnquirerName(firebaseAuth.getCurrentUser().getDisplayName());
                     favor.setTaskType(TaskType.TUTORING);
                     favor.setStatus(Status.OPEN);
-                    favor.setLocation(locationFragment.getInformationLocation());
+                    favor.setLocation(new edu.cuhk.csci3310.project.model.LatLng(locationFragment.getInformationLocation()));
                     favor.setDescription(descriptionFragment.getInformationString());
                     favor.setStartDate(dateFragment.getInformationDate());
                     favor.setEndDate(dateFragment.getInformationDateEnd());

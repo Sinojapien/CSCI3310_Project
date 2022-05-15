@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import edu.cuhk.csci3310.project.R;
+
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 
@@ -39,10 +41,13 @@ public class FavorAdapter extends FirestoreAdapter<FavorAdapter.ViewHolder> {
     // adapter field
     private static final String TAG = "FavorAdapter";
     private OnFavorSelectedListener mListener;
+    FirebaseAuth firebaseAuth;
 
     public FavorAdapter(Query query, OnFavorSelectedListener listener) {
         super(query);
         mListener = listener;
+        firebaseAuth = FirebaseAuth.getInstance();
+
     }
 
     @Override
@@ -59,13 +64,17 @@ public class FavorAdapter extends FirestoreAdapter<FavorAdapter.ViewHolder> {
 
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView item_favor_taskType;
+        TextView item_favor_request_hint;
         TextView item_favor_requesterName;
+        TextView item_favor_status_hint;
         TextView item_favor_status;
 
         public ViewHolder(View itemView) {
             super(itemView);
             item_favor_taskType = itemView.findViewById(R.id.item_favor_taskType);
+            item_favor_request_hint = itemView.findViewById(R.id.item_favor_Requested_by);
             item_favor_requesterName = itemView.findViewById(R.id.item_favor_requesterName);
+            item_favor_status_hint = itemView.findViewById(R.id.item_favor_status_hint);
             item_favor_status = itemView.findViewById(R.id.item_favor_status);
         }
 
@@ -94,9 +103,9 @@ public class FavorAdapter extends FirestoreAdapter<FavorAdapter.ViewHolder> {
                     favor = snapshot.toObject(Favor.class);
             }
 
-            Resources resources = itemView.getResources();
-
+            // Resources resources = itemView.getResources();
             item_favor_taskType.setText(favor.getTaskTypeString());
+            item_favor_requesterName.setText(favor.getEnquirerName());
             item_favor_status.setText(favor.getStatusString());
 
             // Click listener

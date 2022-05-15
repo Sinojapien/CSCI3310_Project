@@ -28,6 +28,8 @@ import java.util.Map;
 
 import edu.cuhk.csci3310.project.R;
 import edu.cuhk.csci3310.project.adaptor.FavorAdapter;
+import edu.cuhk.csci3310.project.createRequest.RequestMapActivity;
+import edu.cuhk.csci3310.project.requestDetails.RequestDetailsActivity;
 
 public class MainSearchRequestActivity extends AppCompatActivity implements
         FavorAdapter.OnFavorSelectedListener{
@@ -140,7 +142,8 @@ public class MainSearchRequestActivity extends AppCompatActivity implements
         // to be added when favor detail page created
         //Intent intent = new Intent(this, favorDetailActivity.class);
         // intent.putExtra(RestaurantDetailActivity.KEY_RESTAURANT_ID, restaurant.getId());
-
         // startActivity(intent);
+        Intent intent = new Intent(MainSearchRequestActivity.this, RequestDetailsActivity.class);
+        startActivity(intent);
     }
 }
