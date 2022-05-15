@@ -13,6 +13,8 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="clear">Clear All</string>
+    <string name="add">Add</string>
+    <string name="remove">Remove</string>
 
     <string name="request_post">Post Request</string>
 
@@ -33,14 +35,18 @@
     <string-array name="request_gathering_type">
         <item>Lecture</item>
         <item>Study</item>
+        <item>Sports</item>
         <item>Party</item>
+        <item>Volunteer</item>
         <item>Other</item>
     </string-array>
     <string-array name="request_borrowing_type">
+        <item>Any</item>
         <item>Disposable</item>
-        <item>Accessory</item>
         <item>Stationery</item>
-        <item>Other</item>
+        <item>Learning Material</item>
+        <item>Accessory</item>
+        <item>Utensil</item>
     </string-array>
     <string-array name="request_major">
         <item>Arts</item>
@@ -53,15 +59,20 @@
         <item>Social Science</item>
     </string-array>
 
+    <!-- Map Activity -->
     <string name="key_map_location">MAP_LOCATION</string>
     <string name="key_map_boundary">MAP_BOUNDARY</string>
     <string name="key_map_title">MAP_MARKER_TITLE</string>
     <string name="key_map_icon">MAP_MARKER_ICON</string>
+    <string name="key_map_zoom">MAP_ZOOM</string>
+    <string name="key_map_info">MAP_INFORMATION</string>
 
+    <!-- Request Activity -->
     <string name="key_request_type">REQUEST_TYPE</string>
 
     <string name="key_request_activity_type">REQUEST_ACTIVITY_TYPE</string>
 
+    <!-- Location -->
     <string name="key_request_location">REQUEST_LOCATION</string>
     <string name="key_request_location_string">REQUEST_LOCATION_STRING</string>
     <string name="key_request_start_location">REQUEST_START_LOCATION</string>
@@ -70,6 +81,7 @@
     <string name="key_request_description">REQUEST_DESCRIPTION</string>
     <string name="key_request_picture">REQUEST_PICTURE</string>
 
+    <!-- Date / Time -->
     <string name="key_request_datetime">REQUEST_DATETIME</string>
     <string name="key_request_date">REQUEST_DATE</string>
     <string name="key_request_date_start">REQUEST_DATE_START</string>
@@ -78,9 +90,27 @@
     <string name="key_request_time_start">REQUEST_TIME_START</string>
     <string name="key_request_time_end">REQUEST_TIME_END</string>
 
+    <!-- Selection / Spinner -->
     <string name="key_request_selection">REQUEST_SELECTION</string>
     <string name="key_request_course_code">REQUEST_COURSE_CODE</string>
     <string name="key_request_participant">REQUEST_PARTICIPANT</string>
+
+    <!-- Location Information -->
+    <string-array name="location_cuhk">
+        <item>22.418014</item>
+        <item>114.207259</item>
+        <item>0.0075</item>
+        <item>16.0</item>
+        <item>20.0</item>
+    </string-array>
+    <string-array name="location_hk">
+        <item>22.302711</item>
+        <item>114.177216</item>
+        <item>0.3</item>
+        <item>12.0</item>
+        <item>20.0</item>
+    </string-array>
+
     <string name="title_activity_request_details">requestDetailsActivity</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -1,12 +1,11 @@
 package edu.cuhk.csci3310.project;
 
 import android.content.Context;
-import android.net.Uri;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,15 +14,17 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Arrays;
 
 public class SelectionListAdapter extends RecyclerView.Adapter<SelectionListAdapter.SelectionViewHolder> {
 
-    private int layoutResId;
-    public ArrayList<String> mSelectionList;
-    private ArrayList<String> mItemList;
+    // Views
     private LayoutInflater mInflater;
+    private SelectionRequestFragment mParentFragment;
+
+    // Variables
+    private int layoutID;
+    private ArrayList<String> mItemList;
 
     class SelectionViewHolder extends RecyclerView.ViewHolder {
 
@@ -34,17 +35,27 @@ public class SelectionListAdapter extends RecyclerView.Adapter<SelectionListAdap
             super(itemView);
             mTextView = (TextView) itemView;
             mAdapter = adapter;
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    removeItem(getAdapterPosition());
+                    return false;
+                }
+            });
         }
     }
 
-    public SelectionListAdapter(Context context, ArrayList<String> list, int rid) {
-        mInflater = LayoutInflater.from(context);
-        this.mSelectionList = list;
-        this.mItemList = new ArrayList<>();
-        layoutResId = rid;
+    public SelectionListAdapter(SelectionRequestFragment fragment, ArrayList<String> defaulSelectedtList, int rid) {
+        this.mInflater = LayoutInflater.from(fragment.getContext());
+        this.mParentFragment = fragment;
+        this.mItemList = defaulSelectedtList;
+        if (this.mItemList == null)
+            this.mItemList = new ArrayList<>();
+        this.layoutID = rid;
     }
 
-    public TextView createItemView(Context context){
+    protected TextView createItemView(Context context){
         TextView itemView = new TextView(context);
 
         itemView.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.rounded_rectangle, null));
@@ -61,6 +72,11 @@ public class SelectionListAdapter extends RecyclerView.Adapter<SelectionListAdap
         return itemView;
     }
 
+    public void addItem(String item){
+        this.mItemList.add(item);
+        this.notifyItemInserted(this.mItemList.size());
+    }
+
     public void addItem(String item, int position){
         this.mItemList.add(position, item);
         this.notifyItemInserted(position);
@@ -74,38 +90,52 @@ public class SelectionListAdapter extends RecyclerView.Adapter<SelectionListAdap
         this.notifyItemRangeChanged(this.getItemCount(), items.size());
     }
 
+    public void removeItem(int index){
+        this.mItemList.remove(index);
+        this.notifyItemRemoved(index);
+    }
+
+    public void removeItem(String item){
+        int index = this.mItemList.indexOf(item);
+        this.mItemList.remove(item);
+        this.notifyItemRemoved(index);
+    }
+
+    public boolean hasItem(String item){
+        return this.mItemList.contains(item);
+    }
+
     public void clearItem(){
         // https://stackoverflow.com/questions/29978695/remove-all-items-from-recyclerview
         int size = this.mItemList.size();
         if (size <= 0) return;
 
         this.mItemList.clear();
-        this.notifyItemRangeRemoved(0, size); // this.notifyDataSetChanged();
+        this.notifyItemRangeRemoved(0, size);
+    }
+
+    public ArrayList<String> getItemList(){
+        return new ArrayList<String>(mItemList);
     }
 
     @NonNull
     @Override
     public SelectionListAdapter.SelectionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // View mItemView = mInflater.inflate(layoutResId, parent, false);
+        // View mItemView = mInflater.inflate(layoutID, parent, false);
         TextView mItemView = createItemView(parent.getContext());
         return new SelectionViewHolder(mItemView, this);
     }
 
     @Override
     public void onBindViewHolder(@NonNull SelectionListAdapter.SelectionViewHolder holder, int position) {
-         String mItemString = mItemList.get(position);
-        // Uri uri = Uri.parse(mImagePath);
-        // holder.imageItemView.setImageURI(uri);
-         holder.mTextView.setText(mItemString);
+        String mItemString = mItemList.get(position);
+        holder.mTextView.setTag(position);
+        holder.mTextView.setText(mItemString);
     }
 
     @Override
     public int getItemCount() {
         return mItemList.size();
-    }
-
-    public ArrayList<String> getItemList(){
-        return (ArrayList<String>) mItemList.clone();
     }
 
 }

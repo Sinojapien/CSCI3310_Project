@@ -2,16 +2,19 @@ package edu.cuhk.csci3310.project.createRequest;
 
 // Name: Yeung Chi Ho, SID: 1155126460
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -22,6 +25,7 @@ import edu.cuhk.csci3310.project.database.Database;
 import edu.cuhk.csci3310.project.database.Status;
 import edu.cuhk.csci3310.project.database.TaskType;
 import edu.cuhk.csci3310.project.model.Favor;
+import edu.cuhk.csci3310.project.model.LatLng;
 import edu.cuhk.csci3310.project.model.MovingFavor;
 
 public class MovingRequestActivity extends RequestActivity {
@@ -45,11 +49,6 @@ public class MovingRequestActivity extends RequestActivity {
 
         setTitle("Moving Request");
 
-        // Restore preferences
-//        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
-//        currentRating = mPreferences.getInt(getKey(RATING_KEY), defaultRating);
-//        nameEditText.setText(mPreferences.getString(getKey(NAME_KEY), name));
-
 //        restaurantTextView.setOnClickListener(new View.OnClickListener(){
 //            public void onClick(View v) {
 //                String url = OPENRICE_URL + restaurantTextView.getText().toString();
@@ -60,22 +59,30 @@ public class MovingRequestActivity extends RequestActivity {
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
-        startLocationFragment = LocationRequestFragment.newInstance("Start Location", getMapBoundary(new LatLng(22.418014,	114.207259), 0.075));
+        if (startLocationFragment == null)
+            //startLocationFragment = LocationRequestFragment.newInstance("Start Location:", getMapBoundary(new LatLng(22.418014,	114.207259), 0.075));
+            startLocationFragment = LocationRequestFragment.newInstance("Start Location:", R.array.location_cuhk);
         fragmentTransaction.replace(R.id.start_location_container, startLocationFragment);
 
-        endLocationFragment = LocationRequestFragment.newInstance("End Location", getMapBoundary(new LatLng(22.418014,	114.207259), 0.075));
+        if (endLocationFragment == null)
+            //endLocationFragment = LocationRequestFragment.newInstance("End Location:", getMapBoundary(new LatLng(22.418014,	114.207259), 0.075));
+            endLocationFragment = LocationRequestFragment.newInstance("End Location:", R.array.location_cuhk);
         fragmentTransaction.replace(R.id.end_location_container, endLocationFragment);
 
-        dateFragment = DateRequestFragment.newInstance(false);
+        if (dateFragment == null)
+            dateFragment = DateRequestFragment.newInstance(null, false);
         fragmentTransaction.replace(R.id.date_container, dateFragment);
 
-        timeFragment = TimeRequestFragment.newInstance(false);
+        if (timeFragment == null)
+            timeFragment = TimeRequestFragment.newInstance(null, false);
         fragmentTransaction.replace(R.id.time_container, timeFragment);
 
-        descriptionFragment = DescriptionRequestFragment.newInstance("Description (if any):");
+        if (descriptionFragment == null)
+            descriptionFragment = DescriptionRequestFragment.newInstance("Description (if any):");
         fragmentTransaction.replace(R.id.description_container, descriptionFragment);
 
-        pictureFragment = PictureRequestFragment.newInstance(findViewById(R.id.expanded_image));
+        if (pictureFragment == null)
+            pictureFragment = PictureRequestFragment.newInstance(findViewById(R.id.expanded_image));
         fragmentTransaction.replace(R.id.picture_container, pictureFragment);
 
         fragmentTransaction.commit();
@@ -93,9 +100,8 @@ public class MovingRequestActivity extends RequestActivity {
                     favor.setEnquirer(firebaseAuth.getCurrentUser().getUid());
                     favor.setEnquirerName(firebaseAuth.getCurrentUser().getDisplayName());
                     favor.setStatus(Status.OPEN);
-                    // favor internal representation of LatLng changed
-                    favor.setStartLoc(new edu.cuhk.csci3310.project.model.LatLng(startLocationFragment.getInformationLocation()));
-                    favor.setEndLoc(new edu.cuhk.csci3310.project.model.LatLng(endLocationFragment.getInformationLocation()));
+                    favor.setStartLoc(new LatLng(startLocationFragment.getInformationLocation()));
+                    favor.setEndLoc(new LatLng(endLocationFragment.getInformationLocation()));
                     favor.setDate(dateFragment.getInformationDate());
                     favor.setTime(timeFragment.getInformationTime());
                     favor.setPhoto(pictureFragment.getInformationBitmap());
@@ -121,6 +127,29 @@ public class MovingRequestActivity extends RequestActivity {
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.putFragment(outState, getResources().getResourceName(R.id.start_location_container), startLocationFragment);
+        fragmentManager.putFragment(outState, getResources().getResourceName(R.id.end_location_container), endLocationFragment);
+        fragmentManager.putFragment(outState, getResources().getResourceName(R.id.date_container), dateFragment);
+        fragmentManager.putFragment(outState, getResources().getResourceName(R.id.time_container), timeFragment);
+        fragmentManager.putFragment(outState, getResources().getResourceName(R.id.description_container), descriptionFragment);
+        fragmentManager.putFragment(outState, getResources().getResourceName(R.id.picture_container), pictureFragment);
+    }
+
+    @Override
+    protected void onLoadInstanceState(@Nullable Bundle savedInstanceState){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        startLocationFragment = (LocationRequestFragment) fragmentManager.getFragment(savedInstanceState, getResources().getResourceName(R.id.start_location_container));
+        endLocationFragment = (LocationRequestFragment) fragmentManager.getFragment(savedInstanceState, getResources().getResourceName(R.id.end_location_container));
+        dateFragment = (DateRequestFragment) fragmentManager.getFragment(savedInstanceState, getResources().getResourceName(R.id.date_container));
+        timeFragment = (TimeRequestFragment) fragmentManager.getFragment(savedInstanceState, getResources().getResourceName(R.id.time_container));
+        descriptionFragment = (DescriptionRequestFragment) fragmentManager.getFragment(savedInstanceState, getResources().getResourceName(R.id.description_container));
+        pictureFragment = (PictureRequestFragment) fragmentManager.getFragment(savedInstanceState, getResources().getResourceName(R.id.picture_container));
+    }
+
+    @Override
     protected boolean isAllInformationFilled(){
         boolean isAllFilled = true;
 
@@ -128,7 +157,7 @@ public class MovingRequestActivity extends RequestActivity {
         isAllFilled &= endLocationFragment.isFilled();
         isAllFilled &= dateFragment.isFilled();
         isAllFilled &= timeFragment.isFilled();
-        // isAllFilled &= descriptionFragment.isFilled(); // description seems to be optional, atleast in user interface
+        isAllFilled &= descriptionFragment.isFilled();
 
         return isAllFilled;
     }
