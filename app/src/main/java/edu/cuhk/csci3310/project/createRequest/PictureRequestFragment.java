@@ -16,8 +16,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Parcelable;
 import android.provider.MediaStore;
@@ -40,19 +38,6 @@ public class PictureRequestFragment extends RequestFragment {
     ImageView mExpandedImageView;
     Button mImageButton;
 
-    // https://developer.android.com/topic/libraries/architecture/viewmodel?gclid=EAIaIQobChMI5ZaZmtnX9wIVF9dMAh06UQjZEAAYASAAEgJ90vD_BwE&gclsrc=aw.ds#java
-    // https://www.youtube.com/watch?v=orH4K6qBzvE
-    // https://stackoverflow.com/questions/44998051/cannot-create-an-instance-of-class-viewmodel
-    // https://stackoverflow.com/questions/61462278/cannot-create-an-instance-of-class-of-androidviewmodel-in-android
-    // https://stackoverflow.com/questions/50969022/cannot-create-an-instance-of-class-viewmodel
-    //     implementation "android.arch.lifecycle:viewmodel:1.1.1"
-//    public class PictureViewModel extends ViewModel {
-//        public Bitmap picture;
-//        public PictureViewModel() { }
-//        //public PictureViewModel newInstance() { return new PictureViewModel();}
-//    }
-//    PictureViewModel pictureViewModel;
-
     private final ActivityResultLauncher<Intent> pictureActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -67,7 +52,6 @@ public class PictureRequestFragment extends RequestFragment {
                             Bitmap imageBitmap = (Bitmap) extras.get("data");
                             // requestPicture = imageBitmap;
                             mImageViewList.get(0).setImageBitmap(imageBitmap);
-                            //pictureViewModel.picture = imageBitmap;
                         }
                     }
                 }
@@ -106,12 +90,10 @@ public class PictureRequestFragment extends RequestFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //pictureViewModel = new ViewModelProvider(requireActivity()).get(PictureViewModel.class);
         mExpandedImageView.setImageDrawable(null);
 
         for (ImageView imageView : mImageViewList) {
             //imageView.setImageDrawable(null);
-            //imageView.setImageBitmap(pictureViewModel.picture);
             setZoomableImageView(imageView, mExpandedImageView);
         }
 

@@ -1,8 +1,8 @@
 package edu.cuhk.csci3310.project.searchRequest;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,19 +12,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.icu.number.CompactNotation;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Debug;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.ToggleButton;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -56,6 +50,8 @@ import edu.cuhk.csci3310.project.database.Database;
 import edu.cuhk.csci3310.project.database.Status;
 import edu.cuhk.csci3310.project.model.Favor;
 import edu.cuhk.csci3310.project.requestDetails.RequestDetailsActivity;
+import edu.cuhk.csci3310.project.viewModel.RequestHistoryViewModel;
+import edu.cuhk.csci3310.project.viewModel.RequestHistoryViewModel.ListType;
 
 // https://stackoverflow.com/questions/52308648/android-firebase-push-notification-click-event
 // android studio send notification upon firebase event
@@ -69,34 +65,9 @@ import edu.cuhk.csci3310.project.requestDetails.RequestDetailsActivity;
 
 public class RequestHistoryActivity extends AppCompatActivity {
 
-    private enum ListType {
-        ANY("Any"), ENQUIRE("Enquire"), ACCEPT("Accept");
-        private final String value;
-        ListType(String value){this.value = value;}
-        public static ListType getTypeFrom(String value) {
-            switch (value) {
-                case "Any":
-                    return ListType.ANY;
-                case "Enquire":
-                    return ListType.ENQUIRE;
-                case "Accept":
-                    return ListType.ACCEPT;
-                default:
-                    return null;
-            }
-        }
-        public static String[] getValues() {
-            ListType[] listTypes = ListType.values();
-            String[] values = new String[listTypes.length];
-            for (int i=0; i<listTypes.length; i++){
-                values[i] = listTypes[i].value;
-            }
-            return values;
-        }
-    }
-
     private static final String TAG = "RequestHistoryActivity";
     private FirebaseFirestore mFirestore;
+    private FirebaseAuth firebaseAuth;
     private Query mQuery;
 
     private RecyclerView mFavorRecycler;
@@ -110,32 +81,23 @@ public class RequestHistoryActivity extends AppCompatActivity {
     private FloatingActionButton mListTypeButton;
     private FloatingActionButton mDeleteButton;
 
-    private ListType mListType;
-    private Status mStatus;
-    private boolean mDeleteMode;
-
-    private FirebaseAuth firebaseAuth;
+    private RequestHistoryViewModel mViewModel;
 
     private class OnHistoryFavorSelectedListener implements FavorAdapter.OnFavorSelectedListener {
-
-        Context mContext;
-
-        //public OnHistoryFavorSelectedListener(Context context){this.mContext = context;}
         public OnHistoryFavorSelectedListener(){}
 
         @Override
         public void onFavorSelected(DocumentSnapshot favor){
-            if (mDeleteMode){
+            if (mViewModel.mDeleteMode){
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(RequestHistoryActivity.this);
-                builder.setTitle("Delete Favor?");
+                builder.setTitle("Delete Favor of user " + favor.toObject(Favor.class).getEnquirerName() + " ?");
 
                 builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // https://firebase.google.com/docs/firestore/manage-data/delete-data#java_1
                         mFirestore.collection("favors").document(favor.getId()).delete();
-                        //Log.d(TAG, favor.getId());
                     }
                 });
 
@@ -206,25 +168,49 @@ public class RequestHistoryActivity extends AppCompatActivity {
         mFavorRecycler.setLayoutManager(new LinearLayoutManager(this));
         mFavorRecycler.setAdapter(mAdapter);
 
+        // Initialize View Model
+        if (mViewModel == null)
+            mViewModel = ViewModelProviders.of(this).get(RequestHistoryViewModel.class);
+
         // Initialize OnClick Events
         mListTypeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // https://www.youtube.com/watch?v=umCX1-Tq25k
 
-                final Spinner listTypeSpinner = new Spinner(view.getContext());
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_dropdown_item, ListType.getValues());
+                Context context = view.getContext();
+                int adapterLayoutID = android.R.layout.simple_spinner_dropdown_item;
+
+                // Inflate Views
+                View spinnersLayout = getLayoutInflater().inflate(R.layout.dialog_list_filters, null);
+
+                Spinner listTypeSpinner = spinnersLayout.findViewById(R.id.list_type_spinner);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(context, adapterLayoutID, ListType.getValues());
                 listTypeSpinner.setAdapter(adapter);
-                listTypeSpinner.setSelection(0);
+                listTypeSpinner.setSelection(adapter.getPosition(mViewModel.mListType.value));
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                Spinner sortTypeSpinner = spinnersLayout.findViewById(R.id.sort_type_spinner);
+                ArrayAdapter<String> sortTypeAdapter = new ArrayAdapter<>(context, adapterLayoutID, RequestHistoryViewModel.listSortType.clone());
+                sortTypeSpinner.setAdapter(sortTypeAdapter);
+                sortTypeSpinner.setSelection(mViewModel.mSortType);
+
+                Spinner sortDirectionSpinner = spinnersLayout.findViewById(R.id.sort_direction_spinner);
+                ArrayAdapter<String> sortOrderAdapter = new ArrayAdapter<>(context, adapterLayoutID, RequestHistoryViewModel.getQueryDirectionValues());
+                sortDirectionSpinner.setAdapter(sortOrderAdapter);
+                sortDirectionSpinner.setSelection(sortOrderAdapter.getPosition(mViewModel.mSortDirection.name()));
+
+                // Setup Dialog Builder
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("List Filters");
-                builder.setView(listTypeSpinner);
+                builder.setView(spinnersLayout);
 
                 builder.setPositiveButton(R.string.set, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        mListType = ListType.getTypeFrom((String)listTypeSpinner.getSelectedItem());
-                        filterList(mListType, mStatus);
+                        mViewModel.mListType = ListType.getTypeFrom((String)listTypeSpinner.getSelectedItem());
+                        mViewModel.mSortType = sortTypeSpinner.getSelectedItemPosition();
+                        mViewModel.mSortDirection = Query.Direction.valueOf((String)sortDirectionSpinner.getSelectedItem());
+                        setFirebaseAdapterQuery(getFilteredList());
                     }
                 });
 
@@ -238,24 +224,22 @@ public class RequestHistoryActivity extends AppCompatActivity {
                 builder.setNeutralButton(R.string.reset, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mListType = ListType.ANY;
-                        mStatus = null;
-                        filterList(mListType, null);
+                        mViewModel.reset();
+                        setFirebaseAdapterQuery(getFilteredList());
                         // also reset buttons
                     }
                 });
 
                 builder.show();
-
             }
         });
 
-        mDeleteMode = false;
+        mViewModel.mDeleteMode = false;
         mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDeleteMode = !mDeleteMode;
-                if (mDeleteMode) {
+                mViewModel.mDeleteMode = !mViewModel.mDeleteMode;
+                if (mViewModel.mDeleteMode) {
                     mDeleteButton.setSupportBackgroundTintList(ColorStateList.valueOf(Color.RED));
                     mDeleteButton.getDrawable().setTint(getResources().getColor(R.color.white));
                 }else {
@@ -281,8 +265,8 @@ public class RequestHistoryActivity extends AppCompatActivity {
 
                     if (mPreviousSelectedButton.getId() == view.getId()){
                         mPreviousSelectedButton = null;
-                        mStatus = null;
-                        filterList(mListType, mStatus);
+                        mViewModel.mStatus = null;
+                        setFirebaseAdapterQuery(getFilteredList());
                         return;
                     }
                 }
@@ -297,34 +281,41 @@ public class RequestHistoryActivity extends AppCompatActivity {
 
                 switch (view.getId()){
                     case R.id.rh_open_button:
-                        mStatus = Status.OPEN;
+                        mViewModel.mStatus = Status.OPEN;
                         break;
                     case R.id.rh_active_button:
-                        mStatus = Status.ACTIVE;
+                        mViewModel.mStatus = Status.ACTIVE;
                         break;
                     case R.id.rh_completed_button:
-                        mStatus = Status.COMPLETED;
+                        mViewModel.mStatus = Status.COMPLETED;
                         break;
                     default:
-                        mStatus = null;
+                        mViewModel.mStatus = null;
                         break;
                 }
 
-                filterList(mListType, mStatus);
+                setFirebaseAdapterQuery(getFilteredList());
             }
         };
+
         mOpenButton.setOnClickListener(buttonOnClickListener);
         mActiveButton.setOnClickListener(buttonOnClickListener);
         mCompletedButton.setOnClickListener(buttonOnClickListener);
+
+        if (mViewModel.mStatus == Status.OPEN)
+            mOpenButton.performClick();
+        else if (mViewModel.mStatus == Status.ACTIVE)
+            mActiveButton.performClick();
+        else if (mViewModel.mStatus == Status.COMPLETED)
+            mCompletedButton.performClick();
 
     }
 
     @Override
     public void onStart() {
-        Log.d(TAG, "on start");
         super.onStart();
 
-        setFirebaseAdapterQuery(getDefaultFirebaseQuery(ListType.ENQUIRE));
+        setFirebaseAdapterQuery(getFilteredList());
 
         // https://stackoverflow.com/questions/50035752/how-to-get-list-of-documents-from-a-collection-in-firestore-android
         // https://firebase.google.com/docs/firestore/query-data/get-data#java
@@ -348,16 +339,7 @@ public class RequestHistoryActivity extends AppCompatActivity {
 
     }
 
-    private void filterList(ListType listType, Status status){
-        Query query = getDefaultFirebaseQuery(listType);
-        if (status != null)
-            query = query.whereEqualTo("status", status);
-        setFirebaseAdapterQuery(query);
-    }
-
     private void setFirebaseAdapterQuery(Query query){
-        Log.d(TAG, "Query: " + query);
-
         // Construct query
         mQuery = query;
         mAdapter.setQuery(query);
@@ -366,6 +348,19 @@ public class RequestHistoryActivity extends AppCompatActivity {
         if (mAdapter != null) {
             mAdapter.startListening();
         }
+    }
+
+    private Query getFilteredList(){
+        return mViewModel.filterQuery(mFirestore.collection("favors").limit(50), firebaseAuth.getCurrentUser().getUid());
+    }
+
+    private void setFilteredList(ListType listType, Status status, int sortType, Query.Direction direction){
+        Query query = getDefaultFirebaseQuery(listType);
+        if (status != null)
+            query = query.whereEqualTo("status", status);
+        if (sortType > 0)
+            query = query.orderBy(RequestHistoryViewModel.getFavorMemberName(sortType), direction);
+        setFirebaseAdapterQuery(query);
     }
 
     private Query getDefaultFirebaseQuery(ListType listType){
