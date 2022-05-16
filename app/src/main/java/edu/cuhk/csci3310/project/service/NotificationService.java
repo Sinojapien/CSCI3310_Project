@@ -104,7 +104,7 @@ public class NotificationService extends Service {
                     // No field level access
                     case ADDED:
 //                        Favor favor = change.getDocument().toObject(Favor.class);
-                        createNotification(mFirebaseAuth.getCurrentUser().getDisplayName() + ", there are new request(s)!");
+                        createNotification(mFirebaseAuth.getCurrentUser().getDisplayName() + ", there are new requests!");
                         break;
                     case MODIFIED:
                         createNotification(mFirebaseAuth.getCurrentUser().getDisplayName() + ", there are changes in your request status!");
@@ -198,6 +198,7 @@ public class NotificationService extends Service {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
+        // https://stackoverflow.com/questions/30525784/android-keep-service-running-when-app-is-killed
 //        Intent broadcastIntent = new Intent();
 //        broadcastIntent.setAction("RestartService");
 //        broadcastIntent.setClass(this, restartService.class);
