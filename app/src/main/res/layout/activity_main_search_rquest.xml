@@ -10,7 +10,38 @@
         android:id="@+id/search_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="To be edit"
+        android:text="To be edited"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_favor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_text"
+        tools:listitem="@layout/item_favor" />
+
+    <!-- Empty list view (shown when there is no favor)-->
+    <LinearLayout
+        android:id="@+id/view_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="gone"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_text" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="You have no favor. start by creating one!"/>
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

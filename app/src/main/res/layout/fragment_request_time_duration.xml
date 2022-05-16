@@ -5,31 +5,32 @@
     tools:context=".createRequest.TimeRequestFragment"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="96dp">
+    android:minHeight="128dp">
 
     <TextView
-        android:id="@+id/date_title"
+        android:id="@+id/time_title"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
+        android:gravity="center"
+        android:maxEms="4"
         android:text="Time:"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/date_from_text"
+        app:layout_constraintEnd_toStartOf="@+id/time_from_text"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/date_from_text"
+        android:id="@+id/time_from_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=" from "
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/start_date_edit"
+        app:layout_constraintEnd_toStartOf="@+id/start_time_edit"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/date_to_text"
+        android:id="@+id/time_to_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="72dp"
@@ -41,7 +42,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/start_date_edit"
+        android:id="@+id/start_time_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="5"
@@ -49,12 +50,12 @@
         android:inputType="time"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/date_to_text"
+        app:layout_constraintEnd_toStartOf="@+id/time_to_text"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.509" />
 
     <EditText
-        android:id="@+id/end_date_edit"
+        android:id="@+id/end_time_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="5"
@@ -62,8 +63,17 @@
         android:inputType="time"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/date_to_text"
+        app:layout_constraintStart_toEndOf="@+id/time_to_text"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.509" />
+
+    <Switch
+        android:id="@+id/time_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Duration"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/end_time_edit" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

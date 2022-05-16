@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <integer name="request_max_duration">3</integer>
+
     <integer name="request_location_max_length">100</integer>
     <integer name="request_description_max_length">250</integer>
 
@@ -8,4 +10,5 @@
     <integer name="request_type_dining">3</integer>
     <integer name="request_type_tutoring">4</integer>
     <integer name="request_type_borrowing">5</integer>
+
 </resources>

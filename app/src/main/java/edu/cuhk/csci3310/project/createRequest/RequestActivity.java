@@ -3,8 +3,9 @@ package edu.cuhk.csci3310.project.createRequest;
 // Name: Yeung Chi Ho, SID: 1155126460
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,20 +22,18 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
-import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -43,11 +42,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
 
 import edu.cuhk.csci3310.project.R;
 import edu.cuhk.csci3310.project.SelectionListAdapter;
@@ -55,14 +52,13 @@ import edu.cuhk.csci3310.project.SelectionListAdapter;
 public class RequestActivity extends AppCompatActivity {
 
     /* todo:
-        map of all restaurants
-        ScrollView as root (not all)
-        extend EnlargeImageFragment to recycler
         Web location
-        switch date & time (duration) real time
-        map save location
-        proper time and date limit
-        title in time & date
+        SavedInstanceState: Time/Date Dialog, use ViewModel for bitmap in PictureRequestFragment (?), RequestMapActivity (Zoom)
+        map of all restaurants / list of restaurants
+            https://stackoverflow.com/questions/63272349/how-to-show-near-by-restaurants-to-current-user-location-in-google-map-when-user
+            place picker / Places API?
+        extend EnlargeImageFragment with recycler
+        possible messaging function?
         http://www.res.cuhk.edu.hk/en-gb/general-information/program-codes
     */
 
@@ -71,13 +67,23 @@ public class RequestActivity extends AppCompatActivity {
 
     // https://stackoverflow.com/questions/215497/what-is-the-difference-between-public-protected-package-private-and-private-in
     protected SharedPreferences mPreferences;
-    protected final String sharedPrefFile = "edu.cuhk.csci3310.project";
+    protected final String sharedPreferenceFile = "edu.cuhk.csci3310.project.request.activity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
-        // setContentView(R.layout.activity_request);
+        mPreferences = getSharedPreferences(sharedPreferenceFile, MODE_PRIVATE);
+        if (savedInstanceState != null)
+            onLoadInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() { super.onResume(); }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        savePreference();
     }
 
     @Override
@@ -86,16 +92,11 @@ public class RequestActivity extends AppCompatActivity {
         savePreference();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // do something
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        savePreference();
+    protected void loadPreference(){
+        // Restore preferences
+        // mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+        // currentRating = mPreferences.getInt(getKey(RATING_KEY), defaultRating);
+        // nameEditText.setText(mPreferences.getString(getKey(NAME_KEY), name));
     }
 
     protected void savePreference(){
@@ -109,9 +110,12 @@ public class RequestActivity extends AppCompatActivity {
         mPreferences.edit().clear().apply();
     }
 
-    protected boolean isAllInformationFilled(){
-        return true;
+    protected void onLoadInstanceState(@Nullable Bundle savedInstanceState){
+        // https://stackoverflow.com/questions/15313598/how-to-correctly-save-instance-state-of-fragments-in-back-stack
+        // https://stackoverflow.com/questions/14647810/easier-way-to-get-views-id-string-by-its-id-int
     }
+
+    protected boolean isAllInformationFilled(){ return true; }
 
     public static String[] getNumberStringArray(int start, int end){
         int total = end - start + 1;
@@ -121,10 +125,10 @@ public class RequestActivity extends AppCompatActivity {
         return output;
     }
 
-    public static LatLngBounds getMapBoundary(LatLng center, double offset){
-        LatLng boundaryNE = new LatLng(center.latitude - offset,	center.longitude - offset);
-        LatLng boundarySW = new LatLng(center.latitude + offset,	center.longitude + offset);
-        return new LatLngBounds(boundaryNE, boundarySW);
+    public static long getTimeInMillis(int year, int month, int day){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day);
+        return calendar.getTimeInMillis();
     }
 
     protected void readCSV(int rawResourceID){
@@ -306,69 +310,69 @@ public class RequestActivity extends AppCompatActivity {
         });
     }
 
-    protected void setSelectionView(View view, RecyclerView recyclerView, ArrayList<String> items){
-        // https://www.geeksforgeeks.org/alert-dialog-with-multipleitemselection-in-android/
-        // https://www.geeksforgeeks.org/alert-dialog-with-singleitemselection-in-android/
-        // https://developer.android.com/reference/kotlin/androidx/appcompat/app/AlertDialog.Builder
-        // https://developer.android.com/guide/topics/ui/dialogs#java
-
-        //SelectionListAdapter adapter = (SelectionListAdapter) recyclerView.getAdapter();
-        //assert adapter != null;
-        SelectionListAdapter adapter = new SelectionListAdapter(view.getContext(), items, 0);
-        recyclerView.setAdapter(adapter);
-
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(view.getContext(), 3);
-        gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerView.setLayoutManager(gridLayoutManager);
-        //tutoringTypeRecycler.setHasFixedSize(true);
-
-        final boolean[] checkedIndex = new boolean[items.size()];
-
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                builder.setTitle("Choose Tutoring Type:");
-                builder.setIcon(R.drawable.common_google_signin_btn_icon_light);
-                builder.setMultiChoiceItems(items.toArray(new String[0]), checkedIndex, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i, boolean isChecked) {
-                        checkedIndex[i] = isChecked;
-                    }
-                });
-
-                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        ArrayList<String> checkedItems = new ArrayList<>();
-                        for(int p=0; p<checkedIndex.length;p++){
-                            if (checkedIndex[p])
-                                checkedItems.add(items.get(p));
-                        }
-                        adapter.clearItem();
-                        adapter.addItem(checkedItems);
-                    }
-                });
-
-                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
-
-                builder.setNeutralButton("CLEAR ALL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Arrays.fill(checkedIndex, false);
-                        // adapter.clearItem();
-                    }
-                });
-
-                builder.show();
-            }
-        });
-    }
+//    protected void setSelectionView(View view, RecyclerView recyclerView, ArrayList<String> items){
+//        // https://www.geeksforgeeks.org/alert-dialog-with-multipleitemselection-in-android/
+//        // https://www.geeksforgeeks.org/alert-dialog-with-singleitemselection-in-android/
+//        // https://developer.android.com/reference/kotlin/androidx/appcompat/app/AlertDialog.Builder
+//        // https://developer.android.com/guide/topics/ui/dialogs#java
+//
+//        //SelectionListAdapter adapter = (SelectionListAdapter) recyclerView.getAdapter();
+//        //assert adapter != null;
+//        SelectionListAdapter adapter = new SelectionListAdapter(view.getContext(), null, 0);
+//        recyclerView.setAdapter(adapter);
+//
+//        GridLayoutManager gridLayoutManager = new GridLayoutManager(view.getContext(), 3);
+//        gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+//        recyclerView.setLayoutManager(gridLayoutManager);
+//        //tutoringTypeRecycler.setHasFixedSize(true);
+//
+//        final boolean[] checkedIndex = new boolean[items.size()];
+//
+//        view.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+//                builder.setTitle("Choose Tutoring Type:");
+//                builder.setIcon(R.drawable.common_google_signin_btn_icon_light);
+//                builder.setMultiChoiceItems(items.toArray(new String[0]), checkedIndex, new DialogInterface.OnMultiChoiceClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i, boolean isChecked) {
+//                        checkedIndex[i] = isChecked;
+//                    }
+//                });
+//
+//                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        ArrayList<String> checkedItems = new ArrayList<>();
+//                        for(int p=0; p<checkedIndex.length;p++){
+//                            if (checkedIndex[p])
+//                                checkedItems.add(items.get(p));
+//                        }
+//                        adapter.clearItem();
+//                        adapter.addItem(checkedItems);
+//                    }
+//                });
+//
+//                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                    }
+//                });
+//
+//                builder.setNeutralButton("CLEAR ALL", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Arrays.fill(checkedIndex, false);
+//                        // adapter.clearItem();
+//                    }
+//                });
+//
+//                builder.show();
+//            }
+//        });
+//    }
 
     protected void setCourseCodeTextEdit(TextView textView){
         textView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);

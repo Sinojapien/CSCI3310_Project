@@ -1,13 +1,17 @@
 package edu.cuhk.csci3310.project.createRequest;
 
+// Name: Yeung Chi Ho, SID: 1155126460
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.os.Debug;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +19,16 @@ import android.widget.TextView;
 
 import edu.cuhk.csci3310.project.R;
 
-public class DescriptionRequestFragment extends Fragment {
+public class DescriptionRequestFragment extends RequestFragment {
 
     public TextView mTitleText;
     public TextView mWordCountText;
     public TextView mDescriptionEdit;
 
     private static final String ARG_PARAM_TITLE = "param1";
+
+//    private static final String INSTANCE_TITLE = "TITLE";
+//    private static final String INSTANCE_DESCRIPTION = "DESCRIPTION";
 
     private String mParamTitle;
 
@@ -46,8 +53,7 @@ public class DescriptionRequestFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_request_description, container, false);
         mTitleText = view.findViewById(R.id.description_title);
         mWordCountText = view.findViewById(R.id.wordcount_text);
@@ -62,7 +68,7 @@ public class DescriptionRequestFragment extends Fragment {
         mTitleText.setText(mParamTitle);
 
         int descriptionMaxLength = getResources().getInteger(R.integer.request_description_max_length);
-        mWordCountText.setText(getString(R.string.request_description_wordcount, 0, descriptionMaxLength));
+        mWordCountText.setText(getString(R.string.request_description_wordcount, mDescriptionEdit.getText().toString().length(), descriptionMaxLength));
 
         mDescriptionEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -82,6 +88,21 @@ public class DescriptionRequestFragment extends Fragment {
         });
     }
 
+//    @Override
+//    public void onSaveInstanceState(@NonNull Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putString(INSTANCE_TITLE, mTitleText.getText().toString());
+//        outState.putString(INSTANCE_DESCRIPTION, mDescriptionEdit.getText().toString());
+//    }
+//
+//    @Override
+//    protected void loadInstanceState(@Nullable Bundle savedInstanceState){
+//        Log.w("TEST", "" + savedInstanceState);
+//        mTitleText.setText(savedInstanceState.getString(INSTANCE_TITLE, ""));
+//        mDescriptionEdit.setText(savedInstanceState.getString(INSTANCE_DESCRIPTION, ""));
+//    }
+
+    @Override
     public boolean isFilled(){
         return mDescriptionEdit.getText().toString().length() > 0;
     }

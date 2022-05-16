@@ -24,6 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:ems="10"
+        android:gravity="center"
         android:hint="Enter location here"
         android:inputType="textPersonName"
         android:maxLength="@integer/request_location_max_length"
