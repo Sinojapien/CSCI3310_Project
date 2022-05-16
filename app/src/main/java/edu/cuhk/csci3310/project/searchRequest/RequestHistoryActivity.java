@@ -53,21 +53,11 @@ import edu.cuhk.csci3310.project.requestDetails.RequestDetailsActivity;
 import edu.cuhk.csci3310.project.viewModel.RequestHistoryViewModel;
 import edu.cuhk.csci3310.project.viewModel.RequestHistoryViewModel.ListType;
 
-// https://stackoverflow.com/questions/52308648/android-firebase-push-notification-click-event
-// android studio send notification upon firebase event
-// https://developer.android.com/training/notify-user/build-notification#java
-// https://firebase.google.com/docs/database/admin/retrieve-data?hl=en
-
-// Service
-// https://developer.android.com/guide/components/foreground-services
-// https://stackoverflow.com/questions/50481821/using-a-listener-after-an-android-application-is-closed
-// https://stackoverflow.com/questions/29323317/how-to-stop-android-service-when-app-is-closed
-
 public class RequestHistoryActivity extends AppCompatActivity {
 
     private static final String TAG = "RequestHistoryActivity";
     private FirebaseFirestore mFirestore;
-    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth mFirebaseAuth;
     private Query mQuery;
 
     private RecyclerView mFavorRecycler;
@@ -140,7 +130,7 @@ public class RequestHistoryActivity extends AppCompatActivity {
         mListTypeButton = findViewById(R.id.rh_list_type_button);
         mDeleteButton = findViewById(R.id.rh_delete_button);
 
-        firebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
 
         // initialize recycler view
@@ -252,13 +242,15 @@ public class RequestHistoryActivity extends AppCompatActivity {
         View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String offset = "\n ";
+
                 if (mPreviousSelectedButton != null){
                     LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mPreviousSelectedButton.getLayoutParams();
                     layoutParams.gravity = Gravity.BOTTOM;
                     mPreviousSelectedButton.setLayoutParams(layoutParams);
 
                     String buttonText = mPreviousSelectedButton.getText().toString();
-                    mPreviousSelectedButton.setText(buttonText.substring(0, buttonText.length() - 1));
+                    mPreviousSelectedButton.setText(buttonText.substring(0, buttonText.length() - offset.length()));
 
                     mPreviousSelectedButton.setChecked(false);
                     //mPreviousSelectedButton.setClickable(true);
@@ -275,7 +267,7 @@ public class RequestHistoryActivity extends AppCompatActivity {
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) buttonView.getLayoutParams();
                 layoutParams.gravity = Gravity.NO_GRAVITY;
                 buttonView.setLayoutParams(layoutParams);
-                buttonView.setText(buttonView.getText().toString() + "\n");
+                buttonView.setText(buttonView.getText().toString() + offset);
                 mPreviousSelectedButton = buttonView;
                 //buttonView.setClickable(false);
 
@@ -303,11 +295,11 @@ public class RequestHistoryActivity extends AppCompatActivity {
         mCompletedButton.setOnClickListener(buttonOnClickListener);
 
         if (mViewModel.mStatus == Status.OPEN)
-            mOpenButton.performClick();
+            mOpenButton.callOnClick();
         else if (mViewModel.mStatus == Status.ACTIVE)
-            mActiveButton.performClick();
+            mActiveButton.callOnClick();
         else if (mViewModel.mStatus == Status.COMPLETED)
-            mCompletedButton.performClick();
+            mCompletedButton.callOnClick();
 
     }
 
@@ -351,7 +343,7 @@ public class RequestHistoryActivity extends AppCompatActivity {
     }
 
     private Query getFilteredList(){
-        return mViewModel.filterQuery(mFirestore.collection("favors").limit(50), firebaseAuth.getCurrentUser().getUid());
+        return mViewModel.filterQuery(mFirestore.collection("favors").limit(50), mFirebaseAuth.getCurrentUser().getUid());
     }
 
     private void setFilteredList(ListType listType, Status status, int sortType, Query.Direction direction){
@@ -368,10 +360,10 @@ public class RequestHistoryActivity extends AppCompatActivity {
         // Logical OR requires >1 queries and combine into 1 ArrayList of objects (Not working with current adapter)
         if (listType == ListType.ACCEPT)
             return mFirestore.collection("favors").limit(50)
-                    .whereEqualTo("accepter", firebaseAuth.getCurrentUser().getUid());
+                    .whereEqualTo("accepter", mFirebaseAuth.getCurrentUser().getUid());
 
         return mFirestore.collection("favors").limit(50)
-                .whereEqualTo("enquirer", firebaseAuth.getCurrentUser().getUid());
+                .whereEqualTo("enquirer", mFirebaseAuth.getCurrentUser().getUid());
     }
 
 }
