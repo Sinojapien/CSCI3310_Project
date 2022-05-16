@@ -25,6 +25,7 @@
             android:layout_marginBottom="10dp" />
 
         <Button
+            android:id="@+id/assign_fulfiller_Btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Assign yourself as fulfiller"

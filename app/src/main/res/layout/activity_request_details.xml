@@ -33,7 +33,6 @@
                     android:paddingVertical="5dp"
                     android:paddingLeft="20dp"
                     android:paddingRight="100dp"
-                    android:text="Moving Request"
                     android:textColor="@color/white"
                     android:textSize="18dp"
                     android:textStyle="bold" />
@@ -43,7 +42,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="20dp"
-                    android:text="OPEN"
                     android:textSize="18dp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -60,13 +58,34 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/type_status_layout">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="Involved People"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
+                android:orientation="horizontal"
+                android:layout_marginBottom="5dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_profile"
+                    app:tint="@color/black" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/black"
+                    android:text="Requested by:"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/enquirer_TV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="Not found"/>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -76,37 +95,25 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_profile"
+                    android:src="@drawable/ic_accepter"
                     app:tint="@color/black" />
 
                 <TextView
-                    android:id="@+id/enquirer_TV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:text="David"
                     android:textColor="@color/black"
+                    android:text="Accepted by:"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/accpter_TV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="Task not accepted yet"/>
             </LinearLayout>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/description_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/border"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/enquirer_layout">
-
-            <TextView
-                android:id="@+id/description_TV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="This is a description of the task at hand"
-                android:textColor="@color/black" />
         </LinearLayout>
 
         <androidx.fragment.app.FragmentContainerView
@@ -116,7 +123,7 @@
             android:layout_marginTop="10dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/description_layout" />
+            app:layout_constraintTop_toBottomOf="@id/enquirer_layout" />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/actionFragmentContainer"

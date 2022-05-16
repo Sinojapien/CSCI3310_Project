@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -16,6 +17,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.cuhk.csci3310.project.R;
 import edu.cuhk.csci3310.project.model.BorrowingFavor;
 import edu.cuhk.csci3310.project.model.GatheringFavor;
@@ -23,7 +27,15 @@ import edu.cuhk.csci3310.project.model.GatheringFavor;
 public class BorrowingFragment extends Fragment {
 
     public static final String BUNDLE_KEY = "Favor";
-    GatheringFavor favor;
+    BorrowingFavor favor;
+
+    // View attributes
+    private TextView descriptionTV;
+    private TextView dateStartTV;
+    private TextView dateEndTV;
+    private TextView timeTV;
+    private TextView activityTypeTV;
+    private TextView itemsTV;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -38,9 +50,11 @@ public class BorrowingFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            LatLng sydney = new LatLng(-34, 151);
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            if(favor.getLocation() != null) {
+                LatLng location = new LatLng(favor.getLocation().getLatitude(), favor.getLocation().getLongitude());
+                googleMap.addMarker(new MarkerOptions().position(location).title("Location"));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 12.0f));
+            }
         }
     };
 
@@ -68,6 +82,40 @@ public class BorrowingFragment extends Fragment {
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
-        favor = getArguments().getParcelable(BUNDLE_KEY);
+        descriptionTV = view.findViewById(R.id.description_TV);
+        dateStartTV = view.findViewById(R.id.date_start_TV);
+        dateEndTV = view.findViewById(R.id.date_end_TV);
+        timeTV = view.findViewById(R.id.time_TV);
+        activityTypeTV = view.findViewById(R.id.activity_type_TV);
+        itemsTV = view.findViewById(R.id.items_TV);
+        if(getArguments().getParcelable(BUNDLE_KEY) != null) {
+            favor = getArguments().getParcelable(BUNDLE_KEY);
+            if (favor.getDescription() != null) {
+                descriptionTV.setText(favor.getDescription());
+            }
+            if(favor.getStartDate() != null) {
+                dateStartTV.setText(favor.getStartDate());
+            }
+            if(favor.getEndDate() != null) {
+                dateEndTV.setText(favor.getEndDate());
+            }
+            if(favor.getTime() != null) {
+                timeTV.setText(favor.getTime());
+            }
+            if(favor.getItemType() != null) {
+                activityTypeTV.setText(favor.getItemType());
+            }
+            if(favor.getSelection() != null) {
+                List<String> selection = favor.getSelection();
+                String selectionString = "";
+                for(String type : selection) {
+                    selectionString += type + ", ";
+                }
+                if (selectionString != null && selectionString.length() > 0 && selectionString.charAt(selectionString.length() - 2) == ',') {
+                    selectionString = selectionString.substring(0, selectionString.length() - 2);
+                }
+                itemsTV.setText(selectionString);
+            }
+        }
     }
 }

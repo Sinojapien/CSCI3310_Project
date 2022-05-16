@@ -139,13 +139,7 @@ public class MainSearchRequestActivity extends AppCompatActivity implements
     // method passed to the adaptor
     @Override
     public void onFavorSelected(DocumentSnapshot snapshot) {
-        Log.d(TAG, "clicked on favor, ID = " + snapshot.getId());
-        // Go to the details page for the selected favor
-        // to be added when favor detail page created
-
         String favorType = snapshot.getString("taskType");
-        //Log.d(TAG,"Trying to bind = " + favorType + " with ID = " + snapshot.getId() );
-
         Favor favor;
         switch(favorType){
             case "MOVING":
@@ -162,10 +156,9 @@ public class MainSearchRequestActivity extends AppCompatActivity implements
                 Log.e(TAG, "unknown favor encountered");
                 favor = snapshot.toObject(Favor.class);
         }
-
+        favor.setId(snapshot.getId());
         Intent intent = new Intent(MainSearchRequestActivity.this, RequestDetailsActivity.class);
         intent.putExtra("FAVOR", favor);
-        intent.putExtra("TYPE", "REQUEST");
         startActivity(intent);
     }
 }

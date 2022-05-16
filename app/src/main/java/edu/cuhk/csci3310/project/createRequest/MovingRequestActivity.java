@@ -15,12 +15,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.UUID;
 
 import edu.cuhk.csci3310.project.R;
+import edu.cuhk.csci3310.project.account.User;
 import edu.cuhk.csci3310.project.database.Database;
 import edu.cuhk.csci3310.project.database.Status;
 import edu.cuhk.csci3310.project.database.TaskType;
@@ -90,7 +96,7 @@ public class MovingRequestActivity extends RequestActivity {
         findViewById(R.id.post_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isAllInformationFilled()){
+                if (!isAllInformationFilled()) {
                     Toast.makeText(view.getContext(), "Please fill in all required info.", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -98,14 +104,37 @@ public class MovingRequestActivity extends RequestActivity {
                     MovingFavor favor = new MovingFavor();
                     favor.setTaskType(TaskType.MOVING);
                     favor.setEnquirer(firebaseAuth.getCurrentUser().getUid());
-                    favor.setEnquirerName(firebaseAuth.getCurrentUser().getDisplayName());
+                    favor.setDescription(descriptionFragment.getInformationString());
                     favor.setStatus(Status.OPEN);
-                    favor.setStartLoc(new LatLng(startLocationFragment.getInformationLocation()));
-                    favor.setEndLoc(new LatLng(endLocationFragment.getInformationLocation()));
+                    favor.setStartLoc(new edu.cuhk.csci3310.project.model.LatLng(startLocationFragment.getInformationLocation()));
+                    favor.setEndLoc(new edu.cuhk.csci3310.project.model.LatLng(endLocationFragment.getInformationLocation()));
                     favor.setDate(dateFragment.getInformationDate());
                     favor.setTime(timeFragment.getInformationTime());
                     favor.setPhoto(pictureFragment.getInformationBitmap());
-                    Database.createNewFavor(favor);
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    DocumentReference docRef = db.collection("users").document(firebaseAuth.getCurrentUser().getUid());
+                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                    String username = (String) document.getData().get("name");
+                                    favor.setEnquirerName(username);
+                                    try {
+                                        Database.createNewFavor(favor);
+                                    } catch(Exception e) {
+                                        Log.d(TAG, e.getMessage());
+                                    }
+                                } else {
+                                    Log.d(TAG, "No such document");
+                                }
+                            } else {
+                                Log.d(TAG, "get failed with ", task.getException());
+                            }
+                        }
+                    });
                 } catch (Exception e) {
                     Log.d(TAG, "onClick: " + e.getMessage());
                 }
@@ -139,7 +168,7 @@ public class MovingRequestActivity extends RequestActivity {
     }
 
     @Override
-    protected void onLoadInstanceState(@Nullable Bundle savedInstanceState){
+    protected void onLoadInstanceState(@Nullable Bundle savedInstanceState) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         startLocationFragment = (LocationRequestFragment) fragmentManager.getFragment(savedInstanceState, getResources().getResourceName(R.id.start_location_container));
         endLocationFragment = (LocationRequestFragment) fragmentManager.getFragment(savedInstanceState, getResources().getResourceName(R.id.end_location_container));
@@ -150,7 +179,7 @@ public class MovingRequestActivity extends RequestActivity {
     }
 
     @Override
-    protected boolean isAllInformationFilled(){
+    protected boolean isAllInformationFilled() {
         boolean isAllFilled = true;
 
         isAllFilled &= startLocationFragment.isFilled();

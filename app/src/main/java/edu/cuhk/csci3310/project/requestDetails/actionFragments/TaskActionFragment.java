@@ -2,13 +2,19 @@ package edu.cuhk.csci3310.project.requestDetails.actionFragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import edu.cuhk.csci3310.project.R;
+import edu.cuhk.csci3310.project.model.Favor;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,33 +23,24 @@ import edu.cuhk.csci3310.project.R;
  */
 public class TaskActionFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_FAVOR = "favorParam";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    // View attributes
+    Button removeFulfillerBtn;
+
+    private Favor favor;
+
+    private View.OnClickListener listener;
 
     public TaskActionFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TaskActionFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static TaskActionFragment newInstance(String param1, String param2) {
+    public static TaskActionFragment newInstance(Favor favor) {
         TaskActionFragment fragment = new TaskActionFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelable(ARG_FAVOR, favor);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,8 +49,7 @@ public class TaskActionFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            favor = getArguments().getParcelable(ARG_FAVOR);
         }
     }
 
@@ -62,5 +58,19 @@ public class TaskActionFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_task_action, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // Instantiate button
+        removeFulfillerBtn = view.findViewById(R.id.remove_fulfiller_Btn);
+        if(listener != null) {
+            removeFulfillerBtn.setOnClickListener(listener);
+        }
+    }
+
+    public void setButtonClickListener(View.OnClickListener listener) {
+        this.listener = listener;
     }
 }
