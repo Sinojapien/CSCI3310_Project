@@ -62,6 +62,11 @@ import edu.cuhk.csci3310.project.requestDetails.RequestDetailsActivity;
 // https://developer.android.com/training/notify-user/build-notification#java
 // https://firebase.google.com/docs/database/admin/retrieve-data?hl=en
 
+// Service
+// https://developer.android.com/guide/components/foreground-services
+// https://stackoverflow.com/questions/50481821/using-a-listener-after-an-android-application-is-closed
+// https://stackoverflow.com/questions/29323317/how-to-stop-android-service-when-app-is-closed
+
 public class RequestHistoryActivity extends AppCompatActivity {
 
     private enum ListType {
@@ -140,6 +145,8 @@ public class RequestHistoryActivity extends AppCompatActivity {
 
                     }
                 });
+                // Button colour
+                // https://stackoverflow.com/questions/27965662/how-can-i-change-default-dialog-button-text-color-in-android-5
 
                 builder.show();
 
@@ -324,20 +331,20 @@ public class RequestHistoryActivity extends AppCompatActivity {
         // https://firebase.google.com/docs/firestore/query-data/listen
         // https://stackoverflow.com/questions/51000169/how-to-check-a-certain-data-already-exists-in-firestore-or-not
 
-        mFirestore.collection("favors").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    List<String> list = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        list.add(document.getId());
-                    }
-                    Log.d(TAG, list.toString());
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-                }
-            }
-        });
+//        mFirestore.collection("favors").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    List<String> list = new ArrayList<>();
+//                    for (QueryDocumentSnapshot document : task.getResult()) {
+//                        list.add(document.getId());
+//                    }
+//                    Log.d(TAG, list.toString());
+//                } else {
+//                    Log.d(TAG, "Error getting documents: ", task.getException());
+//                }
+//            }
+//        });
 
     }
 
