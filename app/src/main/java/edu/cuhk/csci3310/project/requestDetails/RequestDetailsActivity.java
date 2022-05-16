@@ -39,7 +39,7 @@ public class RequestDetailsActivity extends FragmentActivity {
     TextView requestTypeTV;
     TextView statusTV;
     TextView enquirerTV;
-    TextView description;
+    TextView accepterTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +52,14 @@ public class RequestDetailsActivity extends FragmentActivity {
         instantiateTextFields();
         fillTextFields();
         showFavorFragment(favor.getTaskTypeString());
-        showActionFragment(intent.getStringExtra("TYPE"));
+        showActionFragment(intent.getStringExtra("TYPE"), favor.getStatusString());
     }
 
     private void instantiateTextFields() {
         requestTypeTV = findViewById(R.id.request_type_TV);
         statusTV = findViewById(R.id.status_TV);
         enquirerTV = findViewById(R.id.enquirer_TV);
+        accepterTV = findViewById(R.id.accpter_TV);
     }
 
     private void fillTextFields() {
@@ -70,6 +71,10 @@ public class RequestDetailsActivity extends FragmentActivity {
         }
         if(favor.getEnquirerName() != null) {
             enquirerTV.setText(favor.getEnquirerName());
+        }
+        if(favor.getAccepter() != null) {
+            accepterTV.setText(favor.getAccepter());
+            // Add implementation to display username of accepter
         }
     }
 
@@ -93,11 +98,14 @@ public class RequestDetailsActivity extends FragmentActivity {
         ft.add(R.id.favorFragmentContainer, fragment).commit();
     }
 
-    public void showActionFragment(String type) {
+    public void showActionFragment(String type, String status) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         switch(type) {
             case "REQUEST":
-                ft.add(R.id.actionFragmentContainer, new RequestActionFragment()).commit(); break;
+                if (status == "Active") {
+                    ft.add(R.id.actionFragmentContainer, new RequestActionFragment()).commit();
+                }
+                break;
             case "TASK":
                 ft.add(R.id.actionFragmentContainer, new TaskActionFragment()).commit(); break;
             case "FAVOR":

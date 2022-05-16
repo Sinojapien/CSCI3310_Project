@@ -31,12 +31,6 @@
             android:text="Task completed"
             android:layout_marginBottom="5dp" />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Delete Request"
-            android:layout_marginBottom="10dp" />
-
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

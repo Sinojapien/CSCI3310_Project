@@ -8,13 +8,31 @@
     tools:context=".requestDetails.RequestDetailsActivity">
 
     <LinearLayout
+        android:id="@+id/description_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent">
+
+        <TextView
+            android:id="@+id/description_TV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="This request has no description"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/locationLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/description_layout"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="10dp"
         android:background="@drawable/border" >
 
         <TextView
@@ -74,7 +92,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="22.10.2021"
                 android:textStyle="bold"
                 android:textColor="@color/black" />
 
@@ -92,11 +109,10 @@
                 app:tint="@color/black" />
 
             <TextView
-                android:id="@+id/time"
+                android:id="@+id/time_TV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="13:30"
                 android:textStyle="bold"
                 android:textColor="@color/black" />
 

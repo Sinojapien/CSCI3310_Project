@@ -5,41 +5,42 @@ package edu.cuhk.csci3310.project.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
 import java.util.Map;
 
 import edu.cuhk.csci3310.project.database.Status;
 import edu.cuhk.csci3310.project.database.TaskType;
 
-public class BorrowingFavor extends Favor {
-    private String activityType;
+public class BorrowingFavor extends Favor implements Parcelable {
     private String description;
     private LatLng location;
-    private String date;
+    private String startDate;
+    private String endDate;
     private String time;
-
     private String itemType;
-
-    public BorrowingFavor() {
-        super();
-    }
+    private List<String> selection;
 
     protected BorrowingFavor(Parcel in) {
         super(in);
-        activityType = in.readString();
         description = in.readString();
-        date = in.readString();
+        location = in.readParcelable(LatLng.class.getClassLoader());
+        startDate = in.readString();
+        endDate = in.readString();
         time = in.readString();
         itemType = in.readString();
+        selection = in.createStringArrayList();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
-        dest.writeString(activityType);
         dest.writeString(description);
-        dest.writeString(date);
+        dest.writeParcelable(location, flags);
+        dest.writeString(startDate);
+        dest.writeString(endDate);
         dest.writeString(time);
         dest.writeString(itemType);
+        dest.writeStringList(selection);
     }
 
     @Override
@@ -59,12 +60,28 @@ public class BorrowingFavor extends Favor {
         }
     };
 
-    public String getActivityType() {
-        return activityType;
+    public List<String> getSelection() {
+        return selection;
     }
 
-    public void setActivityType(String activityType) {
-        this.activityType = activityType;
+    public void setSelection(List<String> selection) {
+        this.selection = selection;
+    }
+
+    public static Creator<BorrowingFavor> getCREATOR() {
+        return CREATOR;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public BorrowingFavor() {
+        super();
     }
 
     public String getDescription() {
@@ -83,12 +100,12 @@ public class BorrowingFavor extends Favor {
         this.location = location;
     }
 
-    public String getDate() {
-        return date;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
 
     public String getTime() {
@@ -137,16 +154,13 @@ public class BorrowingFavor extends Favor {
             favor.setLocation(new LatLng(latitude, longitude));
         }
         if(data.get("date") != null) {
-            favor.setDate((String) data.get("date"));
+            favor.setStartDate((String) data.get("date"));
         }
         if(data.get("time") != null) {
             favor.setTime((String) data.get("time"));
         }
         if(data.get("description") != null) {
             favor.setDescription((String) data.get("description"));
-        }
-        if(data.get("activityType") != null) {
-            favor.setActivityType((String) data.get("activityType"));
         }
         if(data.get("itemType") != null) {
             favor.setItemType((String) data.get("itemType"));

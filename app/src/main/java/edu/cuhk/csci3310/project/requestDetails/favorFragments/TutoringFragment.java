@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -15,6 +16,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.List;
+
 import edu.cuhk.csci3310.project.R;
 import edu.cuhk.csci3310.project.model.TutoringFavor;
 
@@ -22,6 +26,16 @@ public class TutoringFragment extends Fragment {
 
     public static final String BUNDLE_KEY = "Favor";
     TutoringFavor favor;
+
+    // View attributes
+    private TextView descriptionTV;
+    private TextView dateStartTV;
+    private TextView dateEndTV;
+    private TextView timeStartTV;
+    private TextView timeEndTV;
+    private TextView tutoringTypeTV;
+    private TextView courseCodeTV;
+    private TextView participantTV;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -36,9 +50,11 @@ public class TutoringFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            LatLng sydney = new LatLng(-34, 151);
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            if(favor.getLocation() != null) {
+                LatLng location = new LatLng(favor.getLocation().getLatitude(), favor.getLocation().getLongitude());
+                googleMap.addMarker(new MarkerOptions().position(location).title("Location"));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+            }
         }
     };
 
@@ -66,6 +82,48 @@ public class TutoringFragment extends Fragment {
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
-        favor = getArguments().getParcelable(BUNDLE_KEY);
+        // Instantiate view attributes
+        descriptionTV = view.findViewById(R.id.description_TV);
+        dateStartTV = view.findViewById(R.id.date_start_TV);
+        dateEndTV = view.findViewById(R.id.date_end_TV);
+        timeStartTV = view.findViewById(R.id.time_start_TV);
+        timeEndTV = view.findViewById(R.id.time_end_TV);
+        tutoringTypeTV = view.findViewById(R.id.tutoring_type_TV);
+        courseCodeTV = view.findViewById(R.id.course_code_TV);
+        participantTV = view.findViewById(R.id.participant_TV);
+        // Get favor attribute
+        if(getArguments().getParcelable(BUNDLE_KEY) != null) {
+            favor = getArguments().getParcelable(BUNDLE_KEY);
+            if(favor.getDescription() != null) {
+                descriptionTV.setText(favor.getDescription());
+            }
+            if(favor.getStartDate() != null) {
+                dateStartTV.setText(favor.getStartDate());
+            }
+            if(favor.getEndDate() != null) {
+                dateEndTV.setText(favor.getEndDate());
+            }
+            if(favor.getStartTime() != null) {
+                timeStartTV.setText(favor.getStartTime());
+            }
+            if(favor.getEndTime() != null) {
+                timeEndTV.setText(favor.getEndTime());
+            }
+            if(favor.getSelection() != null) {
+                List<String> selection = favor.getSelection();
+                String selectionString = "";
+                for(String type : selection) {
+                    selectionString += type + ", ";
+                }
+                if (selectionString != null && selectionString.length() > 0 && selectionString.charAt(selectionString.length() - 2) == ',') {
+                    selectionString = selectionString.substring(0, selectionString.length() - 2);
+                }
+                tutoringTypeTV.setText(selectionString);
+            }
+            if(favor.getCourseCode() != null) {
+                courseCodeTV.setText(favor.getCourseCode());
+            }
+            participantTV.setText("" + favor.getCourseParticipant());
+        }
     }
 }
