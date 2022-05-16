@@ -2,6 +2,9 @@ package edu.cuhk.csci3310.project.model;
 
 // import com.google.android.gms.maps.model.LatLng;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +22,42 @@ public class DiningFavor extends Favor {
     public DiningFavor() {
         super();
     }
+
+    protected DiningFavor(Parcel in) {
+        super(in);
+        description = in.readString();
+        date = in.readString();
+        startTime = in.readString();
+        endTime = in.readString();
+        participant = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeString(description);
+        dest.writeString(date);
+        dest.writeString(startTime);
+        dest.writeString(endTime);
+        dest.writeInt(participant);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<DiningFavor> CREATOR = new Creator<DiningFavor>() {
+        @Override
+        public DiningFavor createFromParcel(Parcel in) {
+            return new DiningFavor(in);
+        }
+
+        @Override
+        public DiningFavor[] newArray(int size) {
+            return new DiningFavor[size];
+        }
+    };
 
     public LatLng getLocation() {
         return location;

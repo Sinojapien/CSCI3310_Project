@@ -5,13 +5,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import edu.cuhk.csci3310.project.R;
-import edu.cuhk.csci3310.project.model.MovingFavor;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,14 +15,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import edu.cuhk.csci3310.project.R;
+import edu.cuhk.csci3310.project.model.DiningFavor;
+import edu.cuhk.csci3310.project.model.GatheringFavor;
 
-public class MovingFragment extends Fragment {
+public class GatheringFragment extends Fragment {
 
     public static final String BUNDLE_KEY = "Favor";
-    MovingFavor favor;
-
-    private final String TAG = "MovingFragment";
-
+    GatheringFavor favor;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -41,25 +37,16 @@ public class MovingFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            favor.getEndLoc();
-            // Set marker at start loc
-            if(favor.getStartLoc() != null) {
-                LatLng startloc = new LatLng(favor.getStartLoc().getLatitude(), favor.getEndLoc().getLongitude());
-                googleMap.addMarker(new MarkerOptions().position(startloc).title("Start Locarion"));
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(startloc));
-            }
-            // Set marker at end loc
-            if(favor.getEndLoc() != null) {
-                LatLng endLoc = new LatLng(favor.getStartLoc().getLatitude(), favor.getEndLoc().getLongitude());
-                googleMap.addMarker(new MarkerOptions().position(endLoc).title("End Location"));
-            }
+            LatLng sydney = new LatLng(-34, 151);
+            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         }
     };
 
-    public static Fragment newInstance(MovingFavor favor) {
+    public static Fragment newInstance(GatheringFavor favor) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(BUNDLE_KEY, favor);
-        Fragment fragment = new MovingFragment();
+        Fragment fragment = new GatheringFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -69,7 +56,7 @@ public class MovingFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_moving, container, false);
+        return inflater.inflate(R.layout.fragment_gathering, container, false);
     }
 
     @Override
@@ -80,8 +67,6 @@ public class MovingFragment extends Fragment {
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
-        if(getArguments().getParcelable(BUNDLE_KEY) != null) {
-            favor = getArguments().getParcelable(BUNDLE_KEY);
-        }
+        favor = getArguments().getParcelable(BUNDLE_KEY);
     }
 }

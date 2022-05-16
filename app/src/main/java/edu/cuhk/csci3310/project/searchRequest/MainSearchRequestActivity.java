@@ -29,6 +29,8 @@ import java.util.Map;
 import edu.cuhk.csci3310.project.R;
 import edu.cuhk.csci3310.project.adaptor.FavorAdapter;
 import edu.cuhk.csci3310.project.createRequest.RequestMapActivity;
+import edu.cuhk.csci3310.project.database.Database;
+import edu.cuhk.csci3310.project.model.*;
 import edu.cuhk.csci3310.project.requestDetails.RequestDetailsActivity;
 
 public class MainSearchRequestActivity extends AppCompatActivity implements
@@ -136,14 +138,34 @@ public class MainSearchRequestActivity extends AppCompatActivity implements
     // method to be called when favor is clicked
     // method passed to the adaptor
     @Override
-    public void onFavorSelected(DocumentSnapshot favor) {
-        Log.d(TAG, "clicked on favor, ID = " + favor.getId());
+    public void onFavorSelected(DocumentSnapshot snapshot) {
+        Log.d(TAG, "clicked on favor, ID = " + snapshot.getId());
         // Go to the details page for the selected favor
         // to be added when favor detail page created
-        //Intent intent = new Intent(this, favorDetailActivity.class);
-        // intent.putExtra(RestaurantDetailActivity.KEY_RESTAURANT_ID, restaurant.getId());
-        // startActivity(intent);
+
+        String favorType = snapshot.getString("taskType");
+        //Log.d(TAG,"Trying to bind = " + favorType + " with ID = " + snapshot.getId() );
+
+        Favor favor;
+        switch(favorType){
+            case "MOVING":
+                favor = snapshot.toObject(MovingFavor.class); break;
+            case "TUTORING":
+                favor = snapshot.toObject(TutoringFavor.class); break;
+            case "DINING":
+                favor = snapshot.toObject(DiningFavor.class); break;
+            case "GATHERING":
+                favor = snapshot.toObject(GatheringFavor.class); break;
+            case "BORROWING":
+                favor = snapshot.toObject(BorrowingFavor.class); break;
+            default:
+                Log.e(TAG, "unknown favor encountered");
+                favor = snapshot.toObject(Favor.class);
+        }
+
         Intent intent = new Intent(MainSearchRequestActivity.this, RequestDetailsActivity.class);
+        intent.putExtra("FAVOR", favor);
+        intent.putExtra("TYPE", "REQUEST");
         startActivity(intent);
     }
 }
