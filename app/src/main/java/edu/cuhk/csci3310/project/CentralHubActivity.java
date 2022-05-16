@@ -15,6 +15,7 @@ import edu.cuhk.csci3310.project.account.UserAccountActivity; // for sending int
 import edu.cuhk.csci3310.project.createRequest.MainRequestActivity;
 import edu.cuhk.csci3310.project.myRequests.RequestOverviewActivity;
 import edu.cuhk.csci3310.project.searchRequest.MainSearchRequestActivity;
+import edu.cuhk.csci3310.project.searchRequest.RequestHistoryActivity;
 
 /**
  * The CentralHubActivity is page shown after successful login
@@ -56,6 +57,14 @@ public class CentralHubActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(CentralHubActivity.this, RequestOverviewActivity.class);
+                startActivity(intent);
+            }
+        });
+        Button requestHistoryBtn = findViewById(R.id.request_history_btn);
+        requestHistoryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CentralHubActivity.this, RequestHistoryActivity.class);
                 startActivity(intent);
             }
         });
