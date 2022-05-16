@@ -21,7 +21,16 @@
         <service
             android:name=".service.NotificationService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true"
+            android:stopWithTask="false"></service>
+        <receiver
+            android:name=".service.restartService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="restartService" />
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name=".searchRequest.RequestHistoryActivity"

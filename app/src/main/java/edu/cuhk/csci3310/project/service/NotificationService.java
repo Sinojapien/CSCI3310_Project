@@ -73,7 +73,10 @@ import java.util.List;
 // Developer Options
 // https://www.techrepublic.com/article/how-to-view-all-running-services-on-android-11/
 
-public class NotificationService extends IntentService {
+// Alarm Manager
+// https://guides.codepath.com/android/Starting-Background-Services#using-with-alarmmanager-for-periodic-tasks
+
+public class NotificationService extends Service {
 
     private class FirebaseQueryListener implements EventListener<QuerySnapshot>{
 
@@ -128,7 +131,7 @@ public class NotificationService extends IntentService {
     public static final String CHANNEL_ID = "10001" ;
 
     public NotificationService() {
-        super(NotificationService.class.getName());
+        //super(NotificationService.class.getName());
     }
 
     @Override
@@ -136,46 +139,8 @@ public class NotificationService extends IntentService {
         return null;
     }
 
-    @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
-        FirebaseUser user = mFirebaseAuth.getCurrentUser();
-
-        if (user != null){
-            Query query = mFirestore.collection("favors").limit(50);
-            mEnquireQuery = query.whereEqualTo("enquirer", user.getUid());
-            mAcceptQuery = query.whereEqualTo("accepter", user.getUid());
-            mEnquireRegistration = mEnquireQuery.addSnapshotListener(new FirebaseQueryListener());
-            mAcceptRegistration = mAcceptQuery.addSnapshotListener(new FirebaseQueryListener());
-
-        }else{
-            createNotification("User have signed out.");
-        }
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        mFirestore = FirebaseFirestore.getInstance();
-    }
-
 //    @Override
-//    public int onStartCommand(Intent intent, int flags, int startId) {
-//        super.onStartCommand(intent, flags, startId);
-//        // receive null intent upon restart
-//
-////        String email;
-////        String password;
-////
-////        mFirebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-////            @Override
-////            public void onComplete(@NonNull Task<AuthResult> task) {
-////                if(task.isSuccessful()) {
-////
-////                }
-////            }
-////        });
-//
+//    protected void onHandleIntent(@Nullable Intent intent) {
 //        FirebaseUser user = mFirebaseAuth.getCurrentUser();
 //
 //        if (user != null){
@@ -188,23 +153,59 @@ public class NotificationService extends IntentService {
 //        }else{
 //            createNotification("User have signed out.");
 //        }
+//    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirestore = FirebaseFirestore.getInstance();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        super.onStartCommand(intent, flags, startId);
+        // receive null intent upon restart
+
+//        String email;
+//        String password;
 //
-//        return START_STICKY;
-//    }
+//        mFirebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//            @Override
+//            public void onComplete(@NonNull Task<AuthResult> task) {
+//                if(task.isSuccessful()) {
+//
+//                }
+//            }
+//        });
 
-//    @Override
-//    public void onTaskRemoved(Intent rootIntent) {
-//        super.onTaskRemoved(rootIntent);
-//    }
+        FirebaseUser user = mFirebaseAuth.getCurrentUser();
 
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//    }
+        if (user != null){
+            Query query = mFirestore.collection("favors").limit(50);
+            mEnquireQuery = query.whereEqualTo("enquirer", user.getUid());
+            mAcceptQuery = query.whereEqualTo("accepter", user.getUid());
+            mEnquireRegistration = mEnquireQuery.addSnapshotListener(new FirebaseQueryListener());
+            mAcceptRegistration = mAcceptQuery.addSnapshotListener(new FirebaseQueryListener());
+
+        }else{
+            createNotification("User have signed out.");
+        }
+
+        return START_STICKY;
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        super.onTaskRemoved(rootIntent);
+//        Intent broadcastIntent = new Intent();
+//        broadcastIntent.setAction("RestartService");
+//        broadcastIntent.setClass(this, restartService.class);
+//        this.sendBroadcast(broadcastIntent);
+    }
 
     protected void createNotification(String contentText){
-        if (isAppRunning(getApplicationContext())) return;
-
+        //if (isAppRunning(getApplicationContext())) return;
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
