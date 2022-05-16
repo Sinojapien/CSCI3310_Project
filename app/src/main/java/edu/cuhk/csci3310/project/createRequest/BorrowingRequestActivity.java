@@ -15,7 +15,12 @@ import android.view.View;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import edu.cuhk.csci3310.project.R;
 import edu.cuhk.csci3310.project.SelectionRequestFragment;
@@ -116,7 +121,30 @@ public class BorrowingRequestActivity extends RequestActivity {
                     favor.setTime(timeFragment.getInformationTime());
                     favor.setItemType((String) borrowTypeSpinner.getSelectedItem());
                     favor.setSelection(selectionFragment.getInformationStringList());
-                    Database.createNewFavor(favor);
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    DocumentReference docRef = db.collection("users").document(firebaseAuth.getCurrentUser().getUid());
+                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                    String username = (String) document.getData().get("name");
+                                    favor.setEnquirerName(username);
+                                    try {
+                                        Database.createNewFavor(favor);
+                                    } catch(Exception e) {
+                                        Log.d(TAG, e.getMessage());
+                                    }
+                                } else {
+                                    Log.d(TAG, "No such document");
+                                }
+                            } else {
+                                Log.d(TAG, "get failed with ", task.getException());
+                            }
+                        }
+                    });
                 } catch(Exception e) {
                     Log.d(TAG, "onClick: " + e.getMessage());
                 }

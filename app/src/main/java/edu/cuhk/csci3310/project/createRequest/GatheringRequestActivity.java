@@ -17,14 +17,18 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import edu.cuhk.csci3310.project.R;
 import edu.cuhk.csci3310.project.database.Database;
 import edu.cuhk.csci3310.project.database.Status;
 import edu.cuhk.csci3310.project.database.TaskType;
 import edu.cuhk.csci3310.project.model.GatheringFavor;
-import edu.cuhk.csci3310.project.myRequests.RequestOverviewActivity;
 
 public class GatheringRequestActivity extends RequestActivity {
 
@@ -105,7 +109,6 @@ public class GatheringRequestActivity extends RequestActivity {
                 try {
                     GatheringFavor favor = new GatheringFavor();
                     favor.setEnquirer(firebaseAuth.getCurrentUser().getUid());
-                    favor.setEnquirerName(firebaseAuth.getCurrentUser().getDisplayName());
                     favor.setTaskType(TaskType.GATHERING);
                     favor.setStatus(Status.OPEN);
                     favor.setLocation(new edu.cuhk.csci3310.project.model.LatLng(locationFragment.getInformationLocation()));
@@ -115,14 +118,34 @@ public class GatheringRequestActivity extends RequestActivity {
                     favor.setEndTime(timeFragment.getInformationTimeEnd());
                     favor.setParticipant(Integer.parseInt((String) participantSpinner.getSelectedItem()));
                     favor.setActivityType((String) gatheringTypeSpinner.getSelectedItem());
-                    Database.createNewFavor(favor);
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    DocumentReference docRef = db.collection("users").document(firebaseAuth.getCurrentUser().getUid());
+                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                    String username = (String) document.getData().get("name");
+                                    favor.setEnquirerName(username);
+                                    try {
+                                        Database.createNewFavor(favor);
+                                    } catch(Exception e) {
+                                        Log.d(TAG, e.getMessage());
+                                    }
+                                } else {
+                                    Log.d(TAG, "No such document");
+                                }
+                            } else {
+                                Log.d(TAG, "get failed with ", task.getException());
+                            }
+                        }
+                    });
                 } catch(Exception e) {
                     Log.d(TAG, "onClick: " + e.getMessage());
                 }
                 // [Stop: Create Dining Request]
-
-                Intent intent = new Intent(GatheringRequestActivity.this, RequestOverviewActivity.class);
-                startActivity(intent);
             }
         });
 

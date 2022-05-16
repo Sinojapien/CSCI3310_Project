@@ -54,7 +54,12 @@ import edu.cuhk.csci3310.project.R;
 import edu.cuhk.csci3310.project.adaptor.FavorAdapter;
 import edu.cuhk.csci3310.project.database.Database;
 import edu.cuhk.csci3310.project.database.Status;
+import edu.cuhk.csci3310.project.model.BorrowingFavor;
+import edu.cuhk.csci3310.project.model.DiningFavor;
 import edu.cuhk.csci3310.project.model.Favor;
+import edu.cuhk.csci3310.project.model.GatheringFavor;
+import edu.cuhk.csci3310.project.model.MovingFavor;
+import edu.cuhk.csci3310.project.model.TutoringFavor;
 import edu.cuhk.csci3310.project.requestDetails.RequestDetailsActivity;
 
 // https://stackoverflow.com/questions/52308648/android-firebase-push-notification-click-event
@@ -150,12 +155,27 @@ public class RequestHistoryActivity extends AppCompatActivity {
 
                 builder.show();
 
-            }else{
-                Log.d(TAG, "clicked on favor, ID = " + favor.getId());
-                //Intent intent = new Intent(this, favorDetailActivity.class);
-                // intent.putExtra(RestaurantDetailActivity.KEY_RESTAURANT_ID, restaurant.getId());
-                // startActivity(intent);
+            } else{
+                String favorType = favor.getString("taskType");
+                Favor newFavor;
+                switch(favorType){
+                    case "MOVING":
+                        newFavor = favor.toObject(MovingFavor.class); break;
+                    case "TUTORING":
+                        newFavor = favor.toObject(TutoringFavor.class); break;
+                    case "DINING":
+                        newFavor = favor.toObject(DiningFavor.class); break;
+                    case "GATHERING":
+                        newFavor = favor.toObject(GatheringFavor.class); break;
+                    case "BORROWING":
+                        newFavor = favor.toObject(BorrowingFavor.class); break;
+                    default:
+                        Log.e(TAG, "unknown favor encountered");
+                        newFavor = favor.toObject(Favor.class);
+                }
+                newFavor.setId(favor.getId());
                 Intent intent = new Intent(RequestHistoryActivity.this, RequestDetailsActivity.class);
+                intent.putExtra("FAVOR", newFavor);
                 startActivity(intent);
             }
         }
