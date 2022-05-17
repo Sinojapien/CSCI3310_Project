@@ -29,6 +29,7 @@ public class MovingFragment extends Fragment {
     // View attributes
     private TextView dateTV;
     private TextView timeTV;
+    private TextView descriptionTV;
 
     private final String TAG = "MovingFragment";
 
@@ -87,6 +88,7 @@ public class MovingFragment extends Fragment {
         // Instantiate view attributes
         dateTV = view.findViewById(R.id.date_TV);
         timeTV = view.findViewById(R.id.time_TV);
+        descriptionTV = view.findViewById(R.id.description_TV);
         if(getArguments().getParcelable(BUNDLE_KEY) != null) {
             favor = getArguments().getParcelable(BUNDLE_KEY);
             // Fill views
@@ -95,6 +97,9 @@ public class MovingFragment extends Fragment {
             }
             if(favor.getTime() != null) {
                 timeTV.setText(favor.getTime());
+            }
+            if(favor.getDescription() != null) {
+                descriptionTV.setText(favor.getDescription());
             }
         }
     }

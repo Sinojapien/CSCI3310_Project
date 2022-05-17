@@ -42,7 +42,6 @@ public class UserAccountActivity extends AppCompatActivity implements View.OnCli
     FirebaseAuth mAuth;
     FirebaseUser user;
     Context context;
-    BottomNavigationView bottomNavigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,51 +61,9 @@ public class UserAccountActivity extends AppCompatActivity implements View.OnCli
 
         logoutBtn.setOnClickListener(this);
 
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference rootReference = firebaseDatabase.getReference();
-        DatabaseReference nameReference = rootReference.child("Users").child(user.getUid()).child("name");
-        nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                usernameTV.setText(snapshot.getValue().toString());
-            }
+        usernameTV.setText(user.getDisplayName());
+        emailTV.setText(user.getEmail());
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-        bottomNavigation = findViewById(R.id.bottom_navigation);
-
-        bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Intent intent;
-                switch (item.getItemId()) {
-                    case R.id.request:
-                        intent = new Intent(UserAccountActivity.this, UserAccountActivity.class);
-                        //startActivity(intent);
-                        return true;
-                    case R.id.task:
-                        intent = new Intent(UserAccountActivity.this, UserAccountActivity.class);
-                        //startActivity(intent);
-                        return true;
-                    case R.id.add:
-                        intent = new Intent(UserAccountActivity.this, MainRequestActivity.class);
-                        startActivity(intent);
-                        return true;
-                    case R.id.browse:
-                        intent = new Intent(UserAccountActivity.this, UserAccountActivity.class);
-                        //startActivity(intent);
-                        return true;
-                    case R.id.profile:
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-        });
 
         Switch notificationOptionSwitch = findViewById(R.id.notification_layout).findViewById(R.id.notification_switch);
         Switch onBootOptionSwitch = findViewById(R.id.on_boot_layout).findViewById(R.id.on_boot_switch);
@@ -160,7 +117,6 @@ public class UserAccountActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onResume() {
         super.onResume();
-        bottomNavigation.setSelectedItemId(R.id.profile);
     }
 
     @Override
