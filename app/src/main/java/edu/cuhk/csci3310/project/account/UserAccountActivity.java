@@ -20,11 +20,6 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import edu.cuhk.csci3310.project.MainActivity;
 import edu.cuhk.csci3310.project.R;
@@ -38,6 +33,8 @@ public class UserAccountActivity extends AppCompatActivity implements View.OnCli
 
     TextView usernameTV;
     TextView emailTV;
+    Button updateEmailBtn;
+    Button updatePasswordBtn;
     Button logoutBtn;
     FirebaseAuth mAuth;
     FirebaseUser user;
@@ -51,6 +48,8 @@ public class UserAccountActivity extends AppCompatActivity implements View.OnCli
         logoutBtn = findViewById(R.id.logout_btn);
         usernameTV = findViewById(R.id.username_TV);
         emailTV = findViewById(R.id.email_TV);
+        updateEmailBtn = findViewById(R.id.updateEmail_btn);
+        updatePasswordBtn = findViewById(R.id.updatePassword_btn);
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
@@ -60,6 +59,8 @@ public class UserAccountActivity extends AppCompatActivity implements View.OnCli
         context = this;
 
         logoutBtn.setOnClickListener(this);
+        updateEmailBtn.setOnClickListener(this);
+        updatePasswordBtn.setOnClickListener(this);
 
         usernameTV.setText(user.getDisplayName());
         emailTV.setText(user.getEmail());
@@ -125,7 +126,23 @@ public class UserAccountActivity extends AppCompatActivity implements View.OnCli
             case R.id.logout_btn:
                 showLogoutDialog();
                 break;
+            case R.id.updateEmail_btn:
+                openUpdateEmailActivity();
+                break;
+            case R.id.updatePassword_btn:
+                openUpdatePasswordActivity();
+                break;
         }
+    }
+
+    private void openUpdateEmailActivity() {
+        Intent intent = new Intent(UserAccountActivity.this, UpdateEmailActivity.class);
+        startActivity(intent);
+    }
+
+    private void openUpdatePasswordActivity() {
+        Intent intent = new Intent(UserAccountActivity.this, UpdatePasswordActivity.class);
+        startActivity(intent);
     }
 
     private void showLogoutDialog() {

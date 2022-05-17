@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button loginBTN;
     private TextView signupTV;
     private ProgressBar progressBar;
+    private TextView errorMessageTV;
 
     ValidateInput validateInput;
 
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mAuth = FirebaseAuth.getInstance();
 
         progressBar = findViewById(R.id.progressBar);
+        errorMessageTV = findViewById(R.id.error_message_TV);
         // [Stop] Login code
 
         // Maintaining Login, would not be called upon back button navigation
@@ -86,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void handleLoginBtnClick() {
         showProgressBar();
-
+        errorMessageTV.setVisibility(View.INVISIBLE);
         // Maintaining Login
         if (mFirebaseUser != null){
             Intent CentralHubActivity = new Intent(MainActivity.this, CentralHubActivity.class);
@@ -106,7 +108,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         startActivity(CentralHubActivity);
                     } else {
                         hideProgressBar();
-                        Toast.makeText(MainActivity.this, "Error occured: " + task.getException(), Toast.LENGTH_SHORT).show();
+                        errorMessageTV.setText(task.getException().getMessage());
+                        errorMessageTV.setVisibility(View.VISIBLE);
                     }
                 }
             });
@@ -125,4 +128,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent SignupActivity = new Intent(MainActivity.this, SignupActivity.class);
         startActivity(SignupActivity);
     }
+
 }
