@@ -64,15 +64,7 @@ public class CentralHubActivity extends AppCompatActivity{
         // Log.d("CentralHubActivity", "finish creating CentralHubActivity");
 
         // Notification Service
-        if (!NotificationService.isRunning(this)){
-            Intent notificationIntent = new Intent(this, NotificationService.class);
-//            notificationIntent.putExtra(NotificationService.TAG_EMAIL, firebaseAuth.getCurrentUser().getEmail());
-//            notificationIntent.putExtra(NotificationService.TAG_PASSWORD, firebaseAuth.getCurrentUser().getPass());
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O)
-                startForegroundService(notificationIntent);
-            else
-                startService(notificationIntent);
-        }
+        NotificationService.startService(this);
 
     }
 }

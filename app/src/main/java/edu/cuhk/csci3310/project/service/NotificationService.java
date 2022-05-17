@@ -20,6 +20,7 @@ import edu.cuhk.csci3310.project.CentralHubActivity;
 import edu.cuhk.csci3310.project.MainActivity;
 import edu.cuhk.csci3310.project.R;
 import edu.cuhk.csci3310.project.model.Favor;
+import edu.cuhk.csci3310.project.settings.UserSettings;
 import edu.cuhk.csci3310.project.viewModel.RequestHistoryViewModel;
 
 import androidx.annotation.NonNull;
@@ -254,7 +255,7 @@ public class NotificationService extends Service {
         return false;
     }
 
-    public static boolean isRunning(Context context) {
+    public static boolean isServiceRunning(Context context) {
         // https://stackoverflow.com/questions/600207/how-to-check-if-a-service-is-running-on-android
 
         ActivityManager serviceManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
@@ -264,6 +265,22 @@ public class NotificationService extends Service {
             }
         }
         return false;
+    }
+
+    public static boolean isCallValid(Context context) {
+        return !NotificationService.isServiceRunning(context) && UserSettings.getSettingNotification(context);
+    }
+
+    public static void startService(Context context) {
+        if (NotificationService.isCallValid(context)){
+            Intent notificationIntent = new Intent(context, NotificationService.class);
+//            notificationIntent.putExtra(NotificationService.TAG_EMAIL, firebaseAuth.getCurrentUser().getEmail());
+//            notificationIntent.putExtra(NotificationService.TAG_PASSWORD, firebaseAuth.getCurrentUser().getPass());
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O)
+                context.startForegroundService(notificationIntent);
+            else
+                context.startService(notificationIntent);
+        }
     }
 
 }

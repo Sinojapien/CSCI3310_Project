@@ -146,6 +146,8 @@ public class GatheringRequestActivity extends RequestActivity {
                     Log.d(TAG, "onClick: " + e.getMessage());
                 }
                 // [Stop: Create Dining Request]
+
+                finish();
             }
         });
 
