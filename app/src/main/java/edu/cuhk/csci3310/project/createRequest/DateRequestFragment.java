@@ -110,7 +110,7 @@ public class DateRequestFragment extends RequestFragment {
         final DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                textView.setText(getString(R.string.request_date, i2, i1+1, i));
+                textView.setText(getString(R.string.request_date, i, i1+1, i2));
             }
         }, year, month, day);
         // datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
@@ -158,9 +158,9 @@ public class DateRequestFragment extends RequestFragment {
                 Pair<Long, Long> datePair = (Pair<Long, Long>) selection;
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(datePair.first);
-                startTextView.setText(getString(R.string.request_date, calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.YEAR)));
+                startTextView.setText(getString(R.string.request_date, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1,calendar.get(Calendar.DAY_OF_MONTH) ));
                 calendar.setTimeInMillis(datePair.second);
-                endTextView.setText(getString(R.string.request_date, calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.YEAR)));
+                endTextView.setText(getString(R.string.request_date, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH)));
             }
         });
 
