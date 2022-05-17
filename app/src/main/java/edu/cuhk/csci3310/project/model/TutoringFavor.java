@@ -28,6 +28,7 @@ public class TutoringFavor extends Favor {
 
     protected TutoringFavor(Parcel in) {
         super(in);
+        location = in.readParcelable(LatLng.class.getClassLoader());
         startDate = in.readString();
         endDate = in.readString();
         startTime = in.readString();
@@ -42,6 +43,7 @@ public class TutoringFavor extends Favor {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
+        dest.writeParcelable(location, flags);
         dest.writeString(startDate);
         dest.writeString(endDate);
         dest.writeString(startTime);

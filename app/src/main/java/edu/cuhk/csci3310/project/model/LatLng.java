@@ -13,6 +13,7 @@ public class LatLng implements Parcelable {
     private Double longitude;
 
     public LatLng() {}
+
     public LatLng(Double latitude, Double longitude){
         this.latitude = latitude;
         this.longitude = longitude;

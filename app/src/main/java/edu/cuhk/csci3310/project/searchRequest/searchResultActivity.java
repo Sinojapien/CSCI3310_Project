@@ -209,8 +209,8 @@ public class searchResultActivity extends AppCompatActivity implements
                 Log.e(TAG, "unknown favor encountered");
                 temFavor = favorDoc.toObject(Favor.class);
         }
-
-        intent.putExtra("favor", temFavor);
+        temFavor.setId(favorDoc.getId());
+        intent.putExtra("FAVOR", temFavor);
         startActivity(intent);
     }
 }

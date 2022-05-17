@@ -53,7 +53,7 @@ public class BorrowingFragment extends Fragment {
             if(favor.getLocation() != null) {
                 LatLng location = new LatLng(favor.getLocation().getLatitude(), favor.getLocation().getLongitude());
                 googleMap.addMarker(new MarkerOptions().position(location).title("Location"));
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 12.0f));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 16.0f));
             }
         }
     };

@@ -49,13 +49,13 @@ public class MovingFragment extends Fragment {
         public void onMapReady(GoogleMap googleMap) {
             // Set marker at start loc
             if(favor.getStartLoc() != null) {
-                LatLng startloc = new LatLng(favor.getStartLoc().getLatitude(), favor.getEndLoc().getLongitude());
-                googleMap.addMarker(new MarkerOptions().position(startloc).title("Start Locarion"));
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(startloc));
+                LatLng startloc = new LatLng(favor.getStartLoc().getLatitude(), favor.getStartLoc().getLongitude());
+                googleMap.addMarker(new MarkerOptions().position(startloc).title("Start Location"));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(startloc, 16.0f));
             }
             // Set marker at end loc
             if(favor.getEndLoc() != null) {
-                LatLng endLoc = new LatLng(favor.getStartLoc().getLatitude(), favor.getEndLoc().getLongitude());
+                LatLng endLoc = new LatLng(favor.getEndLoc().getLatitude(), favor.getEndLoc().getLongitude());
                 googleMap.addMarker(new MarkerOptions().position(endLoc).title("End Location"));
             }
         }

@@ -25,6 +25,7 @@ public class DiningFavor extends Favor {
 
     protected DiningFavor(Parcel in) {
         super(in);
+        location = in.readParcelable(LatLng.class.getClassLoader());
         description = in.readString();
         date = in.readString();
         startTime = in.readString();
@@ -35,6 +36,7 @@ public class DiningFavor extends Favor {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
+        dest.writeParcelable(location, flags);
         dest.writeString(description);
         dest.writeString(date);
         dest.writeString(startTime);
