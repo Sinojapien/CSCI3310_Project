@@ -93,10 +93,19 @@
         tools:visibility="visible">
 
         <TextView
+            android:id="@+id/query_any_order_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No further option for favor type 'any'"
+            android:text="Sort by favor type in order: "
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Spinner
+            android:id="@+id/query_any_order_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/query_any_order_hint"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

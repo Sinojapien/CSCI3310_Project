@@ -18,22 +18,14 @@
 
     <string name="request_post">Post Request</string>
 
+    <!-- date format changed because it help query-->
     <string name="request_description_wordcount">(%1$d / %2$d)</string>
-    <string name="request_date_hint">DD/MM/YY</string>
-    <string name="request_date">%1$02d/%2$02d/%3$04d</string>
+    <string name="request_date_hint">YYYY/MM/DD</string>
+    <string name="request_date">%1$04d/%2$02d/%3$02d</string>
     <string name="request_time_hint">HH:MM</string>
     <string name="request_time">%1$02d:%2$02d</string>
 
     <string-array name="request_tutoring_type">
-        <item>Assignment</item>
-        <item>Essay</item>
-        <item>Examination</item>
-        <item>Presentation</item>
-        <item>Course Project</item>
-        <item>Final Year Project</item>
-    </string-array>
-    <string-array name="query_tutoring_type">
-        <item>Any</item>
         <item>Assignment</item>
         <item>Essay</item>
         <item>Examination</item>
@@ -66,6 +58,21 @@
         <item>Medicine</item>
         <item>Science</item>
         <item>Social Science</item>
+    </string-array>
+
+    <!-- search request activity -->
+    <string-array name="query_any_order">
+        <item>Asc</item>
+        <item>Desc</item>
+    </string-array>
+    <string-array name="query_tutoring_type">
+        <item>Any</item>
+        <item>Assignment</item>
+        <item>Essay</item>
+        <item>Examination</item>
+        <item>Presentation</item>
+        <item>Course Project</item>
+        <item>Final Year Project</item>
     </string-array>
 
     <!-- Map Activity -->

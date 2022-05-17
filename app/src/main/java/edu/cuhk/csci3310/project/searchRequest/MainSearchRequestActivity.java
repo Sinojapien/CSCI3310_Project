@@ -32,7 +32,7 @@ public class MainSearchRequestActivity extends AppCompatActivity {
     // use visibility to control option menu on screen
     // fragment is another option, but it is not necessary in the simple case
     View currentView; // variable to store current view
-    View allView;
+    View allView;   String sortOrder;
     View BorrowingView; String itemType; EditText itemNameView;
     View DiningView;
     View GatheringView;
@@ -113,6 +113,22 @@ public class MainSearchRequestActivity extends AppCompatActivity {
                 picker.show();
             }
         });
+
+        // 'any' optional input
+        Spinner anyspinner = (Spinner) findViewById(R.id.query_any_order_spinner);
+        anyspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
+                sortOrder = (String) adapterView.getItemAtPosition(pos);
+                // Log.d(TAG, "get item : " + item);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
+        ArrayAdapter<CharSequence> anyadapter = ArrayAdapter.createFromResource(this,
+                R.array.query_any_order, android.R.layout.simple_spinner_item);
+        anyadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        anyspinner.setAdapter(anyadapter);
 
         // borrowing optional input
         Spinner borrowingspinner = (Spinner) findViewById(R.id.query_Borrowing_spinner);
@@ -202,6 +218,7 @@ public class MainSearchRequestActivity extends AppCompatActivity {
         extras.putString("endDate", endDateView.getText().toString());
         switch(favorType){
             case "all":
+                extras.putString("sortOrder", sortOrder);
                 break;
             case "Borrowing":
                 extras.putString("itemType", itemType);

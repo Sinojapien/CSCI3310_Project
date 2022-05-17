@@ -16,6 +16,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.core.OrderBy;
 
 import edu.cuhk.csci3310.project.R;
 import edu.cuhk.csci3310.project.adaptor.FavorAdapter;
@@ -72,6 +73,11 @@ public class searchResultActivity extends AppCompatActivity implements
         // get different information basic on favorType
         switch(favorType){
             case "all": // no need to modify query with all
+                String sortOrder = extras.getString("sortOrder");
+                if(sortOrder.equals("Asc"))
+                    mQuery = mQuery.orderBy("taskType", Query.Direction.ASCENDING);
+                else
+                    mQuery = mQuery.orderBy("taskType", Query.Direction.DESCENDING);
                 break;
             case "Borrowing":
                 mQuery = mQuery.whereEqualTo("taskType", "BORROWING");
