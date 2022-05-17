@@ -32,6 +32,15 @@
         <item>Course Project</item>
         <item>Final Year Project</item>
     </string-array>
+    <string-array name="query_tutoring_type">
+        <item>Any</item>
+        <item>Assignment</item>
+        <item>Essay</item>
+        <item>Examination</item>
+        <item>Presentation</item>
+        <item>Course Project</item>
+        <item>Final Year Project</item>
+    </string-array>
     <string-array name="request_gathering_type">
         <item>Lecture</item>
         <item>Study</item>

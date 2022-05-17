@@ -102,10 +102,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/query_Borrowing"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/radioGroup"
         app:layout_constraintTop_toBottomOf="@+id/query_optional_hint"
@@ -115,7 +115,7 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Type: "
+            android:text="Item Type: "
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -128,14 +128,33 @@
             app:layout_constraintStart_toEndOf="@+id/textView2"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/query_Borrowing_item_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20sp"
+            android:text="Item Name: "
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+        <EditText
+            android:id="@+id/query_Borrowing_item_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-8sp"
+            android:hint="any item"
+            app:layout_constraintStart_toEndOf="@+id/query_Borrowing_item_hint"
+            app:layout_constraintTop_toTopOf="@+id/query_Borrowing_item_hint" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/query_Dining"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/radioGroup"
         app:layout_constraintTop_toBottomOf="@+id/query_optional_hint"
@@ -145,18 +164,100 @@
             android:id="@+id/query_Dining_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Participant number: "
+            android:text="No further option for favor type 'Dining'"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/query_Gathering"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/radioGroup"
+        app:layout_constraintTop_toBottomOf="@+id/query_optional_hint"
+        tools:visibility="gone">
+
+        <TextView
+            android:id="@+id/query_Gathering_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No further option for favor type 'Gathering'"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/query_Moving"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/radioGroup"
+        app:layout_constraintTop_toBottomOf="@+id/query_optional_hint"
+        tools:visibility="gone">
+
+        <TextView
+            android:id="@+id/query_Moving_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No further option for favor type 'Moving'"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/query_Tutoring"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="10sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/radioGroup"
+        app:layout_constraintTop_toBottomOf="@+id/query_optional_hint"
+        tools:visibility="gone">
+
+        <TextView
+            android:id="@+id/query_Tutoring_spinner_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tutoring Type: "
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/query_Dining_participant"
+        <Spinner
+            android:id="@+id/query_Tutoring_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            app:layout_constraintStart_toEndOf="@+id/query_Dining_text"
+            android:layout_marginTop="6dp"
+            app:layout_constraintStart_toEndOf="@+id/query_Tutoring_spinner_hint"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/query_Tutoring_courseCode_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20sp"
+            android:text="Course Code:  "
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/query_Tutoring_spinner_hint" />
+
+        <EditText
+            android:id="@+id/query_Tutoring_courseCode_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-8sp"
+            android:hint="any item"
+            app:layout_constraintStart_toEndOf="@+id/query_Tutoring_courseCode_hint"
+            app:layout_constraintTop_toTopOf="@+id/query_Tutoring_courseCode_hint" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

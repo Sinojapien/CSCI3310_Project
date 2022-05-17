@@ -60,27 +60,72 @@ public class searchResultActivity extends AppCompatActivity implements
                 .whereEqualTo("status", "OPEN")
                 .limit(50);
 
+        // name search
+        String enquirerName = extras.getString("enquirerName");
+        if(!enquirerName.isEmpty())
+            mQuery = mQuery.whereEqualTo("enquirerName", enquirerName);
+        // firebase only allow range search in single field, used in date
+        String startDate = extras.getString("startDate");
+        String endDate = extras.getString("startDate");
+
+
         // get different information basic on favorType
         switch(favorType){
             case "all": // no need to modify query with all
                 break;
             case "Borrowing":
                 mQuery = mQuery.whereEqualTo("taskType", "BORROWING");
+                if(!startDate.isEmpty())
+                    mQuery = mQuery.whereGreaterThanOrEqualTo("startDate", startDate);
+                if(!endDate.isEmpty())
+                    mQuery = mQuery.whereLessThanOrEqualTo("endDate", endDate);
+
                 String itemType = extras.getString("itemType");
                 if(!itemType.equalsIgnoreCase("any"))
                     mQuery = mQuery.whereEqualTo("itemType", itemType);
                 // Log.d(TAG, "get itemType: " + intent.getStringExtra("itemType"));
-                String date = extras.getString("date");
-                Log.d(TAG, "get date: " + date);
-                mQuery = mQuery.whereGreaterThanOrEqualTo("date", date);
+                String itemName = extras.getString("itemName");
+                if(!itemName.isEmpty())
+                    mQuery = mQuery.whereArrayContains("selection", itemName);
                 break;
             case "Dining":
+                mQuery = mQuery.whereEqualTo("taskType", "DINING");
+                if(!startDate.isEmpty())
+                    mQuery = mQuery.whereGreaterThanOrEqualTo("date", startDate);
+                if(!endDate.isEmpty())
+                    mQuery = mQuery.whereLessThanOrEqualTo("date", endDate);
                 break;
             case "Gathering":
+                mQuery = mQuery.whereEqualTo("taskType", "GATHERING");
+                if(!startDate.isEmpty())
+                    mQuery = mQuery.whereGreaterThanOrEqualTo("date", startDate);
+                if(!endDate.isEmpty())
+                    mQuery = mQuery.whereLessThanOrEqualTo("date", endDate);
                 break;
             case "Moving":
+                mQuery = mQuery.whereEqualTo("taskType", "MOVING");
+                if(!startDate.isEmpty())
+                    mQuery = mQuery.whereGreaterThanOrEqualTo("date", startDate);
+                if(!endDate.isEmpty())
+                    mQuery = mQuery.whereLessThanOrEqualTo("date", endDate);
                 break;
             case "Tutoring":
+                mQuery = mQuery.whereEqualTo("taskType", "TUTORING");
+                if(!startDate.isEmpty())
+                    mQuery = mQuery.whereGreaterThanOrEqualTo("startDate", startDate);
+                if(!endDate.isEmpty())
+                    mQuery = mQuery.whereLessThanOrEqualTo("endDate", endDate);
+
+                String courseCode = extras.getString("courseCode");
+                if(!courseCode.isEmpty())
+                    mQuery = mQuery.whereEqualTo("courseCode", courseCode);
+                // Log.d(TAG, "get itemType: " + intent.getStringExtra("itemType"));
+                String tutoringType = extras.getString("tutoringType");
+                if(!tutoringType.equalsIgnoreCase("any"))
+                    mQuery = mQuery.whereArrayContains("selection", tutoringType);
+
+                Log.d(TAG, "courseCode : " + courseCode);
+                Log.d(TAG, "tutoringType : " + tutoringType);
                 break;
         }
 

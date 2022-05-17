@@ -2,11 +2,9 @@ package edu.cuhk.csci3310.project.searchRequest;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,13 +15,10 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 
-import java.util.Locale;
 import java.util.Calendar;
 
-import edu.cuhk.csci3310.project.MainActivity;
 import edu.cuhk.csci3310.project.R;
-import edu.cuhk.csci3310.project.database.Status;
-import edu.cuhk.csci3310.project.model.Favor;
+
 
 public class MainSearchRequestActivity extends AppCompatActivity {
     private static final String TAG = "SearchRequestActivity";
@@ -33,22 +28,20 @@ public class MainSearchRequestActivity extends AppCompatActivity {
     EditText enquirerName;
     EditText startDateView;
     EditText endDateView;
-    String selectedStartDate;
-    String selectedEndDate;
 
     // use visibility to control option menu on screen
     // fragment is another option, but it is not necessary in the simple case
     View currentView; // variable to store current view
     View allView;
-    View BorrowingView; String itemType;
-    View DiningView; int participantNum;;
+    View BorrowingView; String itemType; EditText itemNameView;
+    View DiningView;
     View GatheringView;
     View MovingView;
-    View TutoringView;
+    View TutoringView; String tutoringType; EditText courseCodeView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "on create");
+        // Log.d(TAG, "on create");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_search_rquest);
 
@@ -58,15 +51,17 @@ public class MainSearchRequestActivity extends AppCompatActivity {
         allView = findViewById(R.id.query_any);
         BorrowingView = findViewById(R.id.query_Borrowing);;
         DiningView = findViewById(R.id.query_Dining);
+        GatheringView = findViewById(R.id.query_Gathering);
+        MovingView = findViewById(R.id.query_Moving);
+        TutoringView = findViewById(R.id.query_Tutoring);
         currentView = allView; // user looking at allView
 
-        // enquirerName input edittext preparation
+        // enquirerName input edittext
         enquirerName = findViewById(R.id.query_name_input);
 
-        // start date and end date input preparation
+        // start date and end date input
         startDateView = findViewById(R.id.query_start_date);
         endDateView = findViewById(R.id.query_end_date);
-
         startDateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,6 +77,7 @@ public class MainSearchRequestActivity extends AppCompatActivity {
                                 startDateView.setText(+ year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
                             }
                         }, year, month, day);
+                // set to cancel button to reset input to empty string
                 picker.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == DialogInterface.BUTTON_NEGATIVE) {
@@ -118,8 +114,9 @@ public class MainSearchRequestActivity extends AppCompatActivity {
             }
         });
 
-        Spinner spinner = (Spinner) findViewById(R.id.query_Borrowing_spinner);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        // borrowing optional input
+        Spinner borrowingspinner = (Spinner) findViewById(R.id.query_Borrowing_spinner);
+        borrowingspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
                 itemType = (String) adapterView.getItemAtPosition(pos);
@@ -128,10 +125,31 @@ public class MainSearchRequestActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {}
         });
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        ArrayAdapter<CharSequence> borrowingadapter = ArrayAdapter.createFromResource(this,
                 R.array.request_borrowing_type, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+        borrowingadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        borrowingspinner.setAdapter(borrowingadapter);
+
+        itemNameView = findViewById(R.id.query_Borrowing_item_input);
+
+        // Tutoring optional input
+
+        Spinner Tutoringspinner = (Spinner) findViewById(R.id.query_Tutoring_spinner);
+        Tutoringspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
+                tutoringType = (String) adapterView.getItemAtPosition(pos);
+                // Log.d(TAG, "get item : " + item);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
+        ArrayAdapter<CharSequence> Tutoringadapter = ArrayAdapter.createFromResource(this,
+                R.array.query_tutoring_type, android.R.layout.simple_spinner_item);
+        Tutoringadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Tutoringspinner.setAdapter(Tutoringadapter);
+
+        courseCodeView = findViewById(R.id.query_Tutoring_courseCode_input);
 
     }
 
@@ -141,39 +159,31 @@ public class MainSearchRequestActivity extends AppCompatActivity {
             case R.id.radio_all:
                 if (checked) {
                     changeView(currentView, allView); favorType = "all";
-
                 }
                     break;
             case R.id.radio_Borrowing:
                 if (checked) {
-                    // dateView.setText(selectedDate);
                     changeView(currentView, BorrowingView); favorType = "Borrowing";
-
                 }
                     break;
             case R.id.radio_Dining:
                 if (checked) {
-                    // query_Dining_date.setText(selectedDate);
                     changeView(currentView, DiningView); favorType = "Dining";
-
                 }
                     break;
             case R.id.radio_Gathering:
                 if (checked) {
                     changeView(currentView, GatheringView); favorType = "Gathering";
-
                 }
                     break;
             case R.id.radio_Moving:
                 if (checked) {
                     changeView(currentView, MovingView); favorType = "Moving";
-
                 }
                     break;
             case R.id.radio_Tutoring:
                 if (checked) {
                     changeView(currentView, TutoringView); favorType = "Tutoring";
-
                 }
                     break;
         }
@@ -186,19 +196,16 @@ public class MainSearchRequestActivity extends AppCompatActivity {
         Intent intent = new Intent(MainSearchRequestActivity.this, searchResultActivity.class);
         Bundle extras = new Bundle();
         extras.putString("favorType", favorType);
+        // empty string are handled in query result
         extras.putString("enquirerName", enquirerName.getText().toString());
-        // Log.d(TAG, "get the name: " + enquirerName.getText() + " is null: " + enquirerName.getText().toString().isEmpty());
         extras.putString("startDate", startDateView.getText().toString());
-        extras.putString("endDateView", endDateView.getText().toString());
-        //Log.d(TAG, "get date: " + startDateView.getText() + " " + endDateView.getText());
-        //Log.d(TAG, "is empty: " + startDateView.getText().toString().isEmpty() + " " + endDateView.getText().toString().isEmpty());
+        extras.putString("endDate", endDateView.getText().toString());
         switch(favorType){
             case "all":
                 break;
             case "Borrowing":
                 extras.putString("itemType", itemType);
-                // extras.putString("date", selectedDate);
-                //Log.d(TAG, "get date: " + dateView.getText());
+                extras.putString("itemName", itemNameView.getText().toString());
                 break;
             case "Dining":
                 break;
@@ -207,6 +214,10 @@ public class MainSearchRequestActivity extends AppCompatActivity {
             case "Moving":
                 break;
             case "Tutoring":
+                extras.putString("tutoringType", tutoringType);
+                extras.putString("courseCode", courseCodeView.getText().toString());
+                Log.d(TAG, "tutoringType : " + tutoringType);
+                Log.d(TAG, "courseCode : " + courseCodeView.getText().toString());
                 break;
         }
         intent.putExtras(extras);
