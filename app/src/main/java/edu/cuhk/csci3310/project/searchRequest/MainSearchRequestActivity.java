@@ -1,164 +1,251 @@
 package edu.cuhk.csci3310.project.searchRequest;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.Spinner;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Calendar;
 
 import edu.cuhk.csci3310.project.R;
-import edu.cuhk.csci3310.project.adaptor.FavorAdapter;
-import edu.cuhk.csci3310.project.createRequest.RequestMapActivity;
-import edu.cuhk.csci3310.project.database.Database;
-import edu.cuhk.csci3310.project.model.*;
-import edu.cuhk.csci3310.project.requestDetails.RequestDetailsActivity;
 
-public class MainSearchRequestActivity extends AppCompatActivity implements
-        FavorAdapter.OnFavorSelectedListener{
+
+public class MainSearchRequestActivity extends AppCompatActivity {
     private static final String TAG = "SearchRequestActivity";
-    private FirebaseFirestore mFirestore;
-    private Query mQuery;
 
-    private RecyclerView mFavorRecycler;
-    private FavorAdapter mAdapter;
-    private LinearLayout mEmptyView;
+    // reuse favor model for searching
+    String favorType;
+    EditText enquirerName;
+    EditText startDateView;
+    EditText endDateView;
+
+    // use visibility to control option menu on screen
+    // fragment is another option, but it is not necessary in the simple case
+    View currentView; // variable to store current view
+    View allView;   String sortOrder;
+    View BorrowingView; String itemType; EditText itemNameView;
+    View DiningView;
+    View GatheringView;
+    View MovingView;
+    View TutoringView; String tutoringType; EditText courseCodeView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "on create");
+        // Log.d(TAG, "on create");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_search_rquest);
 
-        mFavorRecycler = findViewById(R.id.recycler_favor);
-        mEmptyView = findViewById(R.id.view_empty);
+        // default to search for any favor, so give it a basic favor to pass to next activity
+        favorType = "all";
 
-        // initFirestore();
-        mFirestore = FirebaseFirestore.getInstance();
-        mQuery = mFirestore.collection("favors")
-                .limit(50);
+        allView = findViewById(R.id.query_any);
+        BorrowingView = findViewById(R.id.query_Borrowing);;
+        DiningView = findViewById(R.id.query_Dining);
+        GatheringView = findViewById(R.id.query_Gathering);
+        MovingView = findViewById(R.id.query_Moving);
+        TutoringView = findViewById(R.id.query_Tutoring);
+        currentView = allView; // user looking at allView
 
-        // initialize recycler view
-        if (mQuery == null) {
-            Log.w(TAG, "No query, not initializing RecyclerView");
-        }
+        // enquirerName input edittext
+        enquirerName = findViewById(R.id.query_name_input);
 
-        mAdapter = new FavorAdapter(mQuery, this) {
+        // start date and end date input
+        startDateView = findViewById(R.id.query_start_date);
+        endDateView = findViewById(R.id.query_end_date);
+        startDateView.setOnClickListener(new View.OnClickListener() {
             @Override
-            protected void onDataChanged() {
-                // Show/hide content if the query returns empty.
-                if (getItemCount() == 0) {
-                    Log.d(TAG, "itemCount is 0");
-                    mFavorRecycler.setVisibility(View.GONE);
-                    mEmptyView.setVisibility(View.VISIBLE);
-                } else {
-                    Log.d(TAG, "itemCount is not 0. getItemCount() = "+getItemCount());
-                    mFavorRecycler.setVisibility(View.VISIBLE);
-                    mEmptyView.setVisibility(View.GONE);
+            public void onClick(View v) {
+                final Calendar cldr = Calendar.getInstance();
+                int day = cldr.get(Calendar.DAY_OF_MONTH);
+                int month = cldr.get(Calendar.MONTH);
+                int year = cldr.get(Calendar.YEAR);
+                // date picker dialog
+                DatePickerDialog picker = new DatePickerDialog(MainSearchRequestActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                startDateView.setText(+ year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
+                            }
+                        }, year, month, day);
+                // set to cancel button to reset input to empty string
+                picker.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == DialogInterface.BUTTON_NEGATIVE) {
+                            startDateView.setText("");
+                        }
+                    }
+                });
+                picker.show();
+            }
+        });
+        endDateView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar cldr = Calendar.getInstance();
+                int day = cldr.get(Calendar.DAY_OF_MONTH);
+                int month = cldr.get(Calendar.MONTH);
+                int year = cldr.get(Calendar.YEAR);
+                // date picker dialog
+                DatePickerDialog picker = new DatePickerDialog(MainSearchRequestActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                endDateView.setText(+ year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
+                            }
+                        }, year, month, day);
+                picker.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == DialogInterface.BUTTON_NEGATIVE) {
+                            endDateView.setText("");
+                        }
+                    }
+                });
+                picker.show();
+            }
+        });
+
+        // 'any' optional input
+        Spinner anyspinner = (Spinner) findViewById(R.id.query_any_order_spinner);
+        anyspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
+                sortOrder = (String) adapterView.getItemAtPosition(pos);
+                // Log.d(TAG, "get item : " + item);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
+        ArrayAdapter<CharSequence> anyadapter = ArrayAdapter.createFromResource(this,
+                R.array.query_any_order, android.R.layout.simple_spinner_item);
+        anyadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        anyspinner.setAdapter(anyadapter);
+
+        // borrowing optional input
+        Spinner borrowingspinner = (Spinner) findViewById(R.id.query_Borrowing_spinner);
+        borrowingspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
+                itemType = (String) adapterView.getItemAtPosition(pos);
+                // Log.d(TAG, "get item : " + item);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
+        ArrayAdapter<CharSequence> borrowingadapter = ArrayAdapter.createFromResource(this,
+                R.array.request_borrowing_type, android.R.layout.simple_spinner_item);
+        borrowingadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        borrowingspinner.setAdapter(borrowingadapter);
+
+        itemNameView = findViewById(R.id.query_Borrowing_item_input);
+
+        // Tutoring optional input
+
+        Spinner Tutoringspinner = (Spinner) findViewById(R.id.query_Tutoring_spinner);
+        Tutoringspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
+                tutoringType = (String) adapterView.getItemAtPosition(pos);
+                // Log.d(TAG, "get item : " + item);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
+        ArrayAdapter<CharSequence> Tutoringadapter = ArrayAdapter.createFromResource(this,
+                R.array.query_tutoring_type, android.R.layout.simple_spinner_item);
+        Tutoringadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Tutoringspinner.setAdapter(Tutoringadapter);
+
+        courseCodeView = findViewById(R.id.query_Tutoring_courseCode_input);
+
+    }
+
+    public void onTypeClicked(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
+        switch(view.getId()) {
+            case R.id.radio_all:
+                if (checked) {
+                    changeView(currentView, allView); favorType = "all";
                 }
-            }
-
-            @Override
-            protected void onError(FirebaseFirestoreException e) {
-//                // Show a snackbar on errors
-//                Snackbar.make(findViewById(android.R.id.content),
-//                        "Error: check logs for info.", Snackbar.LENGTH_LONG).show();
-                Log.e(TAG, "Error occurs, " + e);
-            }
-        };
-
-        mFavorRecycler.setLayoutManager(new LinearLayoutManager(this));
-        mFavorRecycler.setAdapter(mAdapter);
-
-        // testing
-//        DocumentReference docRef = mFirestore.collection("restaurants").document("7abIQXQwQrKF2k9b6WSL");
-//        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    DocumentSnapshot document = task.getResult();
-//                    if (document.exists()) {
-//                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-//                    } else {
-//                        Log.d(TAG, "No such document");
-//                    }
-//                } else {
-//                    Log.d(TAG, "get failed with ", task.getException());
-//                }
-//            }
-//        });
-    }
-
-    @Override
-    public void onStart() {
-        Log.d(TAG, "on start");
-        super.onStart();
-
-        // Apply filters
-        // onFilter(mViewModel.getFilters());
-
-        // Construct query
-        Query query = mFirestore.collection("favors").limit(50);
-        mQuery = query;
-        mAdapter.setQuery(query);
-
-        // Start listening for Firestore updates
-        if (mAdapter != null) {
-            mAdapter.startListening();
+                    break;
+            case R.id.radio_Borrowing:
+                if (checked) {
+                    changeView(currentView, BorrowingView); favorType = "Borrowing";
+                }
+                    break;
+            case R.id.radio_Dining:
+                if (checked) {
+                    changeView(currentView, DiningView); favorType = "Dining";
+                }
+                    break;
+            case R.id.radio_Gathering:
+                if (checked) {
+                    changeView(currentView, GatheringView); favorType = "Gathering";
+                }
+                    break;
+            case R.id.radio_Moving:
+                if (checked) {
+                    changeView(currentView, MovingView); favorType = "Moving";
+                }
+                    break;
+            case R.id.radio_Tutoring:
+                if (checked) {
+                    changeView(currentView, TutoringView); favorType = "Tutoring";
+                }
+                    break;
         }
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mAdapter != null) {
-            mAdapter.stopListening();
-        }
-    }
-
-    // method to be called when favor is clicked
-    // method passed to the adaptor
-    @Override
-    public void onFavorSelected(DocumentSnapshot snapshot) {
-        String favorType = snapshot.getString("taskType");
-        Favor favor;
+    // sending ParcelableObject
+    // reference: stack overflow question
+    // https://stackoverflow.com/questions/2139134/how-to-send-an-object-from-one-android-activity-to-another-using-intents
+    public void onQuerySubmit(View view) {
+        Intent intent = new Intent(MainSearchRequestActivity.this, searchResultActivity.class);
+        Bundle extras = new Bundle();
+        extras.putString("favorType", favorType);
+        // empty string are handled in query result
+        extras.putString("enquirerName", enquirerName.getText().toString());
+        extras.putString("startDate", startDateView.getText().toString());
+        extras.putString("endDate", endDateView.getText().toString());
         switch(favorType){
-            case "MOVING":
-                favor = snapshot.toObject(MovingFavor.class); break;
-            case "TUTORING":
-                favor = snapshot.toObject(TutoringFavor.class); break;
-            case "DINING":
-                favor = snapshot.toObject(DiningFavor.class); break;
-            case "GATHERING":
-                favor = snapshot.toObject(GatheringFavor.class); break;
-            case "BORROWING":
-                favor = snapshot.toObject(BorrowingFavor.class); break;
-            default:
-                Log.e(TAG, "unknown favor encountered");
-                favor = snapshot.toObject(Favor.class);
+            case "all":
+                extras.putString("sortOrder", sortOrder);
+                break;
+            case "Borrowing":
+                extras.putString("itemType", itemType);
+                extras.putString("itemName", itemNameView.getText().toString());
+                break;
+            case "Dining":
+                break;
+            case "Gathering":
+                break;
+            case "Moving":
+                break;
+            case "Tutoring":
+                extras.putString("tutoringType", tutoringType);
+                extras.putString("courseCode", courseCodeView.getText().toString());
+                Log.d(TAG, "tutoringType : " + tutoringType);
+                Log.d(TAG, "courseCode : " + courseCodeView.getText().toString());
+                break;
         }
-        favor.setId(snapshot.getId());
-        Intent intent = new Intent(MainSearchRequestActivity.this, RequestDetailsActivity.class);
-        intent.putExtra("FAVOR", favor);
+        intent.putExtras(extras);
         startActivity(intent);
     }
+
+    // swap visibility of two view
+    private void changeView(View e1, View e2){
+        e1.setVisibility(View.GONE);
+        e2.setVisibility(View.VISIBLE);
+        currentView = e2;
+    }
+
 }

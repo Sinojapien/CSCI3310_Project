@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.cuhk.csci3310.project">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the "MyLocation" functionality.
     -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -41,6 +41,9 @@
         <activity
             android:name=".searchRequest.RequestHistoryActivity"
             android:exported="false" />
+        <activity
+            android:name=".searchRequest.searchResultActivity"
+            android:exported="false" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -57,6 +60,15 @@
             android:name=".requestDetails.RequestDetailsActivity"
             android:exported="false"
             android:label="@string/title_activity_request_details" />
+        <!-- <activity -->
+        <!-- android:name=".searchRequest.MainSearchRequestActivity" -->
+        <!-- android:exported="true"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
+        <activity
             android:name=".searchRequest.MainSearchRequestActivity"
             android:exported="false" />
         <activity
