@@ -19,9 +19,17 @@
         <entry key="..\:/Users/Sinojapien/AndroidStudioProjects/Project/app/src/main/res/layout/fragment_request_action.xml" value="0.4" />
         <entry key="..\:/Users/User/StudioProjects/CSCI3310_Project/app/src/main/res/layout/activity_request_tutoring.xml" value="0.2477355072463768" />
         <entry key="..\:/Users/User/StudioProjects/CSCI3310_Project/app/src/main/res/layout/fragment_request_time_duration.xml" value="0.536" />
+        <entry key="app/src/main/res/layout/activity_central_hub.xml" value="0.14402173913043478" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_request_details.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_request_dining.xml" value="0.22708333333333333" />
         <entry key="app/src/main/res/layout/activity_signup.xml" value="0.14361702127659576" />
         <entry key="app/src/main/res/layout/activity_user_account.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_borrowing.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_favor_action.xml" value="0.21" />
+        <entry key="app/src/main/res/layout/fragment_request_action.xml" value="0.14402173913043478" />
+        <entry key="app/src/main/res/layout/fragment_request_date.xml" value="0.22708333333333333" />
+        <entry key="app/src/main/res/layout/fragment_task_action.xml" value="0.21" />
       </map>
     </option>
   </component>
