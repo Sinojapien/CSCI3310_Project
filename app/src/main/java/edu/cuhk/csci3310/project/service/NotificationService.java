@@ -3,6 +3,7 @@ package edu.cuhk.csci3310.project.service;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -23,6 +24,7 @@ import edu.cuhk.csci3310.project.viewModel.RequestHistoryViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationBuilderWithBuilderAccessor;
 import androidx.core.app.NotificationCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -84,9 +86,14 @@ public class NotificationService extends Service {
 
         @Override
         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+            if (blockFirstNotification) {
+                blockFirstNotification = false;
+                return;
+            }
+
             // Handle errors
             if (error != null) {
-                createNotification("Error: fail to maintain connection with database");
+                createNotification("Error: fail to maintain connection with database", true);
                 if (mEnquireRegistration != null) {
                     mEnquireRegistration.remove();
                     mEnquireRegistration = null;
@@ -103,14 +110,14 @@ public class NotificationService extends Service {
                     // https://stackoverflow.com/questions/52295327/how-to-get-the-modified-field-or-data-from-the-doc-firebase-firestore-realtime-u
                     // No field level access
                     case ADDED:
-//                        Favor favor = change.getDocument().toObject(Favor.class);
-                        createNotification(mFirebaseAuth.getCurrentUser().getDisplayName() + ", there are new requests!");
+                        Favor favor = change.getDocument().toObject(Favor.class);
+                        createNotification(mFirebaseAuth.getCurrentUser().getDisplayName() + ", there are new requests!", true);
                         break;
                     case MODIFIED:
-                        createNotification(mFirebaseAuth.getCurrentUser().getDisplayName() + ", there are changes in your request status!");
+                        createNotification(mFirebaseAuth.getCurrentUser().getDisplayName() + ", there are changes in your request status!", true);
                         break;
                     case REMOVED:
-                        createNotification(mFirebaseAuth.getCurrentUser().getDisplayName() + ", one or more of your request are removed.");
+                        createNotification(mFirebaseAuth.getCurrentUser().getDisplayName() + ", one or more of your request are removed.", true);
                         break;
                 }
             }
@@ -120,14 +127,17 @@ public class NotificationService extends Service {
 
     private FirebaseFirestore mFirestore;
     private FirebaseAuth mFirebaseAuth;
-    private Query mEnquireQuery;
-    private Query mAcceptQuery;
+//    private Query mEnquireQuery;
+//    private Query mAcceptQuery;
     private ListenerRegistration mEnquireRegistration;
     private ListenerRegistration mAcceptRegistration;
+
+    private boolean blockFirstNotification;
 
     private static final String TAG = "NotificationService";
     public static final String TAG_EMAIL = "NotificationService.email";
     public static final String TAG_PASSWORD = "NotificationService.password";
+    public static final String TAG_BLOCK = "NotificationService.block";
     public static final String CHANNEL_ID = "10001" ;
 
     public NotificationService() {
@@ -138,22 +148,6 @@ public class NotificationService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
-
-//    @Override
-//    protected void onHandleIntent(@Nullable Intent intent) {
-//        FirebaseUser user = mFirebaseAuth.getCurrentUser();
-//
-//        if (user != null){
-//            Query query = mFirestore.collection("favors").limit(50);
-//            mEnquireQuery = query.whereEqualTo("enquirer", user.getUid());
-//            mAcceptQuery = query.whereEqualTo("accepter", user.getUid());
-//            mEnquireRegistration = mEnquireQuery.addSnapshotListener(new FirebaseQueryListener());
-//            mAcceptRegistration = mAcceptQuery.addSnapshotListener(new FirebaseQueryListener());
-//
-//        }else{
-//            createNotification("User have signed out.");
-//        }
-//    }
 
     @Override
     public void onCreate() {
@@ -167,29 +161,22 @@ public class NotificationService extends Service {
         super.onStartCommand(intent, flags, startId);
         // receive null intent upon restart
 
-//        String email;
-//        String password;
-//
-//        mFirebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//            @Override
-//            public void onComplete(@NonNull Task<AuthResult> task) {
-//                if(task.isSuccessful()) {
-//
-//                }
-//            }
-//        });
-
+        blockFirstNotification = true;
         FirebaseUser user = mFirebaseAuth.getCurrentUser();
 
         if (user != null){
             Query query = mFirestore.collection("favors").limit(50);
-            mEnquireQuery = query.whereEqualTo("enquirer", user.getUid());
-            mAcceptQuery = query.whereEqualTo("accepter", user.getUid());
+            Query mEnquireQuery = query.whereEqualTo("enquirer", user.getUid());
+            Query mAcceptQuery = query.whereEqualTo("accepter", user.getUid());
             mEnquireRegistration = mEnquireQuery.addSnapshotListener(new FirebaseQueryListener());
             mAcceptRegistration = mAcceptQuery.addSnapshotListener(new FirebaseQueryListener());
 
+            // https://www.youtube.com/watch?v=bA7v1Ubjlzw
+            // https://www.youtube.com/watch?v=BXwDM5VVuKA
+            startForeground(1001, createNotification("Running foreground service...", false));
+
         }else{
-            createNotification("User have signed out.");
+            createNotification("User have signed out.", true);
         }
 
         return START_STICKY;
@@ -198,16 +185,39 @@ public class NotificationService extends Service {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
+        // https://stackoverflow.com/questions/15758980/android-service-needs-to-run-always-never-pause-or-stop
         // https://stackoverflow.com/questions/30525784/android-keep-service-running-when-app-is-killed
+        // https://stackoverflow.com/questions/46445265/android-8-0-java-lang-illegalstateexception-not-allowed-to-start-service-inten
+        // https://stackoverflow.com/questions/14259504/on-android-whats-the-difference-between-running-processes-and-cached-backgroun
 //        Intent broadcastIntent = new Intent();
 //        broadcastIntent.setAction("RestartService");
 //        broadcastIntent.setClass(this, restartService.class);
 //        this.sendBroadcast(broadcastIntent);
     }
 
-    protected void createNotification(String contentText){
+    @Override
+    public void onDestroy() {
+        stopForeground(true);
+        stopSelf();
+        super.onDestroy();
+    }
+
+    protected Notification createNotification(String contentText, boolean notify){
         //if (isAppRunning(getApplicationContext())) return;
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "CUHKFavor";
+            String description = "It is used to update user upon changes of favors in Firebase store.";
+
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            if (!notify)
+                importance = NotificationManager.IMPORTANCE_NONE;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            //NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -219,19 +229,14 @@ public class NotificationService extends Service {
                 .setAutoCancel(true)
                 .setChannelId(CHANNEL_ID)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        if (!notify)
+            builder = builder.setPriority(NotificationCompat.PRIORITY_MIN);
+        Notification notification = builder.build();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "CUHKFavor";
-            String description = "It is used to update user upon changes of favors in Firebase store.";
+        if (notify)
+            notificationManager.notify((int) System.currentTimeMillis(), notification);
 
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            //NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-
-        notificationManager.notify((int) System.currentTimeMillis(), builder.build());
+        return notification;
     }
 
     public static boolean isAppRunning(Context context) {
