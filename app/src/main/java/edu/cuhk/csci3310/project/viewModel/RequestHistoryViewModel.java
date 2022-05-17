@@ -1,5 +1,7 @@
 package edu.cuhk.csci3310.project.viewModel;
 
+import android.util.Log;
+
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.firestore.Query;
