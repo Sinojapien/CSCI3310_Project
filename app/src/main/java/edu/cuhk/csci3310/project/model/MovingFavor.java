@@ -32,6 +32,8 @@ public class MovingFavor extends Favor {
 
     protected MovingFavor(Parcel in) {
         super(in);
+        startLoc = in.readParcelable(LatLng.class.getClassLoader());
+        endLoc = in.readParcelable(LatLng.class.getClassLoader());
         date = in.readString();
         time = in.readString();
         description = in.readString();
@@ -42,6 +44,8 @@ public class MovingFavor extends Favor {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
+        dest.writeParcelable(startLoc, flags);
+        dest.writeParcelable(endLoc, flags);
         dest.writeString(date);
         dest.writeString(time);
         dest.writeString(description);

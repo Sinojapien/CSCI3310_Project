@@ -11,8 +11,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -21,20 +21,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Project">
+        <activity
+            android:name=".account.UpdatePasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".account.UpdateEmailActivity"
+            android:exported="false" />
+
         <service
             android:name=".service.NotificationService"
             android:enabled="true"
             android:exported="true"
-            android:stopWithTask="false"
+            android:foregroundServiceType="dataSync"
             android:launchMode="singleTop"
-            android:foregroundServiceType="dataSync"></service>
+            android:stopWithTask="false" />
+
         <receiver
             android:name=".service.RestartService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="RestartService"/>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="RestartService" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
@@ -59,55 +67,51 @@
         <activity
             android:name=".requestDetails.RequestDetailsActivity"
             android:exported="false"
-            android:label="@string/title_activity_request_details" />
-        <!-- <activity -->
-        <!-- android:name=".searchRequest.MainSearchRequestActivity" -->
-        <!-- android:exported="true"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.intent.action.MAIN" /> -->
-        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-        <!-- </intent-filter> -->
-        <!-- </activity> -->
+            android:label="Request Details" />
         <activity
             android:name=".searchRequest.MainSearchRequestActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Browse Requests" />
         <activity
             android:name=".CentralHubActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Central Hub" />
         <activity
             android:name=".createRequest.MainRequestActivity"
-            android:exported="true">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
+            android:exported="true"
+            android:label="Create Request" />
         <activity
             android:name=".createRequest.BorrowingRequestActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Create Request" />
         <activity
             android:name=".createRequest.GatheringRequestActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Create Request" />
         <activity
             android:name=".createRequest.DiningRequestActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Create Request" />
         <activity
             android:name=".createRequest.TutoringRequestActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Create Request" />
         <activity
             android:name=".account.UserAccountActivity"
-            android:exported="false" /> <!-- android:theme="@style/AppThemeNoActionBar" /> -->
+            android:exported="false"
+            android:label="My Account" /> <!-- android:theme="@style/AppThemeNoActionBar" /> -->
         <activity
             android:name=".account.SignupActivity"
             android:exported="false"
             android:theme="@style/AppThemeNoActionBar" />
         <activity
             android:name=".createRequest.RequestMapActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Create Request" />
         <activity
             android:name=".createRequest.MovingRequestActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Create Request" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

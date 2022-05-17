@@ -21,7 +21,7 @@
             android:id="@+id/hub_welcome_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="welcome "
+            android:text="Welcome "
             android:textSize="36sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -45,6 +45,15 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="What can we help you with?"
+        app:layout_constraintTop_toBottomOf="@id/hub_welcome_linearLayout"
+        app:layout_constraintLeft_toLeftOf="@id/hub_welcome_linearLayout"
+        app:layout_constraintRight_toRightOf="@id/hub_welcome_linearLayout" />
 
     <Button
         android:id="@+id/hub_account_btn"

@@ -11,7 +11,7 @@ import java.util.Map;
 import edu.cuhk.csci3310.project.database.Status;
 import edu.cuhk.csci3310.project.database.TaskType;
 
-public class BorrowingFavor extends Favor implements Parcelable {
+public class BorrowingFavor extends Favor {
     private String description;
     private LatLng location;
     private String startDate;

@@ -4,22 +4,31 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import edu.cuhk.csci3310.project.R;
 import edu.cuhk.csci3310.project.model.MovingFavor;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class MovingFragment extends Fragment {
 
@@ -30,6 +39,8 @@ public class MovingFragment extends Fragment {
     private TextView dateTV;
     private TextView timeTV;
     private TextView descriptionTV;
+    private ImageView imageView;
+    private LinearLayout imageLayout;
 
     private final String TAG = "MovingFragment";
 
@@ -49,13 +60,13 @@ public class MovingFragment extends Fragment {
         public void onMapReady(GoogleMap googleMap) {
             // Set marker at start loc
             if(favor.getStartLoc() != null) {
-                LatLng startloc = new LatLng(favor.getStartLoc().getLatitude(), favor.getEndLoc().getLongitude());
-                googleMap.addMarker(new MarkerOptions().position(startloc).title("Start Locarion"));
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(startloc));
+                LatLng startloc = new LatLng(favor.getStartLoc().getLatitude(), favor.getStartLoc().getLongitude());
+                googleMap.addMarker(new MarkerOptions().position(startloc).title("Start Location"));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(startloc, 16.0f));
             }
             // Set marker at end loc
             if(favor.getEndLoc() != null) {
-                LatLng endLoc = new LatLng(favor.getStartLoc().getLatitude(), favor.getEndLoc().getLongitude());
+                LatLng endLoc = new LatLng(favor.getEndLoc().getLatitude(), favor.getEndLoc().getLongitude());
                 googleMap.addMarker(new MarkerOptions().position(endLoc).title("End Location"));
             }
         }
@@ -89,6 +100,8 @@ public class MovingFragment extends Fragment {
         dateTV = view.findViewById(R.id.date_TV);
         timeTV = view.findViewById(R.id.time_TV);
         descriptionTV = view.findViewById(R.id.description_TV);
+        imageView = view.findViewById(R.id.imageView);
+        imageLayout = view.findViewById(R.id.image_layout);
         if(getArguments().getParcelable(BUNDLE_KEY) != null) {
             favor = getArguments().getParcelable(BUNDLE_KEY);
             // Fill views
@@ -101,6 +114,28 @@ public class MovingFragment extends Fragment {
             if(favor.getDescription() != null) {
                 descriptionTV.setText(favor.getDescription());
             }
+            loadImage();
         }
     }
+
+    private void loadImage() {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://cuhk-favor.appspot.com");
+        StorageReference imageRef = storageRef.child(favor.getId() + ".jpg");
+
+        final long ONE_MEGABYTE = 1024 * 1024;
+        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                imageView.setImageBitmap(Bitmap.createScaledBitmap(bmp, imageView.getWidth(), imageView.getHeight(), false));
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                imageLayout.setVisibility(View.GONE);
+            }
+        });
+    }
+
 }

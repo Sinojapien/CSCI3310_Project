@@ -2,6 +2,7 @@ package edu.cuhk.csci3310.project.database;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -12,8 +13,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -23,6 +22,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.net.URI;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,8 +40,8 @@ public class Database {
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static CollectionReference favors = db.collection("favors");
 
-    public static boolean createNewFavor(Favor favor) throws Exception{
-        if(favor.getTaskType() == TaskType.MOVING) {
+    public static void createNewFavor(Favor favor) throws Exception{
+        /*if(favor.getTaskType() == TaskType.MOVING) {
             MovingFavor movingFavor = (MovingFavor) favor;
             createNewMovingFavor(movingFavor);
         } else if(favor.getTaskType() == TaskType.TUTORING) {
@@ -57,162 +57,46 @@ public class Database {
             BorrowingFavor borrowingFavor = (BorrowingFavor) favor;
             createNewBorrowingFavor(borrowingFavor);
         }
-        return true;
-    }
-
-    private static void createNewMovingFavor(MovingFavor favor) throws Exception {
-        Log.d(TAG,"saving moving favor");
+        return true;*/
         favors.add(favor);
-//        Map<String, MovingFavor> data = new HashMap<>();
-//        data.put("enquirer", favor.getEnquirer());
-//        data.put("accepter", favor.getAccepter());
-//        data.put("taskType", favor.getTaskType().getValue());
-//        data.put("status", favor.getStatus().getValue());
-//        Map<String, Object> startLoc = new HashMap<>();
-//        startLoc.put("lat", favor.getStartLoc().latitude);
-//        startLoc.put("long", favor.getStartLoc().longitude);
-//        data.put("startLoc", startLoc);
-//        Map<String, Object> endLoc = new HashMap<>();
-//        endLoc.put("lat", favor.getEndLoc().latitude);
-//        endLoc.put("long", favor.getEndLoc().longitude);
-//        data.put("endLoc", endLoc);
-//        data.put("date", favor.getDate());
-//        data.put("time", favor.getTime());
-//        data.put("description", favor.getDescription());
-//        // Save favor in DB
-//        saveFavorInDB(data);
-
     }
 
-    private static void createNewTutoringFavor(TutoringFavor favor) throws Exception {
-        favors.add(favor);
-//        Map<String, Object> data = new HashMap<>();
-//        data.put("enquirer", favor.getEnquirer());
-//        data.put("accepter", favor.getAccepter());
-//        data.put("taskType", favor.getTaskType().getValue());
-//        data.put("status", favor.getStatus().getValue());
-//        Map<String, Object> loc = new HashMap<>();
-//        loc.put("lat", favor.getLocation().latitude);
-//        loc.put("long", favor.getLocation().longitude);
-//        data.put("loc", loc);
-//        data.put("description", favor.getDescription());
-//        data.put("startDate", favor.getStartDate());
-//        data.put("endDate", favor.getEndDate());
-//        data.put("startTime", favor.getStartTime());
-//        data.put("endTime", favor.getStartTime());
-//        data.put("selection", favor.getSelection());
-//        data.put("courseCode", favor.getCourseCode());
-//        data.put("courseParticipant", favor.getCourseParticipant());
-//
-//        // Save favor in DB
-//        saveFavorInDB(data);
-    }
-
-    private static void createNewDiningFavor(DiningFavor favor) throws Exception {
-
-        favors.add(favor);
-//        Map<String, Object> data = new HashMap<>();
-//        data.put("enquirer", favor.getEnquirer());
-//        data.put("accepter", favor.getAccepter());
-//        data.put("taskType", favor.getTaskType().getValue());
-//        data.put("status", favor.getStatus().getValue());
-//        Map<String, Object> loc = new HashMap<>();
-//        loc.put("lat", favor.getLocation().latitude);
-//        loc.put("long", favor.getLocation().longitude);
-//        data.put("loc", loc);
-//        data.put("description", favor.getDescription());
-//        data.put("date", favor.getDate());
-//        data.put("startTime", favor.getStartTime());
-//        data.put("endTime", favor.getStartTime());
-//        data.put("participant", favor.getParticipant());
-//
-//        // Save favor in DB
-//        saveFavorInDB(data);
-    }
-
-    private static void createNewGatheringFavor(GatheringFavor favor) throws Exception {
-
-        favors.add(favor);
-//        Map<String, Object> data = new HashMap<>();
-//        data.put("enquirer", favor.getEnquirer());
-//        data.put("accepter", favor.getAccepter());
-//        data.put("taskType", favor.getTaskType().getValue());
-//        data.put("status", favor.getStatus().getValue());
-//        Map<String, Object> loc = new HashMap<>();
-//        loc.put("lat", favor.getLocation().latitude);
-//        loc.put("long", favor.getLocation().longitude);
-//        data.put("loc", loc);
-//        data.put("description", favor.getDescription());
-//        data.put("date", favor.getDate());
-//        data.put("startTime", favor.getStartTime());
-//        data.put("endTime", favor.getStartTime());
-//        data.put("activityType", favor.getActivityType());
-//        data.put("participant", favor.getParticipant());
-//
-//        // Save favor in DB
-//        saveFavorInDB(data);
-    }
-
-    private static void createNewBorrowingFavor(BorrowingFavor favor) throws Exception {
-
-        favors.add(favor);
-//        Map<String, Object> data = new HashMap<>();
-//        data.put("enquirer", favor.getEnquirer());
-//        data.put("accepter", favor.getAccepter());
-//        data.put("taskType", favor.getTaskType().getValue());
-//        data.put("status", favor.getStatus().getValue());
-//        Map<String, Object> loc = new HashMap<>();
-//        loc.put("lat", favor.getLocation().latitude);
-//        loc.put("long", favor.getLocation().longitude);
-//        data.put("loc", loc);
-//        data.put("description", favor.getDescription());
-//        data.put("date", favor.getDate());
-//        data.put("time", favor.getTime());
-//        data.put("activityType", favor.getActivityType());
-//        data.put("itemType", favor.getItemType());
-//
-//        // Save favor in DB
-//        saveFavorInDB(data);
-    }
-
-    public static void saveFavorInDB(Map<String, Object> data) throws Exception {
-        // Save favor in db
-        db.collection("favors")
-                .add(data)
+    public static void createNewFavorAndSaveImage(Favor favor, Bitmap image) {
+        favors.add(favor)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                        //getMovingFavorById(documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
+                        String id = documentReference.getId();
+                        saveImageInDB(image, id);
                     }
                 });
     }
 
-    public static Favor generateFavorFromDB(String id, Map<String, Object> data) throws Exception {
-        if(data.get("taskType") != null) {
-            TaskType taskType = TaskType.getTaskTypeFromValue(((Long) data.get("taskType")).intValue());
-            switch(taskType) {
-                case MOVING:
-                    return MovingFavor.createMovingFavorFromDB(id, data);
-                case TUTORING:
-                    return TutoringFavor.createTutoringFavorFromDB(id, data);
-                case DINING:
-                    return DiningFavor.createDiningFavorFromDB(id, data);
-                case GATHERING:
-                    return GatheringFavor.createGatheringFavorFromDB(id, data);
-                case BORROWING:
-                    return BorrowingFavor.createBorrowingFavorFromDB(id, data);
-                default:
-                    return null;
+    public static void saveImageInDB(Bitmap bitmap, String imageName) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
+        // Create a storage reference from our app
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://cuhk-favor.appspot.com");
+
+        // Create a reference to "mountains.jpg"
+        StorageReference imageRef = storageRef.child(imageName + ".jpg");
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = imageRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
             }
-        } else {
-            return null;
-        }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                // Uri downloadUrl = taskSnapshot.getDownloadUrl();
+            }
+        });
     }
 }
