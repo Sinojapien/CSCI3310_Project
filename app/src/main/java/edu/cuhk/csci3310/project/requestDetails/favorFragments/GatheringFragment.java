@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,6 +25,14 @@ public class GatheringFragment extends Fragment {
     public static final String BUNDLE_KEY = "Favor";
     GatheringFavor favor;
 
+    // View attributes
+    private TextView descriptionTV;
+    private TextView dateTV;
+    private TextView timeStartTV;
+    private TextView timeEndTV;
+    private TextView gatheringTypeTV;
+    private TextView participantTV;
+
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         /**
@@ -37,9 +46,11 @@ public class GatheringFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            LatLng sydney = new LatLng(-34, 151);
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            if(favor.getLocation() != null) {
+                LatLng location = new LatLng(favor.getLocation().getLatitude(), favor.getLocation().getLongitude());
+                googleMap.addMarker(new MarkerOptions().position(location).title("Location"));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+            }
         }
     };
 
@@ -67,6 +78,32 @@ public class GatheringFragment extends Fragment {
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
+        // Instantiate view attributes
+        descriptionTV = view.findViewById(R.id.description_TV);
+        dateTV = view.findViewById(R.id.date_TV);
+        timeStartTV = view.findViewById(R.id.time_start_TV);
+        timeEndTV = view.findViewById(R.id.time_end_TV);
+        gatheringTypeTV = view.findViewById(R.id.gathering_type_TV);
+        participantTV = view.findViewById(R.id.participant_TV);
         favor = getArguments().getParcelable(BUNDLE_KEY);
+        if(getArguments().getParcelable(BUNDLE_KEY) != null) {
+            favor = getArguments().getParcelable(BUNDLE_KEY);
+            if (favor.getDescription() != null) {
+                descriptionTV.setText(favor.getDescription());
+            }
+            if (favor.getDate() != null) {
+                dateTV.setText(favor.getDate());
+            }
+            if (favor.getStartTime() != null) {
+                timeStartTV.setText(favor.getStartTime());
+            }
+            if (favor.getEndTime() != null) {
+                timeEndTV.setText(favor.getEndTime());
+            }
+            if(favor.getActivityType() != null) {
+                gatheringTypeTV.setText(favor.getActivityType());
+            }
+            participantTV.setText("" + favor.getParticipant());
+        }
     }
 }

@@ -14,7 +14,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import edu.cuhk.csci3310.project.account.UserAccountActivity; // for sending intent
 import edu.cuhk.csci3310.project.createRequest.MainRequestActivity;
-import edu.cuhk.csci3310.project.myRequests.RequestOverviewActivity;
 import edu.cuhk.csci3310.project.searchRequest.MainSearchRequestActivity;
 import edu.cuhk.csci3310.project.searchRequest.RequestHistoryActivity;
 import edu.cuhk.csci3310.project.service.NotificationService;
@@ -53,14 +52,6 @@ public class CentralHubActivity extends AppCompatActivity{
         searchRequestBtn.setOnClickListener(view -> {
             Intent MainSearchRequestActivity = new Intent(CentralHubActivity.this, MainSearchRequestActivity.class);
             startActivity(MainSearchRequestActivity);
-        });
-        Button requestOverviewBtn = findViewById(R.id.request_overview_btn);
-        requestOverviewBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(CentralHubActivity.this, RequestOverviewActivity.class);
-                startActivity(intent);
-            }
         });
         Button requestHistoryBtn = findViewById(R.id.request_history_btn);
         requestHistoryBtn.setOnClickListener(new View.OnClickListener() {

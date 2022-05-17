@@ -9,16 +9,18 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import edu.cuhk.csci3310.project.R;
 import edu.cuhk.csci3310.project.SelectionRequestFragment;
@@ -26,7 +28,6 @@ import edu.cuhk.csci3310.project.database.Database;
 import edu.cuhk.csci3310.project.database.Status;
 import edu.cuhk.csci3310.project.database.TaskType;
 import edu.cuhk.csci3310.project.model.BorrowingFavor;
-import edu.cuhk.csci3310.project.model.GatheringFavor;
 
 public class BorrowingRequestActivity extends RequestActivity {
 
@@ -115,11 +116,35 @@ public class BorrowingRequestActivity extends RequestActivity {
                     favor.setStatus(Status.OPEN);
                     favor.setLocation(new edu.cuhk.csci3310.project.model.LatLng(locationFragment.getInformationLocation()));
                     favor.setDescription(descriptionFragment.getInformationString());
-                    favor.setDate(dateFragment.getInformationDate());
+                    favor.setStartDate(dateFragment.getInformationDate());
+                    favor.setEndDate(dateFragment.getInformationDateEnd());
                     favor.setTime(timeFragment.getInformationTime());
-                    //favor.setActivityType(borrowEdit.getText().toString());
                     favor.setItemType((String) borrowTypeSpinner.getSelectedItem());
-                    Database.createNewFavor(favor);
+                    favor.setSelection(selectionFragment.getInformationStringList());
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    DocumentReference docRef = db.collection("users").document(firebaseAuth.getCurrentUser().getUid());
+                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                    String username = (String) document.getData().get("name");
+                                    favor.setEnquirerName(username);
+                                    try {
+                                        Database.createNewFavor(favor);
+                                    } catch(Exception e) {
+                                        Log.d(TAG, e.getMessage());
+                                    }
+                                } else {
+                                    Log.d(TAG, "No such document");
+                                }
+                            } else {
+                                Log.d(TAG, "get failed with ", task.getException());
+                            }
+                        }
+                    });
                 } catch(Exception e) {
                     Log.d(TAG, "onClick: " + e.getMessage());
                 }

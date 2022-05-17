@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import edu.cuhk.csci3310.project.R;
 import edu.cuhk.csci3310.project.model.MovingFavor;
@@ -24,6 +25,10 @@ public class MovingFragment extends Fragment {
 
     public static final String BUNDLE_KEY = "Favor";
     MovingFavor favor;
+
+    // View attributes
+    private TextView dateTV;
+    private TextView timeTV;
 
     private final String TAG = "MovingFragment";
 
@@ -41,7 +46,6 @@ public class MovingFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            favor.getEndLoc();
             // Set marker at start loc
             if(favor.getStartLoc() != null) {
                 LatLng startloc = new LatLng(favor.getStartLoc().getLatitude(), favor.getEndLoc().getLongitude());
@@ -80,8 +84,18 @@ public class MovingFragment extends Fragment {
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
+        // Instantiate view attributes
+        dateTV = view.findViewById(R.id.date_TV);
+        timeTV = view.findViewById(R.id.time_TV);
         if(getArguments().getParcelable(BUNDLE_KEY) != null) {
             favor = getArguments().getParcelable(BUNDLE_KEY);
+            // Fill views
+            if(favor.getDate() != null) {
+                dateTV.setText(favor.getDate());
+            }
+            if(favor.getTime() != null) {
+                timeTV.setText(favor.getTime());
+            }
         }
     }
 }
