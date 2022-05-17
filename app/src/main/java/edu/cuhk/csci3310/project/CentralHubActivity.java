@@ -3,6 +3,7 @@ package edu.cuhk.csci3310.project;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import edu.cuhk.csci3310.project.account.UserAccountActivity; // for sending int
 import edu.cuhk.csci3310.project.createRequest.MainRequestActivity;
 import edu.cuhk.csci3310.project.searchRequest.MainSearchRequestActivity;
 import edu.cuhk.csci3310.project.searchRequest.RequestHistoryActivity;
+import edu.cuhk.csci3310.project.service.NotificationService;
 
 /**
  * The CentralHubActivity is page shown after successful login
@@ -60,5 +62,9 @@ public class CentralHubActivity extends AppCompatActivity{
             }
         });
         // Log.d("CentralHubActivity", "finish creating CentralHubActivity");
+
+        // Notification Service
+        NotificationService.startService(this);
+
     }
 }

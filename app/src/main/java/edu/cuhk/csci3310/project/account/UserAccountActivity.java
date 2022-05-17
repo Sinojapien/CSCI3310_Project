@@ -3,6 +3,7 @@ package edu.cuhk.csci3310.project.account;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,8 +26,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import edu.cuhk.csci3310.project.MainActivity;
 import edu.cuhk.csci3310.project.R;
 import edu.cuhk.csci3310.project.createRequest.MainRequestActivity;
+import edu.cuhk.csci3310.project.model.Favor;
+import edu.cuhk.csci3310.project.searchRequest.RequestHistoryActivity;
+import edu.cuhk.csci3310.project.service.NotificationService;
+import edu.cuhk.csci3310.project.settings.UserSettings;
 
 public class UserAccountActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -100,6 +107,54 @@ public class UserAccountActivity extends AppCompatActivity implements View.OnCli
                 }
             }
         });
+
+        Switch notificationOptionSwitch = findViewById(R.id.notification_layout).findViewById(R.id.notification_switch);
+        Switch onBootOptionSwitch = findViewById(R.id.on_boot_layout).findViewById(R.id.on_boot_switch);
+
+        notificationOptionSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserSettings.overrideSettings(context, UserSettings.NOTIFICATION_TAG, ((Switch) view).isChecked());
+            }
+        });
+
+        onBootOptionSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserSettings.overrideSettings(view.getContext(), UserSettings.ON_BOOT_TAG, ((Switch) view).isChecked());
+            }
+        });
+
+        findViewById(R.id.reset_option_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(view.getContext());
+                builder.setTitle("Reset all user preferences?");
+
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        notificationOptionSwitch.setChecked(false);
+                        onBootOptionSwitch.setChecked(false);
+                        UserSettings.resetSettings(view.getContext());
+                    }
+                });
+
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+
+                builder.show();
+            }
+        });
+
+        notificationOptionSwitch.setChecked(UserSettings.getSettingNotification(this));
+        onBootOptionSwitch.setChecked(UserSettings.getSettingOnBoot(this));
+
     }
 
     @Override
@@ -124,7 +179,10 @@ public class UserAccountActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 mAuth.signOut();
-                ((Activity) context).finish();
+                //((Activity) context).finish();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
         }).setNegativeButton("No!", new DialogInterface.OnClickListener() {
             @Override

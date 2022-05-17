@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import edu.cuhk.csci3310.project.account.SignupActivity;
 import edu.cuhk.csci3310.project.account.UserAccountActivity;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = "MainActivity";
 
     FirebaseAuth mAuth;
+    FirebaseUser mFirebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         progressBar = findViewById(R.id.progressBar);
         // [Stop] Login code
+
+        // Maintaining Login, would not be called upon back button navigation
+        mFirebaseUser = mAuth.getCurrentUser();
+
+        if (mFirebaseUser != null){
+            emailET.setText(mFirebaseUser.getEmail());
+
+            Intent CentralHubActivity = new Intent(MainActivity.this, CentralHubActivity.class);
+            startActivity(CentralHubActivity);
+        }
     }
 
     @Override
@@ -74,6 +86,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void handleLoginBtnClick() {
         showProgressBar();
+
+        // Maintaining Login
+        if (mFirebaseUser != null){
+            Intent CentralHubActivity = new Intent(MainActivity.this, CentralHubActivity.class);
+            startActivity(CentralHubActivity);
+            return;
+        }
+
         email = emailET.getText().toString();
         password = passwordET.getText().toString();
         if(validateInput.checkIfEmailIsValid(email) && validateInput.checkIfPasswordIsValid(password)) {
