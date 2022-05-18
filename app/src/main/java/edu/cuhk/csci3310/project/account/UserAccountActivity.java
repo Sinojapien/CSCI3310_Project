@@ -72,7 +72,7 @@ public class UserAccountActivity extends AppCompatActivity implements View.OnCli
         notificationOptionSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UserSettings.overrideSettings(context, UserSettings.NOTIFICATION_TAG, ((Switch) view).isChecked());
+                UserSettings.overrideSettings(view.getContext(), UserSettings.NOTIFICATION_TAG, ((Switch) view).isChecked());
             }
         });
 
@@ -152,6 +152,7 @@ public class UserAccountActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 mAuth.signOut();
+                context.stopService(new Intent(context, NotificationService.class));
                 //((Activity) context).finish();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

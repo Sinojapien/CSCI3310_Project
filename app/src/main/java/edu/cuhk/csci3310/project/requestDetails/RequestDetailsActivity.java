@@ -174,6 +174,7 @@ public class RequestDetailsActivity extends FragmentActivity {
                                 showActionFragment();
                             }
                         });
+                finish();
             }
         };
         removeFulfillerListener = new View.OnClickListener() {
@@ -194,6 +195,7 @@ public class RequestDetailsActivity extends FragmentActivity {
                         showActionFragment();
                     }
                 });
+                finish();
             }
         };
         assignFavorListener = new View.OnClickListener() {
@@ -228,6 +230,7 @@ public class RequestDetailsActivity extends FragmentActivity {
                         showActionFragment();
                     }
                 });
+                finish();
             }
         };
     }

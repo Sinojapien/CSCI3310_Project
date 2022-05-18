@@ -83,7 +83,13 @@ public class NotificationService extends Service {
 
     private class FirebaseQueryListener implements EventListener<QuerySnapshot>{
 
-        public FirebaseQueryListener(){}
+        Context mContext;
+        boolean blockFirstNotification;
+
+        public FirebaseQueryListener(Context context){
+            mContext = context;
+            blockFirstNotification = true;
+        }
 
         @Override
         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -106,19 +112,25 @@ public class NotificationService extends Service {
                 return;
             }
 
+            FirebaseUser user = mFirebaseAuth.getCurrentUser();
+            if (user == null){
+                stopService(new Intent(mContext, NotificationService.class));
+                return;
+            }
+
             for (DocumentChange change : value.getDocumentChanges()) {
                 switch (change.getType()) {
                     // https://stackoverflow.com/questions/52295327/how-to-get-the-modified-field-or-data-from-the-doc-firebase-firestore-realtime-u
                     // No field level access
                     case ADDED:
                         Favor favor = change.getDocument().toObject(Favor.class);
-                        createNotification(mFirebaseAuth.getCurrentUser().getDisplayName() + ", there are new requests!", true);
+                        createNotification(user.getDisplayName() + ", there are new requests!", true);
                         break;
                     case MODIFIED:
-                        createNotification(mFirebaseAuth.getCurrentUser().getDisplayName() + ", there are changes in your request status!", true);
+                        createNotification(user.getDisplayName() + ", there are changes in your request status!", true);
                         break;
                     case REMOVED:
-                        createNotification(mFirebaseAuth.getCurrentUser().getDisplayName() + ", one or more of your request are removed.", true);
+                        createNotification(user.getDisplayName() + ", one or more of your request are removed.", true);
                         break;
                 }
             }
@@ -132,8 +144,6 @@ public class NotificationService extends Service {
 //    private Query mAcceptQuery;
     private ListenerRegistration mEnquireRegistration;
     private ListenerRegistration mAcceptRegistration;
-
-    private boolean blockFirstNotification;
 
     private static final String TAG = "NotificationService";
     public static final String TAG_EMAIL = "NotificationService.email";
@@ -162,25 +172,27 @@ public class NotificationService extends Service {
         super.onStartCommand(intent, flags, startId);
         // receive null intent upon restart
 
-        blockFirstNotification = true;
         FirebaseUser user = mFirebaseAuth.getCurrentUser();
-
         if (user != null){
+
             Query query = mFirestore.collection("favors").limit(50);
             Query mEnquireQuery = query.whereEqualTo("enquirer", user.getUid());
             Query mAcceptQuery = query.whereEqualTo("accepter", user.getUid());
-            mEnquireRegistration = mEnquireQuery.addSnapshotListener(new FirebaseQueryListener());
-            mAcceptRegistration = mAcceptQuery.addSnapshotListener(new FirebaseQueryListener());
+            mEnquireRegistration = mEnquireQuery.addSnapshotListener(new FirebaseQueryListener(this));
+            mAcceptRegistration = mAcceptQuery.addSnapshotListener(new FirebaseQueryListener(this));
 
             // https://www.youtube.com/watch?v=bA7v1Ubjlzw
             // https://www.youtube.com/watch?v=BXwDM5VVuKA
             startForeground(1001, createNotification("Running foreground service...", false));
 
-        }else{
-            createNotification("User have signed out.", true);
-        }
+            return START_STICKY;
 
-        return START_STICKY;
+        }else{
+
+            createNotification("User have signed out.", true);
+            return START_NOT_STICKY;
+
+        }
     }
 
     @Override
