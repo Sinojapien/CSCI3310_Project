@@ -138,7 +138,7 @@ public class RequestHistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_request_history);
 
-        setTitle("Request History");
+        setTitle("User Requests");
 
         // Initialize all views
         mFavorRecycler = findViewById(R.id.recycler_favor);
