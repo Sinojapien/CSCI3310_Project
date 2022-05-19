@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             errorMessageTV.setVisibility(View.VISIBLE);
 
                             new android.app.AlertDialog.Builder(errorMessageTV.getContext())
-                            .setTitle("Resend verfication e-mail?")
+                            .setTitle("Resend verification e-mail?")
                             .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
