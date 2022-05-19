@@ -11,7 +11,8 @@ import edu.cuhk.csci3310.project.database.Status;
 public class RequestHistoryViewModel extends ViewModel {
 
     public enum ListType {
-        ANY("Any"), ENQUIRE("Enquire"), ACCEPT("Accept");
+//        ANY("Any"), ENQUIRE("Enquire"), ACCEPT("Accept");
+        ENQUIRE("Enquire"), ACCEPT("Accept");
 
         public final String value;
 
@@ -19,8 +20,8 @@ public class RequestHistoryViewModel extends ViewModel {
 
         public static ListType getTypeFrom(String value) {
             switch (value) {
-                case "Any":
-                    return ListType.ANY;
+//                case "Any":
+//                    return ListType.ANY;
                 case "Enquire":
                     return ListType.ENQUIRE;
                 case "Accept":
@@ -54,7 +55,8 @@ public class RequestHistoryViewModel extends ViewModel {
     }
 
     public void reset(){
-        mListType = ListType.ANY;
+//        mListType = ListType.ANY;
+        mListType = ListType.ENQUIRE;
         mStatus = null;
         mDeleteMode = false;
         mSortType = 0;

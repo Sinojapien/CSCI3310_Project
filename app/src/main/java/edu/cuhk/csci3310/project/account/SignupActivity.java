@@ -3,6 +3,7 @@ package edu.cuhk.csci3310.project.account;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -97,6 +98,7 @@ public class SignupActivity extends AppCompatActivity {
             if(validateInput.checkIfEmailIsValid(email) && validateInput.checkIfPasswordIsValid(password)) {
                 if(password.equals(passwordAgain)) {
                     // Signup user with email and password
+                    Context context = SignupActivity.this;
                     mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -104,8 +106,11 @@ public class SignupActivity extends AppCompatActivity {
                                 hideProgressBar();
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 saveNameInFirebaseRealtimeDatabase(user);
-                                Intent CentralHubActivity = new Intent(SignupActivity.this, edu.cuhk.csci3310.project.CentralHubActivity.class);
-                                startActivity(CentralHubActivity);
+                                MainActivity.sendVerificationEmail(user, context);
+                                Intent intent = new Intent(SignupActivity.this, edu.cuhk.csci3310.project.MainActivity.class);
+                                startActivity(intent);
+//                                Intent CentralHubActivity = new Intent(SignupActivity.this, edu.cuhk.csci3310.project.CentralHubActivity.class);
+//                                startActivity(CentralHubActivity);
                             } else {
                                 hideProgressBar();
                                 errorMessageTV.setText(task.getException().getMessage());
@@ -162,4 +167,7 @@ public class SignupActivity extends AppCompatActivity {
     private void hideProgressBar() {
         progressBar.setVisibility(View.INVISIBLE);
     }
+
+
+
 }

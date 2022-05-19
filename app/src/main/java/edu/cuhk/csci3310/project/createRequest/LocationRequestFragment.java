@@ -59,7 +59,7 @@ public class LocationRequestFragment extends RequestFragment {
                         Intent data = result.getData();
                         if (data != null) {
                             Bundle dataExtra = data.getExtras();
-                            mTextEdit.setText((String) dataExtra.get(getString(R.string.key_map_title)));;
+                            //mTextEdit.setText((String) dataExtra.get(getString(R.string.key_map_title)));;
                             mLocation = (LatLng) dataExtra.get(getString(R.string.key_map_location));
                         }
                     }

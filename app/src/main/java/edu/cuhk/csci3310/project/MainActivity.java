@@ -3,6 +3,8 @@ package edu.cuhk.csci3310.project;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -21,6 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 import edu.cuhk.csci3310.project.account.SignupActivity;
 import edu.cuhk.csci3310.project.account.UserAccountActivity;
 import edu.cuhk.csci3310.project.account.ValidateInput;
+import edu.cuhk.csci3310.project.settings.UserSettings;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -64,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Maintaining Login, would not be called upon back button navigation
         mFirebaseUser = mAuth.getCurrentUser();
 
-        if (mFirebaseUser != null){
+        if (isUserEmailVerified(mFirebaseUser)){
             emailET.setText(mFirebaseUser.getEmail());
 
             Intent CentralHubActivity = new Intent(MainActivity.this, CentralHubActivity.class);
@@ -90,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         showProgressBar();
         errorMessageTV.setVisibility(View.INVISIBLE);
         // Maintaining Login
-        if (mFirebaseUser != null){
+        if (isUserEmailVerified(mFirebaseUser)){
             Intent CentralHubActivity = new Intent(MainActivity.this, CentralHubActivity.class);
             startActivity(CentralHubActivity);
             return;
@@ -104,8 +107,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()) {
                         hideProgressBar();
-                        Intent CentralHubActivity = new Intent(MainActivity.this, CentralHubActivity.class);
-                        startActivity(CentralHubActivity);
+                        if (isUserEmailVerified(mFirebaseUser)){
+                            Intent CentralHubActivity = new Intent(MainActivity.this, CentralHubActivity.class);
+                            startActivity(CentralHubActivity);
+                        }else {
+                            errorMessageTV.setText("The user e-mail is not verified.");
+                            errorMessageTV.setVisibility(View.VISIBLE);
+
+                            new android.app.AlertDialog.Builder(errorMessageTV.getContext())
+                            .setTitle("Resend verfication e-mail?")
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    sendVerificationEmail(mFirebaseUser, errorMessageTV.getContext());
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            }).show();
+
+                        }
                     } else {
                         hideProgressBar();
                         errorMessageTV.setText(task.getException().getMessage());
@@ -127,6 +151,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void handleSignUpClick() {
         Intent SignupActivity = new Intent(MainActivity.this, SignupActivity.class);
         startActivity(SignupActivity);
+    }
+
+    public static boolean isUserEmailVerified(FirebaseUser user){
+        return user != null && user.isEmailVerified();
+    }
+
+    public static void sendVerificationEmail(FirebaseUser user, Context context){
+        // https://stackoverflow.com/questions/40404567/how-to-send-verification-email-with-firebase
+        if (!isUserEmailVerified(user)){
+            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful()) {
+                        Toast.makeText(context, "A verification e-mail has been sent", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, "Fail to send verification e-mail", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
     }
 
 }
